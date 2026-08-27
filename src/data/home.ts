@@ -1,43 +1,47 @@
 import type { GoalItem, ProcessStep, WhyPoint, TechnologyItem, EcosystemNode, AiGuideOption } from "@/types";
 
 export const heroContent = {
-  headline: "기술로 만들고, 연결하여 운영되는 디지털 자산",
+  eyebrow: "산업자동화 · 앱 · 웹 · 전자책 · 콘텐츠",
+  headline: "산업 기술부터 앱·웹·콘텐츠까지, 실제로 쓰이는 디지털 자산을 만듭니다",
   subheadline:
-    "산업자동화부터 앱·웹·전자책·콘텐츠까지 — SotongWare는 실제 문제를 해결하는 기술과 결과물을 만들고, 검색과 플랫폼을 통해 지속적인 가치를 만듭니다.",
+    "공장 자동화와 설비 모니터링, 앱·웹·전자책·Shorts 제작부터 배포·사업화까지 — SotongWare는 기술을 개발하고 연결하여 현장과 온라인에서 검증된 결과물을 만듭니다. 단순 AI 홍보가 아닌, 실제 문제를 해결하는 제작 회사입니다.",
   primaryCta: { label: "결과물 둘러보기", href: "/works" },
   secondaryCta: { label: "서비스 살펴보기", href: "/services" },
+  highlights: [
+    { label: "산업 현장 기술", desc: "PLC · MES · 설비 모니터링" },
+    { label: "디지털 제작·배포", desc: "앱 · 웹 · 전자책 · 콘텐츠" },
+    { label: "사업화까지 연결", desc: "검색 · 플랫폼 · 24시간 운영" },
+  ],
 };
+
+export const whyFormula = [
+  { label: "Industrial Field", labelKo: "산업 현장 이해" },
+  { label: "Software Engineering", labelKo: "소프트웨어 개발" },
+  { label: "AI Utilization", labelKo: "AI 활용" },
+  { label: "Digital Content", labelKo: "디지털 콘텐츠" },
+  { label: "Business Automation", labelKo: "사업 자동화" },
+];
 
 export const whyPoints: WhyPoint[] = [
   {
-    title: "산업 현장 이해",
+    title: "산업 현장을 이해합니다",
     description:
-      "PLC, MES, Modbus 등 실제 공장 환경을 이해하고 현장에 맞는 소프트웨어를 설계합니다.",
+      "PLC, MES, Modbus 등 실제 공장 환경을 알고, 현장에 맞는 산업용 프로그램을 설계합니다. 웹에이전시와 다른 출발점입니다.",
   },
   {
-    title: "풀스택 개발 역량",
+    title: "제작부터 배포까지",
     description:
-      "앱, 웹, 산업용 프로그램을 하나의 팀에서 기획·개발·운영까지 담당합니다.",
+      "앱, 웹, 산업 프로그램을 기획·개발하고 Google Play, 웹 호스팅, 판매 채널까지 연결합니다.",
   },
   {
-    title: "AI 활용 설계",
+    title: "AI는 도구로 활용",
     description:
-      "AI를 단순 홍보가 아닌, 실제 업무 자동화와 사용자 경험 개선에 적용합니다.",
+      "AI를 홍보 문구가 아닌, 업무 자동화·사용자 경험·콘텐츠 제작에 실제로 적용합니다.",
   },
   {
-    title: "디지털 자산 연결",
+    title: "자산이 서로 홍보합니다",
     description:
-      "앱, 전자책, 웹, 콘텐츠를 서로 연결하여 하나의 결과물이 다른 결과물을 홍보하는 구조를 만듭니다.",
-  },
-  {
-    title: "온라인 사업화",
-    description:
-      "검색 유입, 플랫폼 배포, 수익화 구조를 함께 설계하여 24시간 운영되는 사업 기반을 구축합니다.",
-  },
-  {
-    title: "자동화 운영",
-    description:
-      "제작부터 배포, 홈페이지 등록, 홍보까지 자동화 가능한 파이프라인을 지향합니다.",
+      "앱, 전자책, 웹, 콘텐츠를 연결하여 하나의 결과물이 다른 결과물로 방문자를 이동시킵니다.",
   },
 ];
 
@@ -55,43 +59,43 @@ export const processSteps: ProcessStep[] = [
 export const exploreGoals: GoalItem[] = [
   {
     id: "automate",
-    title: "업무를 자동화하고 싶어요",
-    description: "공장·사무 업무 자동화, 설비 모니터링, 데이터 수집",
+    title: "공장·업무를 자동화하고 싶어요",
+    description: "설비 모니터링, PLC 연동, 생산 데이터 수집·분석",
     href: "/services/industrial-automation",
     icon: "automation",
   },
   {
-    id: "use-app",
-    title: "앱을 사용해보고 싶어요",
-    description: "SotongWare가 만든 앱을 다운로드하고 체험",
-    href: "/works/apps",
+    id: "app",
+    title: "앱을 만들거나 사용하고 싶어요",
+    description: "업무용·산업용 앱 개발, 또는 SotongWare 앱 체험",
+    href: "/services/app-development",
     icon: "app",
   },
   {
     id: "start-business",
     title: "온라인 사업을 시작하고 싶어요",
-    description: "웹사이트, 지식 사이트, 디지털 상품 사업 구축",
+    description: "지식 사이트, 디지털 상품, 검색 유입 구조 설계",
     href: "/solutions/digital-business",
     icon: "business",
   },
   {
-    id: "read-ebook",
-    title: "전자책을 보고 싶어요",
-    description: "전문 분야 전자책 둘러보기",
-    href: "/works/ebooks",
+    id: "ebook",
+    title: "전자책을 만들거나 보고 싶어요",
+    description: "전자책 기획·제작, 또는 전문 분야 전자책 탐색",
+    href: "/services/ebook-development",
     icon: "ebook",
   },
   {
-    id: "find-info",
-    title: "유용한 정보를 찾고 있어요",
-    description: "기술자료, 산업 정보, 인사이트",
-    href: "/insights",
-    icon: "info",
+    id: "website",
+    title: "웹사이트를 만들고 싶어요",
+    description: "기업 홈페이지, 마케팅 사이트, 웹서비스 개발",
+    href: "/services/web-development",
+    icon: "web",
   },
   {
     id: "enjoy-content",
-    title: "음악이나 영상을 보고 싶어요",
-    description: "Shorts, 음악, 영상 콘텐츠",
+    title: "영상·음악·콘텐츠를 보고 싶어요",
+    description: "Shorts, 정보 영상, 음악, 지식 콘텐츠",
     href: "/works/content",
     icon: "media",
   },
@@ -121,37 +125,51 @@ export const aiGuideOptions: AiGuideOption[] = [
   {
     id: "automation",
     label: "공장·설비 자동화가 필요해요",
-    description: "산업자동화 서비스와 관련 결과물을 안내합니다.",
+    description: "산업자동화 서비스와 관련 기술 안내",
     href: "/services/industrial-automation",
   },
   {
     id: "app",
-    label: "앱을 만들고 싶어요",
-    description: "앱 개발 서비스와 기존 앱을 추천합니다.",
+    label: "앱을 만들거나 사용하고 싶어요",
+    description: "앱 개발 서비스 및 앱 카탈로그 안내",
     href: "/services/app-development",
   },
   {
     id: "website",
     label: "웹사이트·온라인 사업이 필요해요",
-    description: "웹 개발과 디지털 사업 솔루션을 안내합니다.",
+    description: "웹 개발과 디지털 사업 솔루션 안내",
     href: "/services/web-development",
+  },
+  {
+    id: "ebook",
+    label: "전자책이 필요해요",
+    description: "전자책 기획·제작 서비스 안내",
+    href: "/services/ebook-development",
   },
   {
     id: "unsure",
     label: "아직 잘 모르겠어요",
-    description: "목적에 맞는 서비스를 찾아드립니다.",
+    description: "목적에 맞는 서비스와 솔루션 탐색",
     href: "/solutions",
   },
 ];
 
+export const worksEmptyContent = {
+  title: "첫 결과물들이 준비되고 있습니다",
+  description:
+    "앱, 전자책, 웹사이트, 산업 프로그램, 음악, Shorts가 제작·검수 완료되는 순서대로 이곳에 공개됩니다. 실제 결과물만 등록합니다.",
+  pipeline: ["기획", "제작", "검수", "배포", "공개"],
+  categories: ["앱", "전자책", "웹사이트", "자동화", "음악", "Shorts"],
+};
+
 export const finalCtaContent = {
   title: "지금 필요한 것부터 시작하세요",
   description:
-    "상담 전에 결과물을 둘러보거나, 목적에 맞는 서비스를 찾아보세요. SotongWare는 24시간 자동으로 안내할 수 있는 구조를 만들고 있습니다.",
+    "결과물을 둘러보거나, 목적에 맞는 서비스를 찾아보세요. 직접 문의는 자동 안내로 해결되지 않을 때 선택하시면 됩니다.",
   actions: [
-    { label: "결과물 보기", href: "/works", variant: "primary" as const },
-    { label: "내게 맞는 서비스 찾기", href: "/solutions", variant: "secondary" as const },
-    { label: "AI 안내 받기", href: "/ai-guide", variant: "secondary" as const },
+    { label: "서비스 살펴보기", href: "/services", variant: "primary" as const },
+    { label: "목적별 안내", href: "/ai-guide", variant: "secondary" as const },
+    { label: "결과물 보기", href: "/works", variant: "outline" as const },
     { label: "직접 문의하기", href: "/contact", variant: "outline" as const },
   ],
 };

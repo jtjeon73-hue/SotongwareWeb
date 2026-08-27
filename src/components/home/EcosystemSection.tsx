@@ -3,7 +3,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 
 export function EcosystemSection() {
   return (
-    <section className="section-padding bg-surface-50" aria-labelledby="ecosystem-heading">
+    <section className="section-padding section-alt" aria-labelledby="ecosystem-heading">
       <div className="container-main">
         <SectionHeader
           id="ecosystem-heading"

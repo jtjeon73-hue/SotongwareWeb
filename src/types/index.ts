@@ -53,9 +53,13 @@ export interface ServiceItem {
   title: string;
   subtitle: string;
   description: string;
+  makesWhat: string;
+  customerValue: string;
   valuePoints: string[];
   href: string;
+  worksHref?: string;
   icon: string;
+  featured?: boolean;
 }
 
 export interface GoalItem {

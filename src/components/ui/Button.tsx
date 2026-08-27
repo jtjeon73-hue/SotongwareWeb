@@ -11,6 +11,7 @@ interface ButtonProps {
   size?: ButtonSize;
   className?: string;
   external?: boolean;
+  onClick?: () => void;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
@@ -36,6 +37,7 @@ export function Button({
   size = "md",
   className,
   external,
+  onClick,
 }: ButtonProps) {
   const classes = cn(
     "inline-flex items-center justify-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
@@ -53,7 +55,7 @@ export function Button({
   }
 
   return (
-    <Link href={href} className={classes}>
+    <Link href={href} className={classes} onClick={onClick}>
       {children}
     </Link>
   );
