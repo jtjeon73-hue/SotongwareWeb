@@ -38,4 +38,10 @@ export const defaultMetadata: Metadata = {
     index: true,
     follow: true,
   },
+  alternates: {
+    canonical: siteConfig.url,
+  },
+  icons: {
+    icon: "/icon.svg",
+  },
 };

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:hosting": "next build",
+    "deploy:hosting": "npm run build:hosting && firebase deploy --only hosting --project sotongware"
   },
   "dependencies": {
     "next": "^15.5.0",

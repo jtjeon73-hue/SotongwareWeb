@@ -30,9 +30,21 @@ npm run dev
 ## 빌드
 
 ```bash
-npm run build
-npm start
+npm run build    # static export → out/
 ```
+
+로컬 미리보기는 `npm run dev` 사용. 프로덕션은 Firebase Hosting에 `out/`을 배포합니다.
+
+## Firebase Hosting 배포
+
+- **Project ID:** `sotongware` (SotongWareControl `sotongware-control`과 분리)
+- **URL:** https://sotongware.web.app
+
+```bash
+npm run deploy:hosting
+```
+
+상세: [`docs/deploy-firebase-hosting.md`](docs/deploy-firebase-hosting.md)
 
 ## Lint
 
@@ -102,10 +114,9 @@ src/
 
 ## 향후 배포 방향
 
-- Firebase Hosting 또는 정적 호스팅
-- 도메인: `sotongware.com`
-- CI/CD로 `npm run build` 후 배포
-- 환경 변수는 `.env.local` (커밋 금지)
+- Firebase Hosting (`sotongware` 프로젝트) — **배포 완료**
+- 도메인: `sotongware.com` (Custom Domain DNS 연결은 사용자 작업)
+- CI/CD: `npm run deploy:hosting`
 
 ## 관련 저장소
 
