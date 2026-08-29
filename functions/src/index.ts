@@ -1,8 +1,13 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import { initializeApp } from "firebase-admin/app";
+import { initializeApp, getApps } from "firebase-admin/app";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 
-initializeApp();
+function getDb() {
+  if (!getApps().length) {
+    initializeApp();
+  }
+  return getFirestore();
+}
 
 const ALLOWED_INQUIRY_TYPES = new Set([
   "automation",
@@ -79,7 +84,7 @@ export const submitContactInquiry = onCall(
     if (!subject) throw new HttpsError("invalid-argument", "제목을 입력해 주세요.");
     if (!message) throw new HttpsError("invalid-argument", "문의 내용을 입력해 주세요.");
 
-    const db = getFirestore();
+    const db = getDb();
 
     // 동일 이메일+제목 5분 내 중복 방지
     const fiveMinutesAgo = Timestamp.fromMillis(Date.now() - 5 * 60 * 1000);

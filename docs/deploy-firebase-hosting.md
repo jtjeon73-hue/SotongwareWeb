@@ -40,18 +40,14 @@ firebase deploy --only hosting --project sotongware
 
 문의 접수는 `submitContactInquiry` Callable Function + Firestore `contactInquiries` 컬렉션을 사용합니다.
 
-**Blaze(종량제) 플랜 필요:** Cloud Functions 배포에는 Firebase Blaze 업그레이드가 필요합니다.
+로컬 E2E (에뮬레이터):
 
 ```bash
-# Functions + Firestore rules + Hosting 일괄 배포
-npm run deploy:all
-
-# Functions만
-npm run deploy:functions
+npm run test:e2e:contact
 ```
 
-로컬 빌드 전 `.env.local`에 Web SDK 설정 필요 (`.env.example` 참고).  
-Firebase Console → Project settings → Your apps → **SotongWare Web** 에서 API Key 확인.
+**Blaze 업그레이드 필수:** [Firebase Console → Usage](https://console.firebase.google.com/project/sotongware/usage/details) 에서 Blaze(종량제) 활성화 후 Functions 배포 가능.  
+`billingEnabled: false` 상태에서는 Cloud Functions 배포가 거부됩니다.
 
 ## sotongware.com Custom Domain 연결 (사용자 작업)
 

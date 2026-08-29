@@ -10,7 +10,8 @@
     "build:hosting": "next build",
     "deploy:hosting": "npm run build:hosting && firebase deploy --only hosting --project sotongware",
     "deploy:functions": "firebase deploy --only functions,firestore:rules,firestore:indexes --project sotongware",
-    "deploy:all": "npm run build:hosting && firebase deploy --only hosting,functions,firestore:rules,firestore:indexes --project sotongware"
+    "deploy:all": "npm run build:hosting && firebase deploy --only hosting,functions,firestore:rules,firestore:indexes --project sotongware",
+    "test:e2e:contact": "firebase emulators:exec --only functions,firestore --project sotongware \"node scripts/e2e-contact.mjs\""
   },
   "dependencies": {
     "firebase": "^11.10.0",
@@ -26,6 +27,7 @@
     "@types/react-dom": "^19.1.7",
     "eslint": "^9.33.0",
     "eslint-config-next": "^15.5.0",
+    "firebase-admin": "^14.3.0",
     "tailwindcss": "^4.1.12",
     "typescript": "^5.9.2"
   }
