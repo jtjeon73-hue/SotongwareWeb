@@ -1,0 +1,88 @@
+import type { BusinessArea } from "@/types/product";
+
+export const businessAreas: BusinessArea[] = [
+  {
+    id: "automation",
+    slug: "automation",
+    title: "Industrial Automation",
+    titleKo: "산업자동화",
+    description: "PLC, MES, 설비 모니터링, 비전검사 — 산업 현장 맞춤 소프트웨어 개발·구축",
+    href: "/automation",
+    productsHref: "/products?type=automation",
+    icon: "factory",
+    ctas: [
+      { label: "자동화 상담", href: "/contact?topic=automation", variant: "primary" },
+      { label: "견적 요청", href: "/contact?topic=quote", variant: "outline" },
+    ],
+  },
+  {
+    id: "app",
+    slug: "apps",
+    title: "App Development",
+    titleKo: "앱개발",
+    description: "SotongWare가 제작한 앱을 전시·배포·판매하는 App Marketplace",
+    href: "/apps",
+    productsHref: "/products?type=app",
+    icon: "app",
+    ctas: [
+      { label: "앱 목록", href: "/apps", variant: "primary" },
+      { label: "앱 개발 의뢰", href: "/contact?topic=app", variant: "outline" },
+    ],
+  },
+  {
+    id: "ebook",
+    slug: "ebooks",
+    title: "E-book Development",
+    titleKo: "전자책개발",
+    description: "전자책 기획·제작·판매 — 다중 플랫폼 연동 구조",
+    href: "/ebooks",
+    productsHref: "/products?type=ebook",
+    icon: "ebook",
+    ctas: [
+      { label: "전자책 보기", href: "/ebooks", variant: "primary" },
+      { label: "제작 의뢰", href: "/contact?topic=ebook", variant: "outline" },
+    ],
+  },
+  {
+    id: "knowledge",
+    slug: "knowledge",
+    title: "Knowledge & Education",
+    titleKo: "지식·교육",
+    description: "무료·회원·유료·구독 콘텐츠 — 반복수익형 지식 사업",
+    href: "/knowledge",
+    productsHref: "/products?type=knowledge",
+    icon: "info",
+    ctas: [
+      { label: "무료 콘텐츠", href: "/knowledge?tier=free", variant: "primary" },
+      { label: "전체 교육", href: "/knowledge", variant: "outline" },
+    ],
+  },
+  {
+    id: "marketing",
+    slug: "marketing",
+    title: "Marketing",
+    titleKo: "마케팅",
+    description: "SEO, Shorts, 홍보 영상, 랜딩페이지 — 마케팅 서비스 판매",
+    href: "/marketing",
+    productsHref: "/products?type=marketing",
+    icon: "business",
+    ctas: [
+      { label: "서비스 보기", href: "/marketing", variant: "primary" },
+      { label: "상담 요청", href: "/contact?topic=marketing", variant: "outline" },
+    ],
+  },
+  {
+    id: "content",
+    slug: "content",
+    title: "Content",
+    titleKo: "콘텐츠",
+    description: "AI 음악, Shorts, 영상, 만화 — 콘텐츠 제작·대행",
+    href: "/contents",
+    productsHref: "/products?type=content",
+    icon: "media",
+    ctas: [
+      { label: "콘텐츠 보기", href: "/content", variant: "primary" },
+      { label: "제작 의뢰", href: "/contact?topic=content", variant: "outline" },
+    ],
+  },
+];

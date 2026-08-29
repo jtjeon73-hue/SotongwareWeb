@@ -1,16 +1,20 @@
 import type { GoalItem, ProcessStep, WhyPoint, TechnologyItem, EcosystemNode, AiGuideOption } from "@/types";
 
 export const heroContent = {
-  eyebrow: "산업자동화 · 앱 · 웹 · 전자책 · 콘텐츠",
-  headline: "산업 기술부터 앱·웹·콘텐츠까지, 실제로 쓰이는 디지털 자산을 만듭니다",
+  eyebrow: "Digital Business Platform",
+  headline: "산업 기술부터 앱·전자책·웹·콘텐츠까지, 만들고 판매하고 성장시키는 디지털 사업 플랫폼",
   subheadline:
-    "공장 자동화와 설비 모니터링, 앱·웹·전자책·Shorts 제작부터 배포·사업화까지 — SotongWare는 기술을 개발하고 연결하여 현장과 온라인에서 검증된 결과물을 만듭니다. 단순 AI 홍보가 아닌, 실제 문제를 해결하는 제작 회사입니다.",
-  primaryCta: { label: "결과물 둘러보기", href: "/works" },
-  secondaryCta: { label: "서비스 살펴보기", href: "/services" },
+    "SotongWare는 산업자동화 기술을 기반으로 앱, 전자책, 지식서비스, 웹서비스, 콘텐츠를 직접 제작하고 배포·판매합니다. 단순 AI 홍보가 아닌, 실제 상품과 결과물 중심의 기술 기업입니다.",
+  ctas: [
+    { label: "서비스 둘러보기", href: "/services", variant: "primary" as const },
+    { label: "디지털 상품 보기", href: "/products", variant: "secondary" as const },
+    { label: "제작 의뢰", href: "/contact", variant: "secondary" as const },
+    { label: "무료 콘텐츠", href: "/knowledge", variant: "outline" as const },
+  ],
   highlights: [
-    { label: "산업 현장 기술", desc: "PLC · MES · 설비 모니터링" },
-    { label: "디지털 제작·배포", desc: "앱 · 웹 · 전자책 · 콘텐츠" },
-    { label: "사업화까지 연결", desc: "검색 · 플랫폼 · 24시간 운영" },
+    { label: "6대 사업 영역", desc: "자동화 · 앱 · 전자책 · 교육 · 마케팅 · 콘텐츠" },
+    { label: "제작 → 판매 → 배포", desc: "상품 등록 · Store · YouTube 연동 구조" },
+    { label: "Cross-Sell", desc: "앱 ↔ 전자책 ↔ 교육 ↔ 콘텐츠 연결" },
   ],
 };
 
@@ -96,7 +100,7 @@ export const exploreGoals: GoalItem[] = [
     id: "enjoy-content",
     title: "영상·음악·콘텐츠를 보고 싶어요",
     description: "Shorts, 정보 영상, 음악, 지식 콘텐츠",
-    href: "/works/content",
+    href: "/contents",
     icon: "media",
   },
 ];
@@ -165,11 +169,11 @@ export const worksEmptyContent = {
 export const finalCtaContent = {
   title: "지금 필요한 것부터 시작하세요",
   description:
-    "결과물을 둘러보거나, 목적에 맞는 서비스를 찾아보세요. 직접 문의는 자동 안내로 해결되지 않을 때 선택하시면 됩니다.",
+    "디지털 상품을 둘러보거나, 6대 사업 영역에서 맞는 서비스를 찾아보세요.",
   actions: [
-    { label: "서비스 살펴보기", href: "/services", variant: "primary" as const },
-    { label: "목적별 안내", href: "/ai-guide", variant: "secondary" as const },
-    { label: "결과물 보기", href: "/works", variant: "outline" as const },
-    { label: "직접 문의하기", href: "/contact", variant: "outline" as const },
+    { label: "디지털 상품 보기", href: "/products", variant: "primary" as const },
+    { label: "6대 사업 영역", href: "/#business-hub-heading", variant: "secondary" as const },
+    { label: "제작 의뢰", href: "/contact", variant: "outline" as const },
+    { label: "목적별 안내", href: "/ai-guide", variant: "outline" as const },
   ],
 };
