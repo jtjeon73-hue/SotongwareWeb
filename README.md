@@ -46,6 +46,8 @@ npm run deploy:hosting
 
 상세: [`docs/deploy-firebase-hosting.md`](docs/deploy-firebase-hosting.md)
 
+검색엔진 등록 및 소유권 확인: [`docs/search-engine-registration.md`](docs/search-engine-registration.md)
+
 ## Lint
 
 ```bash

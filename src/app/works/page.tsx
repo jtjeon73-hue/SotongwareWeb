@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { WorksEmptyState } from "@/components/shared/WorksEmptyState";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Works",
   description: "SotongWare 결과물 — 앱, 전자책, 웹사이트, 자동화, 콘텐츠",
-};
+  path: "/works",
+});
 
 export default function WorksPage() {
   return (

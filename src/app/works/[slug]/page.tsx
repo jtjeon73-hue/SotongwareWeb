@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PlaceholderPage } from "@/components/shared/PlaceholderPage";
+import { createPageMetadata } from "@/lib/metadata";
 
 const workCategories = [
   { slug: "apps", title: "Apps", description: "SotongWare가 개발한 앱 목록" },
@@ -18,7 +19,12 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const cat = workCategories.find((c) => c.slug === slug);
-  return { title: cat?.title ?? "Works", description: cat?.description };
+  if (!cat) return { title: "Works" };
+  return createPageMetadata({
+    title: cat.title,
+    description: cat.description,
+    path: `/works/${cat.slug}`,
+  });
 }
 
 export default async function WorksCategoryPage({ params }: Props) {

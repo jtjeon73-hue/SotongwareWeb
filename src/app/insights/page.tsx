@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
 import { PlaceholderPage } from "@/components/shared/PlaceholderPage";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Insights",
   description: "기술자료, 사업정보, AI 활용, 산업자동화 인사이트",
-};
+  path: "/insights",
+});
 
 export default function InsightsPage() {
   return (

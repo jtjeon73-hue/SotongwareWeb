@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
 import { PlaceholderPage } from "@/components/shared/PlaceholderPage";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "이용약관",
-};
+  description: "SotongWare 이용약관",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { aiGuideOptions } from "@/data/home";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "목적별 안내",
   description: "목적에 맞는 SotongWare 서비스와 솔루션 안내",
-};
+  path: "/ai-guide",
+});
 
 export default function AiGuidePage() {
   return (

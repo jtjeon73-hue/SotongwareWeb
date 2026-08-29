@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
 import { PlaceholderPage } from "@/components/shared/PlaceholderPage";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "개인정보처리방침",
-};
+  description: "SotongWare 개인정보처리방침",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

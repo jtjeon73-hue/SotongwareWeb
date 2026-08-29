@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
 import { PlaceholderPage } from "@/components/shared/PlaceholderPage";
 import { siteConfig } from "@/data/navigation";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "About",
   description: `${siteConfig.name} 소개`,
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

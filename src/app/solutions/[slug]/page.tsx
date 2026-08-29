@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PlaceholderPage } from "@/components/shared/PlaceholderPage";
+import { createPageMetadata } from "@/lib/metadata";
 
 const solutions = [
   { slug: "digital-business", title: "Digital Business", description: "온라인 사업 구축 솔루션" },
@@ -17,7 +18,12 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const sol = solutions.find((s) => s.slug === slug);
-  return { title: sol?.title ?? "Solutions", description: sol?.description };
+  if (!sol) return { title: "Solutions" };
+  return createPageMetadata({
+    title: sol.title,
+    description: sol.description,
+    path: `/solutions/${sol.slug}`,
+  });
 }
 
 export default async function SolutionDetailPage({ params }: Props) {

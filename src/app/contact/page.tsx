@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
 import { PlaceholderPage } from "@/components/shared/PlaceholderPage";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Contact",
   description: "SotongWare 문의 및 안내",
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { services } from "@/data/services";
 import { ServiceIcon } from "@/components/ui/Icons";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Services",
   description: "산업자동화, 앱, 웹, 전자책, 콘텐츠 개발 서비스",
-};
+  path: "/services",
+});
 
 export default function ServicesPage() {
   return (
