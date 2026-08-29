@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { BusinessArea } from "@/types/product";
 import { ServiceIcon } from "@/components/ui/Icons";
+import { TrackedBusinessLink } from "@/components/product/StoreLinks";
 
 export function BusinessHubCard({ area }: { area: BusinessArea }) {
   return (
@@ -16,19 +16,21 @@ export function BusinessHubCard({ area }: { area: BusinessArea }) {
         {area.description}
       </p>
       <div className="mt-5 flex flex-wrap gap-2">
-        <Link
+        <TrackedBusinessLink
           href={area.href}
-          className="inline-flex items-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
-        >
-          {area.ctas[0]?.label ?? "둘러보기"}
-        </Link>
+          label={area.ctas[0]?.label ?? "둘러보기"}
+          businessType={area.id}
+          ctaName={area.ctas[0]?.label ?? "browse"}
+          variant="primary"
+        />
         {area.ctas[1] && (
-          <Link
+          <TrackedBusinessLink
             href={area.ctas[1].href}
-            className="inline-flex items-center rounded-lg border border-surface-200 px-4 py-2 text-sm font-medium text-surface-700 hover:bg-surface-50"
-          >
-            {area.ctas[1].label}
-          </Link>
+            label={area.ctas[1].label}
+            businessType={area.id}
+            ctaName={area.ctas[1].label}
+            variant="outline"
+          />
         )}
       </div>
     </article>

@@ -81,7 +81,7 @@ export const businessAreas: BusinessArea[] = [
     productsHref: "/products?type=content",
     icon: "media",
     ctas: [
-      { label: "콘텐츠 보기", href: "/content", variant: "primary" },
+      { label: "콘텐츠 보기", href: "/contents", variant: "primary" },
       { label: "제작 의뢰", href: "/contact?topic=content", variant: "outline" },
     ],
   },

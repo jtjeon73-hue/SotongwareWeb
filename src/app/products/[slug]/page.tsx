@@ -35,11 +35,26 @@ function ProductExtraContent({ product }: { product: ReturnType<typeof getProduc
   if (product.type === "app" && product.appMeta) {
     return (
       <div className="mt-10 space-y-6">
-        {product.appMeta.features?.map((f) => (
-          <p key={f} className="text-sm text-surface-700">• {f}</p>
-        ))}
-        {product.appMeta.version && <p className="text-sm text-surface-600">버전: {product.appMeta.version}</p>}
-        {product.appMeta.os && <p className="text-sm text-surface-600">지원 OS: {product.appMeta.os.join(", ")}</p>}
+        {product.appMeta.features?.length ? (
+          <section>
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-surface-500">
+              주요 기능
+            </h2>
+            <ul className="mt-3 space-y-2">
+              {product.appMeta.features.map((f) => (
+                <li key={f} className="text-sm text-surface-700">• {f}</li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+        <section className="text-sm text-surface-600">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-surface-500">
+            출시 상태
+          </h2>
+          <p className="mt-2">
+            Google Play Store: 출시 준비 중
+          </p>
+        </section>
       </div>
     );
   }

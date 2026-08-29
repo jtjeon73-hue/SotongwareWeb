@@ -34,7 +34,7 @@ export const STATUS_LABELS: Record<SotongProduct["status"], string> = {
   testing: "테스트 중",
   ready: "출시 준비",
   published: "서비스 중",
-  archived: "종료",
+  archived: "서비스 종료",
 };
 
 export const ACCESS_LABELS: Record<SotongProduct["accessMode"], string> = {
@@ -48,7 +48,7 @@ export const ACCESS_LABELS: Record<SotongProduct["accessMode"], string> = {
 export const APP_RELEASE_LABELS: Record<string, string> = {
   development: "개발 중",
   testing: "테스트 중",
-  ready: "출시 준비",
+  ready: "출시 준비 중",
   "play-store": "Play Store 등록",
   live: "서비스 중",
   "update-planned": "업데이트 예정",

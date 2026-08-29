@@ -8,9 +8,12 @@
     "start": "next start",
     "lint": "eslint .",
     "build:hosting": "next build",
-    "deploy:hosting": "npm run build:hosting && firebase deploy --only hosting --project sotongware"
+    "deploy:hosting": "npm run build:hosting && firebase deploy --only hosting --project sotongware",
+    "deploy:functions": "firebase deploy --only functions,firestore:rules,firestore:indexes --project sotongware",
+    "deploy:all": "npm run build:hosting && firebase deploy --only hosting,functions,firestore:rules,firestore:indexes --project sotongware"
   },
   "dependencies": {
+    "firebase": "^11.10.0",
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

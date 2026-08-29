@@ -36,6 +36,23 @@ firebase deploy --only hosting --project sotongware
 
 **절대 사용하지 말 것:** `--project sotongware-control`
 
+## 문의 폼 (Firebase Functions)
+
+문의 접수는 `submitContactInquiry` Callable Function + Firestore `contactInquiries` 컬렉션을 사용합니다.
+
+**Blaze(종량제) 플랜 필요:** Cloud Functions 배포에는 Firebase Blaze 업그레이드가 필요합니다.
+
+```bash
+# Functions + Firestore rules + Hosting 일괄 배포
+npm run deploy:all
+
+# Functions만
+npm run deploy:functions
+```
+
+로컬 빌드 전 `.env.local`에 Web SDK 설정 필요 (`.env.example` 참고).  
+Firebase Console → Project settings → Your apps → **SotongWare Web** 에서 API Key 확인.
+
 ## sotongware.com Custom Domain 연결 (사용자 작업)
 
 ### 1. Firebase Console
