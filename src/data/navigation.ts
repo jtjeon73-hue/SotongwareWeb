@@ -22,7 +22,7 @@ export const businessNavigation: NavItem[] = [
   { label: "전자책", href: "/ebooks" },
   { label: "지식·교육", href: "/knowledge" },
   { label: "마케팅", href: "/marketing" },
-  { label: "콘텐츠", href: "/content" },
+  { label: "콘텐츠", href: "/contents" },
 ];
 
 export const footerNavigation = {
@@ -32,7 +32,7 @@ export const footerNavigation = {
     { label: "앱", href: "/apps" },
     { label: "전자책", href: "/ebooks" },
     { label: "교육", href: "/knowledge" },
-    { label: "콘텐츠", href: "/content" },
+    { label: "콘텐츠", href: "/contents" },
   ],
   services: [
     { label: "산업자동화", href: "/automation" },
