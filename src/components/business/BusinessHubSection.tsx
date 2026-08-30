@@ -10,7 +10,7 @@ export function BusinessHubSection() {
           id="business-hub-heading"
           eyebrow="Digital Business Hub"
           title="6대 사업 영역"
-          description="산업자동화, 앱, 전자책, 지식·교육, 마케팅, 콘텐츠 — 제작부터 판매·배포까지 연결되는 SotongWare 디지털 사업 생태계"
+          description="산업자동화, 앱, 전자책, 지식·교육, 마케팅, 콘텐츠 — SotongWare가 직접 운영하는 6대 전문 사업 채널"
         />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {businessAreas.map((area) => (

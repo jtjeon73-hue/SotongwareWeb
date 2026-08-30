@@ -1,6 +1,17 @@
 import type { SotongProduct } from "@/types/product";
 import { siteConfig } from "@/data/navigation";
 
+export function organizationJsonLd(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    alternateName: siteConfig.nameKo,
+    url: siteConfig.url,
+    description: siteConfig.description,
+  };
+}
+
 export function productJsonLd(product: SotongProduct): Record<string, unknown> {
   const base = {
     "@context": "https://schema.org",

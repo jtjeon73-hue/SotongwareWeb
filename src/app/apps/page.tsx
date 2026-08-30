@@ -1,4 +1,5 @@
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { BusinessSiteBanner } from "@/components/business/BusinessSiteBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { Button } from "@/components/ui/Button";
@@ -10,7 +11,7 @@ import { serviceJsonLd } from "@/lib/structured-data";
 const PAGE_DESCRIPTION = "SotongWare가 제작한 앱 — 전시, 배포, 판매";
 
 export const metadata = createPageMetadata({
-  title: "앱 마켓플레이스",
+  title: "앱개발",
   description: PAGE_DESCRIPTION,
   path: "/apps",
 });
@@ -30,6 +31,7 @@ export default function AppsPage() {
             title="앱 마켓플레이스"
             description="SotongWare가 직접 제작한 앱을 전시하고, 출시·배포·판매합니다. Play Store 등록 URL은 실제 등록 후에만 표시됩니다."
           />
+          <BusinessSiteBanner businessId="app" />
           {published.length > 0 ? (
             <ProductGrid products={published} />
           ) : (

@@ -1,4 +1,5 @@
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { BusinessSiteBanner } from "@/components/business/BusinessSiteBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { Button } from "@/components/ui/Button";
@@ -22,6 +23,7 @@ export default function EbooksPage() {
           title="전자책"
           description="SotongWare에서 제작한 전자책을 상품으로 판매합니다. 외부 플랫폼 링크는 실제 등록 후에만 표시됩니다."
         />
+        <BusinessSiteBanner businessId="ebook" />
         {published.length > 0 ? (
           <ProductGrid products={published} />
         ) : (

@@ -1,12 +1,25 @@
 import type { BusinessArea } from "@/types/product";
 import { ServiceIcon } from "@/components/ui/Icons";
-import { TrackedBusinessLink } from "@/components/product/StoreLinks";
+import {
+  BusinessDetailLink,
+  BusinessExternalSiteLink,
+  BusinessContactLink,
+  BusinessSiteStatusBadge,
+  RevenueModelTag,
+  ConversionHintTags,
+} from "./BusinessActions";
 
 export function BusinessHubCard({ area }: { area: BusinessArea }) {
   return (
     <article className="group flex flex-col rounded-xl border border-surface-200 bg-white p-5 transition-colors hover:border-brand-300 sm:p-6">
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-600 group-hover:bg-brand-100">
-        <ServiceIcon name={area.icon} />
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600 group-hover:bg-brand-100">
+          <ServiceIcon name={area.icon} />
+        </div>
+        <div className="flex flex-wrap justify-end gap-1">
+          <RevenueModelTag label={area.revenueModel} />
+          <BusinessSiteStatusBadge status={area.siteStatus} />
+        </div>
       </div>
       <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-brand-600">
         {area.title}
@@ -15,24 +28,26 @@ export function BusinessHubCard({ area }: { area: BusinessArea }) {
       <p className="mt-2 flex-1 text-sm leading-relaxed text-surface-600">
         {area.description}
       </p>
-      <div className="mt-5 flex flex-wrap gap-2">
-        <TrackedBusinessLink
-          href={area.href}
-          label={area.ctas[0]?.label ?? "둘러보기"}
-          businessType={area.id}
-          ctaName={area.ctas[0]?.label ?? "browse"}
-          variant="primary"
-        />
-        {area.ctas[1] && (
-          <TrackedBusinessLink
-            href={area.ctas[1].href}
-            label={area.ctas[1].label}
-            businessType={area.id}
-            ctaName={area.ctas[1].label}
-            variant="outline"
-          />
-        )}
+      <div className="mt-4">
+        <ConversionHintTags hints={area.conversionHints} />
       </div>
+      <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        <BusinessDetailLink area={area} className="w-full sm:w-auto" />
+        <BusinessExternalSiteLink area={area} className="w-full sm:w-auto" />
+      </div>
+      {area.ctas.length > 0 && (
+        <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          {area.ctas.map((cta) => (
+            <BusinessContactLink
+              key={cta.href + cta.label}
+              href={cta.href}
+              label={cta.label}
+              businessType={area.id}
+              className="w-full sm:w-auto"
+            />
+          ))}
+        </div>
+      )}
     </article>
   );
 }

@@ -1,5 +1,9 @@
 import type { BusinessArea } from "@/types/product";
 
+/**
+ * 6대 사업 — 내부 경로 + 외부 전문 사이트 URL 중앙 관리
+ * externalSiteUrl은 HTTP 200 검증된 URL만 등록 (가짜 URL 금지)
+ */
 export const businessAreas: BusinessArea[] = [
   {
     id: "automation",
@@ -8,10 +12,16 @@ export const businessAreas: BusinessArea[] = [
     titleKo: "산업자동화",
     description: "PLC, MES, 설비 모니터링, 비전검사 — 산업 현장 맞춤 소프트웨어 개발·구축",
     href: "/automation",
+    internalPath: "/automation",
     productsHref: "/products?type=automation",
     icon: "factory",
+    revenueModel: "구축 · 개발 · 유지보수",
+    externalSiteUrl: "https://sotong-automation-promo.web.app",
+    externalSiteLabel: "산업자동화 사이트 열기",
+    siteStatus: "active",
+    conversionHints: ["자동화 상담", "견적 요청"],
     ctas: [
-      { label: "자동화 상담", href: "/contact?topic=automation", variant: "primary" },
+      { label: "자동화 상담", href: "/contact?topic=automation", variant: "outline" },
       { label: "견적 요청", href: "/contact?topic=quote", variant: "outline" },
     ],
   },
@@ -22,11 +32,16 @@ export const businessAreas: BusinessArea[] = [
     titleKo: "앱개발",
     description: "SotongWare가 제작한 앱을 전시·배포·판매하는 App Marketplace",
     href: "/apps",
+    internalPath: "/apps",
     productsHref: "/products?type=app",
     icon: "app",
+    revenueModel: "앱 서비스 · 개발 의뢰",
+    externalSiteUrl: "https://sotongware-apps-promo.web.app",
+    externalSiteLabel: "앱개발 사이트 열기",
+    siteStatus: "active",
+    conversionHints: ["Google Play 출시 준비 중"],
     ctas: [
-      { label: "앱 목록", href: "/apps", variant: "primary" },
-      { label: "앱 개발 의뢰", href: "/contact?topic=app", variant: "outline" },
+      { label: "앱 제작 문의", href: "/contact?topic=app", variant: "outline" },
     ],
   },
   {
@@ -36,10 +51,15 @@ export const businessAreas: BusinessArea[] = [
     titleKo: "전자책개발",
     description: "전자책 기획·제작·판매 — 다중 플랫폼 연동 구조",
     href: "/ebooks",
+    internalPath: "/ebooks",
     productsHref: "/products?type=ebook",
     icon: "ebook",
+    revenueModel: "전자책 판매 · 제작",
+    externalSiteUrl: "https://sotongware-ebook-promo.web.app",
+    externalSiteLabel: "전자책 사이트 열기",
+    siteStatus: "active",
+    conversionHints: ["구매 채널 준비 중"],
     ctas: [
-      { label: "전자책 보기", href: "/ebooks", variant: "primary" },
       { label: "제작 의뢰", href: "/contact?topic=ebook", variant: "outline" },
     ],
   },
@@ -50,11 +70,16 @@ export const businessAreas: BusinessArea[] = [
     titleKo: "지식·교육",
     description: "무료·회원·유료·구독 콘텐츠 — 반복수익형 지식 사업",
     href: "/knowledge",
+    internalPath: "/knowledge",
     productsHref: "/products?type=knowledge",
     icon: "info",
+    revenueModel: "무료 · 유료 · 구독",
+    externalSiteUrl: "https://sotong-country-ai.web.app",
+    externalSiteLabel: "지식·교육 사이트 열기",
+    siteStatus: "preparing",
+    conversionHints: ["무료 콘텐츠 보기", "프리미엄 준비 중"],
     ctas: [
-      { label: "무료 콘텐츠", href: "/knowledge?tier=free", variant: "primary" },
-      { label: "전체 교육", href: "/knowledge", variant: "outline" },
+      { label: "무료 콘텐츠", href: "/knowledge?tier=free", variant: "outline" },
     ],
   },
   {
@@ -64,10 +89,15 @@ export const businessAreas: BusinessArea[] = [
     titleKo: "마케팅",
     description: "SEO, Shorts, 홍보 영상, 랜딩페이지 — 마케팅 서비스 판매",
     href: "/marketing",
+    internalPath: "/marketing",
     productsHref: "/products?type=marketing",
     icon: "business",
+    revenueModel: "홍보 · 마케팅 서비스",
+    externalSiteUrl: "https://sotongware-marketing.web.app",
+    externalSiteLabel: "마케팅 사이트 열기",
+    siteStatus: "active",
+    conversionHints: ["홍보 상담", "마케팅 의뢰"],
     ctas: [
-      { label: "서비스 보기", href: "/marketing", variant: "primary" },
       { label: "상담 요청", href: "/contact?topic=marketing", variant: "outline" },
     ],
   },
@@ -78,11 +108,20 @@ export const businessAreas: BusinessArea[] = [
     titleKo: "콘텐츠",
     description: "AI 음악, Shorts, 영상, 만화 — 콘텐츠 제작·대행",
     href: "/contents",
+    internalPath: "/contents",
     productsHref: "/products?type=content",
     icon: "media",
+    revenueModel: "콘텐츠 · 제작 의뢰",
+    externalSiteUrl: "https://sotongware-contents-promo.web.app",
+    externalSiteLabel: "콘텐츠 사이트 열기",
+    siteStatus: "active",
+    conversionHints: ["콘텐츠 보기", "제작 의뢰"],
     ctas: [
-      { label: "콘텐츠 보기", href: "/contents", variant: "primary" },
       { label: "제작 의뢰", href: "/contact?topic=content", variant: "outline" },
     ],
   },
 ];
+
+export function getBusinessById(id: string): BusinessArea | undefined {
+  return businessAreas.find((b) => b.id === id);
+}

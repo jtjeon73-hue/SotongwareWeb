@@ -22,7 +22,13 @@ export function HeroSection() {
               id="hero-heading"
               className="mt-4 text-[1.75rem] font-bold leading-[1.2] tracking-tight sm:text-4xl lg:text-[2.5rem] lg:leading-[1.15]"
             >
-              {heroContent.headline}
+              {heroContent.headline.split(",").map((part, i, arr) => (
+                <span key={part.trim()}>
+                  {part.trim()}
+                  {i < arr.length - 1 ? "," : ""}
+                  {i < arr.length - 1 && <br />}
+                </span>
+              ))}
             </h1>
             <p className="mt-5 text-base leading-relaxed text-surface-300 sm:text-lg">
               {heroContent.subheadline}

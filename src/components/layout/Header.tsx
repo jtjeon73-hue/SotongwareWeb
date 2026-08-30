@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { mainNavigation, siteConfig } from "@/data/navigation";
+import { ServicesNavMenu } from "./ServicesNavMenu";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +28,8 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex" aria-label="주요 메뉴">
-          {mainNavigation.map((item) => (
+          <ServicesNavMenu />
+          {mainNavigation.filter((item) => item.label !== "Services").map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -39,12 +41,6 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <span className="text-xs text-surface-400" aria-label="언어 전환 준비 중">
-            KO
-          </span>
-          <Button href="/ai-guide" variant="ghost" size="sm">
-            목적별 안내
-          </Button>
           <Button href="/contact" variant="outline" size="sm">
             문의
           </Button>
@@ -79,7 +75,18 @@ export function Header() {
         aria-hidden={!mobileOpen}
       >
         <nav className="container-main flex flex-col py-3" aria-label="모바일 메뉴">
-          {mainNavigation.map((item) => (
+          <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">Services</p>
+          {mainNavigation.find((i) => i.label === "Services")?.children?.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-lg px-3 py-3.5 text-base font-medium text-surface-800 hover:bg-surface-50"
+              onClick={() => setMobileOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+          {mainNavigation.filter((item) => item.label !== "Services").map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -91,24 +98,14 @@ export function Header() {
           ))}
           <div className="mt-2 space-y-2 border-t border-surface-100 px-3 pt-4">
             <Button
-              href="/ai-guide"
-              variant="primary"
-              size="md"
-              className="w-full min-h-11"
-              onClick={() => setMobileOpen(false)}
-            >
-              목적별 안내
-            </Button>
-            <Button
               href="/contact"
-              variant="outline"
+              variant="primary"
               size="md"
               className="w-full min-h-11"
               onClick={() => setMobileOpen(false)}
             >
               문의
             </Button>
-            <p className="pt-1 text-center text-xs text-surface-400">KO · EN 준비 중</p>
           </div>
         </nav>
       </div>

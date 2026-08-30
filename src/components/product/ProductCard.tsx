@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import type { SotongProduct } from "@/types/product";
 import { productDetailPath, formatPrice } from "@/lib/products";
+import { trackEvent } from "@/lib/analytics";
 import { ProductStatusBadge, AccessModeBadge, AppReleaseBadge } from "./ProductBadges";
 import { ServiceIcon } from "@/components/ui/Icons";
 
@@ -13,7 +16,17 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <article className="group flex flex-col rounded-xl border border-surface-200 bg-white transition-colors hover:border-brand-300 hover:shadow-sm">
-      <Link href={href} className="flex flex-1 flex-col p-5">
+      <Link
+        href={href}
+        className="flex flex-1 flex-col p-5"
+        onClick={() =>
+          trackEvent("product_click", {
+            product_id: product.id,
+            product_type: product.type,
+            product_slug: product.slug,
+          })
+        }
+      >
         <div className="flex items-start justify-between gap-3">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-surface-100 text-brand-600 group-hover:bg-brand-50">
             {product.thumbnail ? (

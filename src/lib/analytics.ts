@@ -5,11 +5,15 @@
 
 export type AnalyticsEventName =
   | "product_view"
+  | "product_click"
   | "business_cta_click"
+  | "business_detail_click"
+  | "business_site_click"
   | "contact_start"
   | "contact_submit"
   | "contact_success"
   | "contact_error"
+  | "contact_cta_click"
   | "store_link_click"
   | "external_product_click";
 

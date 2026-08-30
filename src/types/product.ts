@@ -102,15 +102,27 @@ export interface SotongProduct {
   contentMeta?: ContentMeta;
 }
 
+export type BusinessSiteStatus = "active" | "preparing" | "coming-soon";
+
 export interface BusinessArea {
   id: ProductType;
   slug: string;
   title: string;
   titleKo: string;
   description: string;
+  /** SotongWare 내부 사업 소개 경로 */
   href: string;
+  internalPath: string;
   productsHref: string;
   icon: string;
+  /** 수익·서비스 모델 (카드 태그) */
+  revenueModel: string;
+  /** 외부 전문 사이트 — 검증된 URL만 */
+  externalSiteUrl?: string;
+  externalSiteLabel?: string;
+  siteStatus: BusinessSiteStatus;
+  /** 전환 보조 CTA (구독·출시 준비 등) */
+  conversionHints?: string[];
   ctas: { label: string; href: string; variant?: "primary" | "outline" }[];
 }
 

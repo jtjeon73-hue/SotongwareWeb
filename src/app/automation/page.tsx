@@ -1,4 +1,5 @@
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { BusinessSiteBanner } from "@/components/business/BusinessSiteBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { Button } from "@/components/ui/Button";
@@ -28,6 +29,8 @@ export default function AutomationPage() {
             title="산업자동화"
             description="SotongWare의 핵심 기술 역량 — PLC, HMI, MES, 설비 모니터링, 비전검사, 원격관리. B2B 구축·의뢰를 받습니다."
           />
+
+          <BusinessSiteBanner businessId="automation" />
 
           <section className="mb-12">
             <h2 className="text-lg font-bold text-surface-900">기술 영역</h2>

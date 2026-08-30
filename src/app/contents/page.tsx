@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { BusinessSiteBanner } from "@/components/business/BusinessSiteBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { contents, contentCategories } from "@/data/contents";
@@ -23,6 +24,8 @@ export default function ContentPage() {
           title="콘텐츠"
           description="AI 음악, YouTube Shorts, 영상, 만화 — 콘텐츠 자체 수익과 제작 대행 두 가지 사업 흐름을 지원합니다."
         />
+
+        <BusinessSiteBanner businessId="content" />
 
         <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {contentCategories.map((cat) => (

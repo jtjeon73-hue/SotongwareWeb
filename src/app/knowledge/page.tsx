@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { BusinessSiteBanner } from "@/components/business/BusinessSiteBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { knowledgeItems, knowledgeFields } from "@/data/knowledge";
@@ -29,6 +30,8 @@ export default function KnowledgePage() {
           title="지식·교육"
           description="무료 정보부터 회원·유료·구독 콘텐츠까지 — 반복수익형 지식 사업 구조입니다. 결제·회원 연동은 준비 중입니다."
         />
+
+        <BusinessSiteBanner businessId="knowledge" />
 
         <div className="mb-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {TIERS.map((tier) => (
