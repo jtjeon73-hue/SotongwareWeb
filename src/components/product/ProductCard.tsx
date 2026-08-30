@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { SotongProduct } from "@/types/product";
 import { productDetailPath, formatPrice } from "@/lib/products";
 import { trackEvent } from "@/lib/analytics";
-import { ProductStatusBadge, AccessModeBadge, AppReleaseBadge } from "./ProductBadges";
+import { RevenueStatusBadges } from "./ProductBadges";
 import { ServiceIcon } from "@/components/ui/Icons";
 
 interface ProductCardProps {
@@ -37,8 +37,7 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
           <div className="flex flex-wrap justify-end gap-1">
-            <AccessModeBadge accessMode={product.accessMode} />
-            <ProductStatusBadge status={product.status} />
+            <RevenueStatusBadges product={product} max={3} />
           </div>
         </div>
         <h3 className="mt-4 text-base font-semibold text-surface-900 group-hover:text-brand-700">
@@ -52,9 +51,6 @@ export function ProductCard({ product }: ProductCardProps) {
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-surface-100 pt-4">
           <span className="text-sm font-semibold text-surface-900">{formatPrice(product)}</span>
-          {product.appMeta?.releaseStatus && (
-            <AppReleaseBadge status={product.appMeta.releaseStatus} />
-          )}
           {product.category && (
             <span className="text-xs text-surface-500">{product.category}</span>
           )}

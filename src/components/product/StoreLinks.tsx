@@ -76,14 +76,24 @@ export function StoreLinksPanel({
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-lg border border-brand-300 bg-brand-50 px-4 py-2 text-sm font-medium text-brand-700 hover:bg-brand-100"
-              onClick={() =>
+              onClick={() => {
                 trackEvent(link.eventName, {
                   link_name: link.label,
                   destination: link.url,
                   product_slug: productSlug,
                   product_type: productType,
-                })
-              }
+                });
+                trackEvent("commerce_channel_click", {
+                  channel_type: link.label === "Google Play" ? "play_store" : "external",
+                  product_slug: productSlug,
+                  product_type: productType,
+                });
+                trackEvent("conversion_start", {
+                  conversion_type: link.label === "Google Play" ? "play_store" : "external",
+                  product_slug: productSlug,
+                  product_type: productType,
+                });
+              }}
             >
               {link.label === "Google Play" ? "Google Play에서 받기" : link.label} ↗
             </a>

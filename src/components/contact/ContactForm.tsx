@@ -11,6 +11,7 @@ import {
   type ContactFormData,
   type InquiryType,
 } from "@/types/contact";
+import { isContactSubmissionAvailable } from "@/config/platform-status";
 
 interface FieldErrors {
   name?: string;
@@ -59,6 +60,7 @@ function validateForm(data: ContactFormData): FieldErrors {
 
 export function ContactForm({ defaultTopic, defaultProductSlug }: ContactFormProps) {
   const startedRef = useRef(false);
+  const contactAvailable = isContactSubmissionAvailable();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [globalError, setGlobalError] = useState<string | null>(null);
@@ -141,6 +143,11 @@ export function ContactForm({ defaultTopic, defaultProductSlug }: ContactFormPro
 
       setStatus("success");
       trackEvent("contact_success", {
+        inquiry_type: form.inquiryType,
+        source_page: "/contact",
+      });
+      trackEvent("conversion_complete", {
+        conversion_type: "contact_inquiry",
         inquiry_type: form.inquiryType,
         source_page: "/contact",
       });
@@ -336,10 +343,14 @@ export function ContactForm({ defaultTopic, defaultProductSlug }: ContactFormPro
 
       <button
         type="submit"
-        disabled={status === "submitting"}
-        className="inline-flex items-center rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
+        disabled={status === "submitting" || !contactAvailable}
+        className="inline-flex min-h-11 items-center rounded-lg bg-brand-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-60"
       >
-        {status === "submitting" ? "문의 접수 중..." : "문의 접수"}
+        {status === "submitting"
+          ? "문의 접수 중..."
+          : contactAvailable
+            ? "문의 접수"
+            : "문의 접수 준비 중"}
       </button>
     </form>
   );

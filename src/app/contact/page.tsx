@@ -2,6 +2,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { ContactFormSection } from "@/components/contact/ContactFormSection";
 import { ContactIntentSelector } from "@/components/contact/ContactIntentSelector";
+import { ContactProductionBanner } from "@/components/contact/ContactProductionBanner";
 import { createPageMetadata } from "@/lib/page-metadata";
 
 export const metadata = createPageMetadata({
@@ -18,6 +19,8 @@ export default function ContactPage() {
           title="상담·제작 문의"
           description="제작 의뢰, 견적, 상담 문의를 접수합니다. 영업일 기준 순차적으로 답변합니다."
         />
+
+        <ContactProductionBanner />
 
         <ContactIntentSelector />
 

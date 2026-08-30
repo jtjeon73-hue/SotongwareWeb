@@ -2,13 +2,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import type { SotongProduct } from "@/types/product";
 import { formatPrice } from "@/lib/products";
-import { ProductStatusBadge, AccessModeBadge, AppReleaseBadge } from "@/components/product/ProductBadges";
-import { StoreLinksPanel } from "@/components/product/StoreLinks";
+import { RevenueStatusBadges } from "@/components/product/ProductBadges";
+import { CommerceConversionPanel } from "@/components/product/CommerceConversionPanel";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { ProductViewTracker } from "@/components/product/ProductViewTracker";
 import { getRelatedProducts } from "@/data/products";
 import { StructuredData } from "@/components/common/StructuredData";
 import { productJsonLd } from "@/lib/structured-data";
+import { canInstallFromStore } from "@/lib/commerce";
+import { isContactSubmissionAvailable } from "@/config/platform-status";
 
 interface ProductDetailViewProps {
   product: SotongProduct;
@@ -25,6 +27,8 @@ export function ProductDetailView({
 }: ProductDetailViewProps) {
   const related = getRelatedProducts(product);
   const isApp = product.type === "app";
+  const contactAvailable = isContactSubmissionAvailable();
+  const storeInstallAvailable = canInstallFromStore(product);
 
   return (
     <>
@@ -37,16 +41,7 @@ export function ProductDetailView({
           </Link>
 
           <header className="mt-6">
-            <div className="flex flex-wrap gap-2">
-              <span className="inline-flex rounded-md bg-surface-100 px-2 py-0.5 text-xs font-medium text-surface-700 ring-1 ring-surface-200">
-                {product.type === "app" ? "앱" : product.type}
-              </span>
-              <AccessModeBadge accessMode={product.accessMode} />
-              <ProductStatusBadge status={product.status} />
-              {product.appMeta?.releaseStatus && (
-                <AppReleaseBadge status={product.appMeta.releaseStatus} />
-              )}
-            </div>
+            <RevenueStatusBadges product={product} className="gap-2" />
             <h1 className="mt-4 text-3xl font-bold tracking-tight text-surface-900 sm:text-4xl">
               {product.title}
             </h1>
@@ -67,36 +62,25 @@ export function ProductDetailView({
 
           {children}
 
-          <section className="mt-10">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-surface-500">
-              {isApp ? "배포·스토어" : "외부 링크"}
-            </h2>
-            <div className="mt-3">
-              <StoreLinksPanel
-                storeLinks={product.storeLinks}
-                externalLinks={product.externalLinks}
-                productSlug={product.slug}
-                productType={product.type}
-                showPlayStorePending={isApp}
-              />
-            </div>
-          </section>
+          <CommerceConversionPanel product={product} />
 
           <div className="mt-8 flex flex-wrap gap-3">
-            {isApp && (
-              <Button
-                href={`/contact?topic=app&product=${product.slug}`}
-                variant="primary"
-              >
+            {storeInstallAvailable && product.storeLinks?.playStore && (
+              <Button href={product.storeLinks.playStore} variant="primary" external>
+                Google Play에서 받기
+              </Button>
+            )}
+            {contactAvailable && isApp && (
+              <Button href={`/contact?topic=app&product=${product.slug}`} variant="primary">
                 앱 문의
               </Button>
             )}
-            {product.accessMode === "inquiry" || product.accessMode === "paid" ? (
+            {contactAvailable && (product.accessMode === "inquiry" || product.accessMode === "paid") && (
               <Button href={`/contact?product=${product.slug}`} variant="primary">
                 {product.type === "automation" ? "견적 요청" : "구매·상담"}
               </Button>
-            ) : null}
-            {isApp && (
+            )}
+            {contactAvailable && isApp && (
               <Button href="/contact?topic=app" variant="outline">
                 앱 제작 문의
               </Button>
@@ -116,9 +100,11 @@ export function ProductDetailView({
                 <Button href="/services/app-development" variant="outline">
                   앱 개발 서비스
                 </Button>
-                <Button href="/contact?topic=app" variant="outline">
-                  제작 문의
-                </Button>
+                {contactAvailable && (
+                  <Button href="/contact?topic=app" variant="outline">
+                    제작 문의
+                  </Button>
+                )}
               </div>
             </section>
           )}

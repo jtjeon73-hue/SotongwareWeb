@@ -20,6 +20,21 @@ export const apps: SotongProduct[] = [
     updatedAt: "2026-08-29",
     featured: true,
     storeLinks: {},
+    commerceChannels: [
+      {
+        type: "play_store",
+        label: "Google Play",
+        status: "preparing",
+        external: true,
+      },
+      {
+        type: "inquiry",
+        label: "앱 제작 문의",
+        url: "/contact?topic=app",
+        status: "preparing",
+        external: false,
+      },
+    ],
     appMeta: {
       version: "0.1.0",
       os: ["Android"],

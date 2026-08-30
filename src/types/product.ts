@@ -1,3 +1,5 @@
+import type { CommerceChannel } from "@/types/commerce";
+
 export type ProductType =
   | "app"
   | "ebook"
@@ -100,6 +102,8 @@ export interface SotongProduct {
   ebookMeta?: EbookMeta;
   knowledgeMeta?: KnowledgeMeta;
   contentMeta?: ContentMeta;
+  /** 판매·배포·전환 채널 (storeLinks보다 우선) */
+  commerceChannels?: CommerceChannel[];
 }
 
 export type BusinessSiteStatus = "active" | "preparing" | "coming-soon";

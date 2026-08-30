@@ -17,7 +17,10 @@ export type AnalyticsEventName =
   | "knowledge_site_click"
   | "service_intent_click"
   | "store_link_click"
-  | "external_product_click";
+  | "external_product_click"
+  | "commerce_channel_click"
+  | "conversion_start"
+  | "conversion_complete";
 
 export type AnalyticsEventParams = Record<string, string | number | boolean | undefined>;
 
