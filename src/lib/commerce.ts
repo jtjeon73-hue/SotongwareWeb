@@ -144,11 +144,14 @@ export function canInstallFromStore(product: SotongProduct): boolean {
   );
 }
 
-/** Sotong24Work 자동등록 payload 호환 검증용 타입 */
+/** Sotong24Work 자동등록 payload 호환 */
 export interface ProductRegistrationPayload {
   productType: SotongProduct["type"];
   title: string;
+  slug: string;
+  summary: string;
   status: SotongProduct["status"];
+  updatedAt?: string;
   commerceChannels: CommerceChannel[];
 }
 
@@ -156,7 +159,10 @@ export function toRegistrationPayload(product: SotongProduct): ProductRegistrati
   return {
     productType: product.type,
     title: product.title,
+    slug: product.slug,
+    summary: product.subtitle ?? product.description.slice(0, 200),
     status: product.status,
+    updatedAt: product.updatedAt,
     commerceChannels: resolveCommerceChannels(product),
   };
 }

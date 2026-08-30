@@ -94,7 +94,7 @@ function ChannelAction({
     if (!contactAvailable) {
       return (
         <span className="inline-flex min-h-11 items-center text-sm text-surface-500">
-          문의 접수 준비 중
+          온라인 문의 준비 중
         </span>
       );
     }

@@ -33,7 +33,7 @@ export const STATUS_LABELS: Record<SotongProduct["status"], string> = {
   draft: "준비 중",
   testing: "테스트 중",
   ready: "출시 준비",
-  published: "서비스 중",
+  published: "이용 가능",
   archived: "서비스 종료",
 };
 

@@ -11,7 +11,7 @@ export function BusinessNetworkSection() {
           id="business-network-heading"
           eyebrow="SotongWare Business Network"
           title="하나의 SotongWare, 여섯 개의 전문 서비스"
-          description="필요한 분야를 선택하면 각 전문 서비스와 실제 결과물로 바로 연결됩니다."
+          description="6개 사업은 별도 회사가 아니라 SotongWare Business Network 안의 전문 채널입니다. 필요한 분야를 선택하면 각 서비스와 결과물로 바로 연결됩니다."
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

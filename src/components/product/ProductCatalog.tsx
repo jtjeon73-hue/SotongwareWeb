@@ -2,10 +2,18 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { allProducts, filterProducts } from "@/data/products";
+import { filterProducts } from "@/data/products";
 import type { AccessMode, ProductType, SotongProduct } from "@/types/product";
+import {
+  getVisibleProducts,
+  getProductCountTier,
+  getFeaturedProducts,
+  getPreparingProducts,
+  getRecentlyUpdatedProducts,
+  getMerchandiseTitle,
+} from "@/lib/product-catalog";
 import { ProductGrid } from "./ProductGrid";
-import { ProductEmptyState } from "./ProductEmptyState";
+import { ProductsEmptyState } from "@/components/shared/ProductsEmptyState";
 import { ProductCard } from "./ProductCard";
 
 const TYPE_OPTIONS: { value: ProductType | "all"; label: string }[] = [
@@ -31,18 +39,6 @@ interface ProductCatalogProps {
   initialAccess?: AccessMode | "all";
 }
 
-function getFeaturedProducts(products: SotongProduct[]): SotongProduct[] {
-  return products.filter((p) => p.featured);
-}
-
-function getFreeProducts(products: SotongProduct[]): SotongProduct[] {
-  return products.filter((p) => p.accessMode === "free");
-}
-
-function getTestingProducts(products: SotongProduct[]): SotongProduct[] {
-  return products.filter((p) => p.status === "testing");
-}
-
 export function ProductCatalog({
   initialType = "all",
   initialAccess = "all",
@@ -60,40 +56,41 @@ export function ProductCatalog({
     if (urlAccess) setAccessMode(urlAccess);
   }, [urlType, urlAccess]);
 
-  const allVisible = useMemo(
-    () => allProducts.filter((p) => p.status !== "draft"),
-    [],
-  );
+  const allVisible = useMemo(() => getVisibleProducts(), []);
+  const tier = getProductCountTier(allVisible.length);
 
   const products = useMemo(
     () => filterProducts({ type, accessMode, query }),
     [type, accessMode, query],
   );
 
-  const featured = getFeaturedProducts(allVisible);
-  const showMerchandising = type === "all" && !query.trim();
+  const showMerchandising = type === "all" && !query.trim() && tier !== "empty";
 
   return (
     <div>
-      {showMerchandising && allVisible.length > 0 && (
+      {showMerchandising && (
         <div className="mb-8 space-y-6">
           <MerchandiseSection
-            title="현재 공개된 제품"
-            description="실제 제작·검증 중이거나 공개된 SotongWare 디지털 상품입니다."
-            products={featured.length > 0 ? featured : allVisible}
+            title={getMerchandiseTitle(tier, "featured")}
+            description={
+              tier === "single"
+                ? "현재 공개 중인 SotongWare 디지털 제품입니다."
+                : "실제 제작·검증 중이거나 공개된 제품입니다."
+            }
+            products={getFeaturedProducts(allVisible)}
           />
-          {getTestingProducts(allVisible).length > 0 && (
+          {getPreparingProducts(allVisible).length > 0 && (
             <MerchandiseSection
-              title="테스트 중"
-              description="출시 전 검증 단계의 제품입니다."
-              products={getTestingProducts(allVisible)}
+              title={getMerchandiseTitle(tier, "preparing")}
+              description="출시 전 검증·준비 단계의 제품입니다."
+              products={getPreparingProducts(allVisible)}
               compact
             />
           )}
-          {getFreeProducts(allVisible).length > 0 && allVisible.length > 1 && (
+          {tier === "many" && getRecentlyUpdatedProducts(allVisible, 3).length > 0 && (
             <MerchandiseSection
-              title="무료"
-              products={getFreeProducts(allVisible)}
+              title={getMerchandiseTitle(tier, "recent")}
+              products={getRecentlyUpdatedProducts(allVisible, 3)}
               compact
             />
           )}
@@ -154,7 +151,7 @@ export function ProductCatalog({
           <ProductGrid products={products} />
         </>
       ) : (
-        <ProductEmptyState />
+        <ProductsEmptyState />
       )}
     </div>
   );

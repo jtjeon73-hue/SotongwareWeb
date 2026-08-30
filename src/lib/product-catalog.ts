@@ -1,0 +1,77 @@
+import type { SotongProduct } from "@/types/product";
+import { allProducts } from "@/data/products";
+
+export type ProductCountTier = "empty" | "single" | "few" | "many";
+
+/** draft 제외 공개 대상 상품 */
+export function getVisibleProducts(): SotongProduct[] {
+  return allProducts.filter((p) => p.status !== "draft");
+}
+
+export function getProductCountTier(count?: number): ProductCountTier {
+  const n = count ?? getVisibleProducts().length;
+  if (n === 0) return "empty";
+  if (n === 1) return "single";
+  if (n <= 5) return "few";
+  return "many";
+}
+
+export function getFeaturedProducts(products = getVisibleProducts()): SotongProduct[] {
+  const featured = products.filter((p) => p.featured);
+  return featured.length > 0 ? featured : products;
+}
+
+export function getPreparingProducts(products = getVisibleProducts()): SotongProduct[] {
+  return products.filter((p) => p.status === "testing" || p.status === "ready");
+}
+
+export function getPublishedOrReadyProducts(products = getVisibleProducts()): SotongProduct[] {
+  return products.filter((p) => p.status === "published" || p.status === "ready");
+}
+
+export function getRecentlyUpdatedProducts(
+  products = getVisibleProducts(),
+  limit = 6,
+): SotongProduct[] {
+  return [...products]
+    .sort((a, b) => (b.updatedAt ?? b.publishedAt ?? "").localeCompare(a.updatedAt ?? a.publishedAt ?? ""))
+    .slice(0, limit);
+}
+
+export function getWorksSectionCopy(tier: ProductCountTier) {
+  switch (tier) {
+    case "empty":
+      return {
+        eyebrow: "SotongWare Works",
+        title: "새로운 결과물을 준비하고 있습니다",
+        description:
+          "SotongWare에서 제작·검증을 마친 제품과 콘텐츠만 이곳에 공개합니다. 가짜 데이터는 등록하지 않습니다.",
+      };
+    case "single":
+      return {
+        eyebrow: "SotongWare Works",
+        title: "직접 만들고 검증하는 결과물",
+        description: "현재 공개 중인 SotongWare 디지털 제품입니다.",
+      };
+    case "few":
+      return {
+        eyebrow: "SotongWare Works",
+        title: "직접 만들고 검증하는 결과물",
+        description: "SotongWare에서 실제 제작·검증 중인 제품과 콘텐츠를 공개합니다.",
+      };
+    default:
+      return {
+        eyebrow: "SotongWare Works",
+        title: "SotongWare 결과물",
+        description: "앱, 전자책, 교육, 콘텐츠, 자동화 — 실제 제작·검증된 결과물 카탈로그입니다.",
+      };
+  }
+}
+
+export function getMerchandiseTitle(tier: ProductCountTier, kind: "featured" | "preparing" | "recent") {
+  if (kind === "featured") {
+    return tier === "single" ? "현재 공개 중인 제품" : "현재 공개";
+  }
+  if (kind === "preparing") return "새로 준비 중";
+  return "최근 업데이트";
+}

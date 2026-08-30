@@ -1,13 +1,7 @@
-import type { WorkItem } from "@/types";
-
 /**
- * SotongWare 결과물 데이터.
- * 향후 Firestore, CMS, Sotong24Work API로 교체 가능.
+ * @deprecated Works는 Product 중앙 데이터(allProducts)에서 파생합니다.
+ * 호환용 stub — 새 코드는 @/lib/product-catalog 또는 @/data/products 사용.
  */
-export const works: WorkItem[] = [];
+import { getVisibleProducts } from "@/lib/product-catalog";
 
-export const featuredWorks: WorkItem[] = works.filter((w) => w.featured);
-
-export function getWorksByType(type: WorkItem["type"]): WorkItem[] {
-  return works.filter((w) => w.type === type && w.status === "published");
-}
+export const works = getVisibleProducts();

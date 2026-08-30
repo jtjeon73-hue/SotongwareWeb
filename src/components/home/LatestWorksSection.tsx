@@ -1,41 +1,52 @@
-import { allProducts } from "@/data/products";
+import { getVisibleProducts, getProductCountTier, getWorksSectionCopy } from "@/lib/product-catalog";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ProductCard } from "@/components/product/ProductCard";
-import { WorksEmptyState } from "@/components/shared/WorksEmptyState";
+import { ProductsEmptyState } from "@/components/shared/ProductsEmptyState";
 import { Button } from "@/components/ui/Button";
 
 export function LatestWorksSection() {
-  const visibleProducts = allProducts.filter((p) => p.status !== "draft");
-  const hasProducts = visibleProducts.length > 0;
+  const visibleProducts = getVisibleProducts();
+  const tier = getProductCountTier(visibleProducts.length);
+  const copy = getWorksSectionCopy(tier);
+  const displayProducts = visibleProducts.slice(0, tier === "many" ? 6 : visibleProducts.length);
 
   return (
     <section className="section-padding section-alt" aria-labelledby="latest-works-heading">
       <div className="container-main">
         <SectionHeader
           id="latest-works-heading"
-          eyebrow="SotongWare Works"
-          title="실제로 만들고 있는 결과물"
-          description="아이디어만 보여드리지 않습니다. 실제 제작하고 검증한 결과물을 공개합니다."
+          eyebrow={copy.eyebrow}
+          title={copy.title}
+          description={copy.description}
         />
 
-        {hasProducts ? (
+        {tier === "empty" ? (
+          <ProductsEmptyState compact />
+        ) : (
           <>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {visibleProducts.slice(0, 6).map((product) => (
+            {tier === "single" && (
+              <p className="mb-4 text-sm font-medium text-brand-700">현재 공개 중인 제품</p>
+            )}
+            <div
+              className={
+                tier === "single"
+                  ? "max-w-md"
+                  : "grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+              }
+            >
+              {displayProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/products" variant="primary">
+              <Button href="/products" variant="primary" className="min-h-11">
                 디지털 상품 보기
               </Button>
-              <Button href="/works" variant="outline">
+              <Button href="/works" variant="outline" className="min-h-11">
                 포트폴리오 전체
               </Button>
             </div>
           </>
-        ) : (
-          <WorksEmptyState compact />
         )}
       </div>
     </section>
