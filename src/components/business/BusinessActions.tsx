@@ -12,12 +12,26 @@ const btnOutline =
 const btnExternal =
   "inline-flex min-h-11 items-center justify-center rounded-lg border border-brand-300 bg-brand-50 px-4 py-2.5 text-sm font-medium text-brand-700 hover:bg-brand-100";
 
+function trackExternalSiteClick(area: BusinessArea): void {
+  const params = {
+    business_type: area.id,
+    destination: "external",
+    external_site: area.externalSiteName ?? area.titleKo,
+  };
+  if (area.id === "knowledge") {
+    trackEvent("knowledge_site_click", params);
+  }
+  trackEvent("business_site_click", params);
+}
+
 export function BusinessDetailLink({
   area,
   className,
+  label = "서비스 자세히",
 }: {
   area: BusinessArea;
   className?: string;
+  label?: string;
 }) {
   return (
     <Link
@@ -30,7 +44,7 @@ export function BusinessDetailLink({
         })
       }
     >
-      상세 보기
+      {label}
     </Link>
   );
 }
@@ -38,11 +52,15 @@ export function BusinessDetailLink({
 export function BusinessExternalSiteLink({
   area,
   className,
+  label,
 }: {
   area: BusinessArea;
   className?: string;
+  label?: string;
 }) {
   if (!area.externalSiteUrl || area.siteStatus === "coming-soon") return null;
+
+  const displayLabel = label ?? area.externalSiteLabel ?? "전문 사이트 방문 ↗";
 
   return (
     <a
@@ -50,14 +68,9 @@ export function BusinessExternalSiteLink({
       target="_blank"
       rel="noopener noreferrer"
       className={className ?? btnExternal}
-      onClick={() =>
-        trackEvent("business_site_click", {
-          business_type: area.id,
-          destination: "external",
-        })
-      }
+      onClick={() => trackExternalSiteClick(area)}
     >
-      {area.externalSiteLabel ?? "서비스 사이트 열기"} ↗
+      {displayLabel}
     </a>
   );
 }

@@ -17,14 +17,14 @@ const serviceNavChildren: NavItem[] = businessAreas.map((area) => ({
 
 export const mainNavigation: NavItem[] = [
   {
-    label: "Services",
+    label: "서비스",
     href: "/services",
     children: serviceNavChildren,
   },
-  { label: "Products", href: "/products", description: "디지털 상품" },
-  { label: "Knowledge", href: "/knowledge", description: "지식·교육" },
-  { label: "Works", href: "/works", description: "제작물" },
-  { label: "About", href: "/about", description: "소개" },
+  { label: "디지털 상품", href: "/products" },
+  { label: "지식·교육", href: "/knowledge" },
+  { label: "포트폴리오", href: "/works" },
+  { label: "SotongWare 소개", href: "/about" },
 ];
 
 export const businessNavigation: NavItem[] = businessAreas.map((area) => ({
@@ -33,7 +33,13 @@ export const businessNavigation: NavItem[] = businessAreas.map((area) => ({
 }));
 
 export const footerNavigation = {
-  business: businessNavigation,
+  externalServices: businessAreas
+    .filter((area) => area.externalSiteUrl && area.siteStatus !== "coming-soon")
+    .map((area) => ({
+      label: area.titleKo,
+      href: area.externalSiteUrl!,
+      external: true as const,
+    })),
   products: [
     { label: "전체 상품", href: "/products" },
     { label: "앱", href: "/apps" },
@@ -41,14 +47,9 @@ export const footerNavigation = {
     { label: "교육", href: "/knowledge" },
     { label: "콘텐츠", href: "/contents" },
   ],
-  services: businessAreas.map((area) => ({
-    label: area.titleKo,
-    href: area.internalPath,
-  })),
   company: [
     { label: "소개", href: "/about" },
     { label: "문의", href: "/contact" },
-    { label: "목적별 안내", href: "/ai-guide" },
   ],
   legal: [
     { label: "개인정보처리방침", href: "/privacy" },

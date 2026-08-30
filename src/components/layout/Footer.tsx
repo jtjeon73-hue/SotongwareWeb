@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { businessAreas } from "@/data/businesses";
 import { footerNavigation, siteConfig } from "@/data/navigation";
 
 function FooterLinkGroup({
@@ -36,26 +35,12 @@ function FooterLinkGroup({
   );
 }
 
-const businessFooterLinks = businessAreas.flatMap((area) => {
-  const links: { label: string; href: string; external?: boolean }[] = [
-    { label: area.titleKo, href: area.internalPath },
-  ];
-  if (area.externalSiteUrl && area.siteStatus !== "coming-soon") {
-    links.push({
-      label: `${area.titleKo} 전문 사이트`,
-      href: area.externalSiteUrl,
-      external: true,
-    });
-  }
-  return links;
-});
-
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-surface-200 bg-white" aria-label="사이트 푸터">
-      <div className="container-main section-padding !py-12 sm:!py-14">
+      <div className="container-main section-padding !py-10 sm:!py-12">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-4">
             <Link href="/" className="inline-flex items-center gap-2.5">
@@ -69,15 +54,14 @@ export function Footer() {
             <p className="mt-2 text-sm leading-relaxed text-surface-600">{siteConfig.description}</p>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:col-span-1 lg:col-span-8 lg:grid-cols-4">
-            <FooterLinkGroup title="Services" links={businessFooterLinks} />
-            <FooterLinkGroup title="Products" links={footerNavigation.products} />
-            <FooterLinkGroup title="Company" links={[...footerNavigation.company, { label: "Contact", href: "/contact" }]} />
-            <FooterLinkGroup title="Legal" links={footerNavigation.legal} />
+            <FooterLinkGroup title="전문 서비스" links={footerNavigation.externalServices} />
+            <FooterLinkGroup title="디지털 상품" links={footerNavigation.products} />
+            <FooterLinkGroup title="회사" links={footerNavigation.company} />
+            <FooterLinkGroup title="법적 안내" links={footerNavigation.legal} />
           </div>
         </div>
-        <div className="mt-10 flex flex-col gap-4 border-t border-surface-200 pt-8 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-4 border-t border-surface-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-surface-500">© {year} {siteConfig.name}. All rights reserved.</p>
-          <span className="text-xs text-surface-400">KO / EN</span>
         </div>
       </div>
     </footer>

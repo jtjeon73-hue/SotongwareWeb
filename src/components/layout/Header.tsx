@@ -23,13 +23,13 @@ export function Header() {
           </span>
           <div className="flex flex-col leading-tight">
             <span className="text-sm font-bold text-surface-900">{siteConfig.name}</span>
-            <span className="text-[11px] text-surface-500">{siteConfig.nameKo}</span>
+            <span className="hidden text-[11px] text-surface-500 sm:block">{siteConfig.nameKo}</span>
           </div>
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex" aria-label="주요 메뉴">
           <ServicesNavMenu />
-          {mainNavigation.filter((item) => item.label !== "Services").map((item) => (
+          {mainNavigation.filter((item) => item.label !== "서비스").map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -41,14 +41,14 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <Button href="/contact" variant="outline" size="sm">
-            문의
+          <Button href="/contact" variant="primary" size="sm" className="min-h-11">
+            상담·제작 문의
           </Button>
         </div>
 
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-surface-700 transition-colors hover:bg-surface-100 lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-lg text-surface-700 transition-colors hover:bg-surface-100 lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
@@ -75,22 +75,22 @@ export function Header() {
         aria-hidden={!mobileOpen}
       >
         <nav className="container-main flex flex-col py-3" aria-label="모바일 메뉴">
-          <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">Services</p>
-          {mainNavigation.find((i) => i.label === "Services")?.children?.map((item) => (
+          <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">서비스</p>
+          {mainNavigation.find((i) => i.label === "서비스")?.children?.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-lg px-3 py-3.5 text-base font-medium text-surface-800 hover:bg-surface-50"
+              className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
               onClick={() => setMobileOpen(false)}
             >
               {item.label}
             </Link>
           ))}
-          {mainNavigation.filter((item) => item.label !== "Services").map((item) => (
+          {mainNavigation.filter((item) => item.label !== "서비스").map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-lg px-3 py-3.5 text-base font-medium text-surface-800 hover:bg-surface-50"
+              className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
               onClick={() => setMobileOpen(false)}
             >
               {item.label}
@@ -104,7 +104,7 @@ export function Header() {
               className="w-full min-h-11"
               onClick={() => setMobileOpen(false)}
             >
-              문의
+              상담·제작 문의
             </Button>
           </div>
         </nav>

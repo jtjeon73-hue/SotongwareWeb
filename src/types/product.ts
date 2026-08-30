@@ -120,7 +120,15 @@ export interface BusinessArea {
   /** 외부 전문 사이트 — 검증된 URL만 */
   externalSiteUrl?: string;
   externalSiteLabel?: string;
+  /** 분석·문서용 외부 서비스명 (예: SotongSiteManager) */
+  externalSiteName?: string;
   siteStatus: BusinessSiteStatus;
+  /** 한 줄 가치 제안 */
+  tagline: string;
+  /** 대상 고객 */
+  audience?: string;
+  /** 기술·플랫폼 태그 */
+  platforms?: string;
   /** 전환 보조 CTA (구독·출시 준비 등) */
   conversionHints?: string[];
   ctas: { label: string; href: string; variant?: "primary" | "outline" }[];

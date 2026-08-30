@@ -14,6 +14,8 @@ export type AnalyticsEventName =
   | "contact_success"
   | "contact_error"
   | "contact_cta_click"
+  | "knowledge_site_click"
+  | "service_intent_click"
   | "store_link_click"
   | "external_product_click";
 

@@ -25,15 +25,26 @@ export function BusinessHubCard({ area }: { area: BusinessArea }) {
         {area.title}
       </p>
       <h3 className="mt-1 text-lg font-bold text-surface-900">{area.titleKo}</h3>
+      <p className="mt-2 text-sm font-medium text-surface-800">{area.tagline}</p>
       <p className="mt-2 flex-1 text-sm leading-relaxed text-surface-600">
         {area.description}
       </p>
+      {area.platforms && (
+        <p className="mt-3 text-xs font-medium text-surface-500">{area.platforms}</p>
+      )}
+      {area.audience && (
+        <p className="mt-1 text-xs text-surface-400">대상: {area.audience}</p>
+      )}
       <div className="mt-4">
         <ConversionHintTags hints={area.conversionHints} />
       </div>
       <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
         <BusinessDetailLink area={area} className="w-full sm:w-auto" />
-        <BusinessExternalSiteLink area={area} className="w-full sm:w-auto" />
+        <BusinessExternalSiteLink
+          area={area}
+          className="w-full sm:w-auto"
+          label="전문 사이트 방문 ↗"
+        />
       </div>
       {area.ctas.length > 0 && (
         <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap">

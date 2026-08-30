@@ -1,4 +1,5 @@
-import { whyFormula, whyPoints } from "@/data/home";
+import Link from "next/link";
+import { whyFormula, whyPoints, trustItems } from "@/data/home";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
 export function WhySection() {
@@ -7,8 +8,8 @@ export function WhySection() {
       <div className="container-main">
         <SectionHeader
           id="why-heading"
-          eyebrow="Differentiation"
-          title="Why SotongWare"
+          eyebrow="Why SotongWare"
+          title="현장 기술과 디지털 제품을 연결합니다"
           description="단순 웹에이전시나 AI 홍보 회사가 아닙니다. 산업 현장과 디지털 제작을 아우르는 기술 기반 회사입니다."
         />
 
@@ -44,6 +45,35 @@ export function WhySection() {
                 {point.description}
               </p>
             </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function TrustSection() {
+  return (
+    <section className="section-padding section-alt" aria-labelledby="trust-heading">
+      <div className="container-main">
+        <SectionHeader
+          id="trust-heading"
+          eyebrow="Trust"
+          title="말보다 결과로 보여드립니다"
+          description="검증되지 않은 수치나 후기는 표시하지 않습니다. 현재 실제로 증명할 수 있는 것만 공개합니다."
+        />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {trustItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="group rounded-xl border border-surface-200 bg-white p-5 transition-colors hover:border-brand-300"
+            >
+              <h3 className="text-sm font-semibold text-surface-900 group-hover:text-brand-700">
+                {item.label}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-surface-600">{item.desc}</p>
+            </Link>
           ))}
         </div>
       </div>

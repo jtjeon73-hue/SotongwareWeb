@@ -2,10 +2,11 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { filterProducts } from "@/data/products";
-import type { AccessMode, ProductType } from "@/types/product";
+import { allProducts, filterProducts } from "@/data/products";
+import type { AccessMode, ProductType, SotongProduct } from "@/types/product";
 import { ProductGrid } from "./ProductGrid";
 import { ProductEmptyState } from "./ProductEmptyState";
+import { ProductCard } from "./ProductCard";
 
 const TYPE_OPTIONS: { value: ProductType | "all"; label: string }[] = [
   { value: "all", label: "전체" },
@@ -30,6 +31,18 @@ interface ProductCatalogProps {
   initialAccess?: AccessMode | "all";
 }
 
+function getFeaturedProducts(products: SotongProduct[]): SotongProduct[] {
+  return products.filter((p) => p.featured);
+}
+
+function getFreeProducts(products: SotongProduct[]): SotongProduct[] {
+  return products.filter((p) => p.accessMode === "free");
+}
+
+function getTestingProducts(products: SotongProduct[]): SotongProduct[] {
+  return products.filter((p) => p.status === "testing");
+}
+
 export function ProductCatalog({
   initialType = "all",
   initialAccess = "all",
@@ -47,13 +60,46 @@ export function ProductCatalog({
     if (urlAccess) setAccessMode(urlAccess);
   }, [urlType, urlAccess]);
 
+  const allVisible = useMemo(
+    () => allProducts.filter((p) => p.status !== "draft"),
+    [],
+  );
+
   const products = useMemo(
     () => filterProducts({ type, accessMode, query }),
     [type, accessMode, query],
   );
 
+  const featured = getFeaturedProducts(allVisible);
+  const showMerchandising = type === "all" && !query.trim();
+
   return (
     <div>
+      {showMerchandising && allVisible.length > 0 && (
+        <div className="mb-8 space-y-6">
+          <MerchandiseSection
+            title="현재 공개된 제품"
+            description="실제 제작·검증 중이거나 공개된 SotongWare 디지털 상품입니다."
+            products={featured.length > 0 ? featured : allVisible}
+          />
+          {getTestingProducts(allVisible).length > 0 && (
+            <MerchandiseSection
+              title="테스트 중"
+              description="출시 전 검증 단계의 제품입니다."
+              products={getTestingProducts(allVisible)}
+              compact
+            />
+          )}
+          {getFreeProducts(allVisible).length > 0 && allVisible.length > 1 && (
+            <MerchandiseSection
+              title="무료"
+              products={getFreeProducts(allVisible)}
+              compact
+            />
+          )}
+        </div>
+      )}
+
       <div className="mb-6 space-y-4 rounded-xl border border-surface-200 bg-white p-4 sm:p-5">
         <div>
           <label htmlFor="product-search" className="sr-only">상품 검색</label>
@@ -73,7 +119,7 @@ export function ProductCatalog({
               key={opt.value}
               type="button"
               onClick={() => setType(opt.value)}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`min-h-11 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors sm:min-h-0 ${
                 type === opt.value
                   ? "bg-brand-600 text-white"
                   : "bg-surface-100 text-surface-700 hover:bg-surface-200"
@@ -90,7 +136,7 @@ export function ProductCatalog({
               key={opt.value}
               type="button"
               onClick={() => setAccessMode(opt.value)}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`min-h-11 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors sm:min-h-0 ${
                 accessMode === opt.value
                   ? "bg-brand-600 text-white"
                   : "bg-surface-100 text-surface-700 hover:bg-surface-200"
@@ -110,6 +156,32 @@ export function ProductCatalog({
       ) : (
         <ProductEmptyState />
       )}
+    </div>
+  );
+}
+
+function MerchandiseSection({
+  title,
+  description,
+  products,
+  compact,
+}: {
+  title: string;
+  description?: string;
+  products: SotongProduct[];
+  compact?: boolean;
+}) {
+  if (products.length === 0) return null;
+
+  return (
+    <div>
+      <h2 className="text-lg font-bold text-surface-900">{title}</h2>
+      {description && <p className="mt-1 text-sm text-surface-600">{description}</p>}
+      <div className={`mt-4 grid gap-4 ${compact ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </div>
   );
 }

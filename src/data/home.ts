@@ -1,21 +1,20 @@
-import type { GoalItem, ProcessStep, WhyPoint, TechnologyItem, EcosystemNode, AiGuideOption } from "@/types";
+import type { ProcessStep, GoalItem, TechnologyItem, EcosystemNode, AiGuideOption, WhyPoint } from "@/types";
 
 export const heroContent = {
-  eyebrow: "Digital Business Platform",
+  eyebrow: "INDUSTRIAL × DIGITAL BUSINESS",
   headline:
-    "산업 기술부터 앱·지식·콘텐츠까지, 실제로 쓰이고 수익으로 이어지는 디지털 서비스를 만듭니다.",
+    "현장의 기술을, 사용되는 디지털 제품과 서비스로 만듭니다",
   subheadline:
-    "SotongWare는 산업자동화 기술을 기반으로 앱, 전자책, 지식서비스, 웹사이트, AI 콘텐츠를 직접 제작하고 운영합니다.",
+    "산업자동화부터 앱·웹·전자책·지식서비스·콘텐츠까지. SotongWare가 직접 만들고 운영하며 고객의 사업과 일상에 연결합니다.",
   ctas: [
-    { label: "서비스 둘러보기", href: "/#business-hub-heading", variant: "primary" as const },
-    { label: "디지털 상품 보기", href: "/products", variant: "secondary" as const },
-    { label: "제작·사업 문의", href: "/contact", variant: "secondary" as const },
-    { label: "무료 콘텐츠 보기", href: "/knowledge", variant: "outline" as const },
+    { label: "서비스 찾기", href: "/#business-hub-heading", variant: "primary" as const },
+    { label: "실제 결과물 보기", href: "/products", variant: "secondary" as const },
+    { label: "제작 상담", href: "/contact", variant: "secondary" as const },
   ],
   highlights: [
-    { label: "6대 전문 사업", desc: "내부 소개 + 전문 사이트 직접 연결" },
-    { label: "제작 → 운영 → 수익", desc: "앱 · 전자책 · 교육 · 콘텐츠 · 마케팅" },
-    { label: "Business Network", desc: "필요한 서비스를 한 곳에서 연결" },
+    { label: "6대 전문 서비스", desc: "내부 소개 + 전문 사이트 직접 연결" },
+    { label: "실제 제품·결과물", desc: "앱 · 전자책 · 교육 · 콘텐츠 · 자동화" },
+    { label: "제작 → 운영 → 연결", desc: "문의 · 배포 · 전문 사이트까지" },
   ],
 };
 
@@ -23,30 +22,30 @@ export const whyFormula = [
   { label: "Industrial Field", labelKo: "산업 현장 이해" },
   { label: "Software Engineering", labelKo: "소프트웨어 개발" },
   { label: "AI Utilization", labelKo: "AI 활용" },
-  { label: "Digital Content", labelKo: "디지털 콘텐츠" },
-  { label: "Business Automation", labelKo: "사업 자동화" },
+  { label: "Digital Product", labelKo: "디지털 제품화" },
+  { label: "Business Connection", labelKo: "사업 연결" },
 ];
 
 export const whyPoints: WhyPoint[] = [
   {
-    title: "산업 현장을 이해합니다",
+    title: "현장을 이해합니다",
     description:
-      "PLC, MES, Modbus 등 실제 공장 환경을 알고, 현장에 맞는 산업용 프로그램을 설계합니다. 웹에이전시와 다른 출발점입니다.",
+      "단순 웹에이전시와 달리 산업현장과 설비의 실제 문제를 이해합니다. PLC, MES, Modbus 등 현장 기술을 알고 있습니다.",
   },
   {
-    title: "제작부터 배포까지",
+    title: "만들어서 끝내지 않습니다",
     description:
-      "앱, 웹, 산업 프로그램을 기획·개발하고 Google Play, 웹 호스팅, 판매 채널까지 연결합니다.",
+      "제작 → 검증 → 배포 → 운영까지 연결합니다. 앱, 웹, 전자책, 콘텐츠가 실제로 사용되도록 만듭니다.",
   },
   {
-    title: "AI는 도구로 활용",
+    title: "하나의 기술을 여러 상품으로 확장합니다",
     description:
-      "AI를 홍보 문구가 아닌, 업무 자동화·사용자 경험·콘텐츠 제작에 실제로 적용합니다.",
+      "앱·웹·전자책·교육·콘텐츠가 서로 연결됩니다. 하나의 결과물이 다른 서비스로 고객을 안내합니다.",
   },
   {
-    title: "자산이 서로 홍보합니다",
+    title: "말보다 결과로 보여드립니다",
     description:
-      "앱, 전자책, 웹, 콘텐츠를 연결하여 하나의 결과물이 다른 결과물로 방문자를 이동시킵니다.",
+      "실제 앱, 실제 운영 사이트, 실제 제작 프로세스를 공개합니다. 검증되지 않은 수치나 실적은 표시하지 않습니다.",
   },
 ];
 
@@ -66,28 +65,28 @@ export const exploreGoals: GoalItem[] = [
     id: "automate",
     title: "공장·업무를 자동화하고 싶어요",
     description: "설비 모니터링, PLC 연동, 생산 데이터 수집·분석",
-    href: "/services/industrial-automation",
+    href: "/automation",
     icon: "automation",
   },
   {
     id: "app",
     title: "앱을 만들거나 사용하고 싶어요",
     description: "업무용·산업용 앱 개발, 또는 SotongWare 앱 체험",
-    href: "/services/app-development",
+    href: "/apps",
     icon: "app",
   },
   {
     id: "start-business",
     title: "온라인 사업을 시작하고 싶어요",
     description: "지식 사이트, 디지털 상품, 검색 유입 구조 설계",
-    href: "/solutions/digital-business",
+    href: "/knowledge",
     icon: "business",
   },
   {
     id: "ebook",
     title: "전자책을 만들거나 보고 싶어요",
     description: "전자책 기획·제작, 또는 전문 분야 전자책 탐색",
-    href: "/services/ebook-development",
+    href: "/ebooks",
     icon: "ebook",
   },
   {
@@ -175,6 +174,12 @@ export const finalCtaContent = {
     { label: "6대 사업 보기", href: "/#business-hub-heading", variant: "primary" as const },
     { label: "디지털 상품", href: "/products", variant: "secondary" as const },
     { label: "제작·사업 문의", href: "/contact", variant: "outline" as const },
-    { label: "무료 콘텐츠", href: "/knowledge", variant: "outline" as const },
   ],
 };
+
+export const trustItems = [
+  { label: "실제 앱", desc: "전기 점검 체크 앱 — 테스트 중", href: "/products/electrical-inspection-check" },
+  { label: "운영 사이트", desc: "6개 전문 서비스 채널 운영", href: "/#business-network-heading" },
+  { label: "제작 프로세스", desc: "기획 → 제작 → 검증 → 배포", href: "/#why-heading" },
+  { label: "기술 Stack", desc: "PLC · Web · App · AI · Content", href: "/about" },
+];
