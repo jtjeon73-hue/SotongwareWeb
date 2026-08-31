@@ -1,5 +1,6 @@
 import type { NavItem } from "@/types";
 import { businessAreas } from "@/data/businesses";
+import { getExternalSiteUrl } from "@/lib/business-sites";
 
 export const siteConfig = {
   name: "SotongWare",
@@ -21,9 +22,8 @@ export const mainNavigation: NavItem[] = [
     href: "/services",
     children: serviceNavChildren,
   },
-  { label: "디지털 상품", href: "/products" },
-  { label: "지식·교육", href: "/knowledge" },
-  { label: "포트폴리오", href: "/works" },
+  { label: "제작 과정", href: "/process" },
+  { label: "이용 안내", href: "/guide" },
   { label: "SotongWare 소개", href: "/about" },
 ];
 
@@ -34,22 +34,19 @@ export const businessNavigation: NavItem[] = businessAreas.map((area) => ({
 
 export const footerNavigation = {
   externalServices: businessAreas
-    .filter((area) => area.externalSiteUrl && area.siteStatus !== "coming-soon")
+    .filter((area) => getExternalSiteUrl(area) && area.siteStatus !== "coming-soon")
     .map((area) => ({
       label: area.titleKo,
-      href: area.externalSiteUrl!,
+      href: getExternalSiteUrl(area)!,
       external: true as const,
     })),
-  products: [
-    { label: "전체 상품", href: "/products" },
-    { label: "앱", href: "/apps" },
-    { label: "전자책", href: "/ebooks" },
-    { label: "교육", href: "/knowledge" },
-    { label: "콘텐츠", href: "/contents" },
+  guide: [
+    { label: "제작 과정", href: "/process" },
+    { label: "서비스 이용 안내", href: "/guide" },
   ],
   company: [
-    { label: "소개", href: "/about" },
-    { label: "문의", href: "/contact" },
+    { label: "SotongWare 소개", href: "/about" },
+    { label: "상담·제작 문의", href: "/contact" },
   ],
   legal: [
     { label: "개인정보처리방침", href: "/privacy" },

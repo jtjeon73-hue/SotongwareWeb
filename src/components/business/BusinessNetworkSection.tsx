@@ -38,13 +38,10 @@ export function BusinessNetworkSection() {
                   area={area}
                   className="!min-h-11 w-full sm:w-auto !px-3 !py-2 !text-sm"
                 />
-                {area.externalSiteUrl && area.siteStatus !== "coming-soon" && (
-                  <BusinessExternalSiteLink
-                    area={area}
-                    className="!min-h-11 w-full sm:w-auto !px-3 !py-2 !text-sm"
-                    label="전문 사이트 ↗"
-                  />
-                )}
+                <BusinessExternalSiteLink
+                  area={area}
+                  className="!min-h-11 w-full sm:w-auto !px-3 !py-2 !text-sm"
+                />
               </div>
             </article>
           ))}

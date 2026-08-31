@@ -5,12 +5,13 @@ import { ProductGrid } from "@/components/product/ProductGrid";
 import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { knowledgeItems, knowledgeFields } from "@/data/knowledge";
 import { getBusinessById } from "@/data/businesses";
+import { getExternalSiteUrl } from "@/lib/business-sites";
 import { Button } from "@/components/ui/Button";
 import { createPageMetadata } from "@/lib/page-metadata";
 
 export const metadata = createPageMetadata({
   title: "지식·교육 서비스",
-  description: "무료·회원·유료·구독 교육 콘텐츠 — SotongWare 지식 사업. 전문 서비스는 SotongSiteManager에서 운영합니다.",
+  description: "무료·회원·유료·구독 교육 콘텐츠 — SotongWare 지식 사업. 전문 서비스는 지식·교육 사이트에서 운영합니다.",
   path: "/knowledge",
 });
 
@@ -31,7 +32,7 @@ const CONTENT_RAILS = [
 export default function KnowledgePage() {
   const published = knowledgeItems.filter((k) => k.status !== "draft");
   const knowledgeArea = getBusinessById("knowledge");
-  const externalUrl = knowledgeArea?.externalSiteUrl;
+  const externalUrl = knowledgeArea ? getExternalSiteUrl(knowledgeArea) : undefined;
 
   return (
     <div className="section-padding bg-white">
@@ -39,7 +40,7 @@ export default function KnowledgePage() {
         <SectionHeader
           eyebrow="Knowledge & Education"
           title="지식·교육"
-          description="무료 정보부터 회원·유료·구독 콘텐츠까지 — 반복수익형 지식 사업 구조입니다. 실제 지식·교육 서비스는 SotongSiteManager에서 운영합니다."
+          description="무료 정보부터 회원·유료·구독 콘텐츠까지 — 반복수익형 지식 사업 구조입니다. 실제 지식·교육 서비스는 지식·교육 사이트에서 운영합니다."
         />
 
         <BusinessSiteBanner businessId="knowledge" />
@@ -47,13 +48,13 @@ export default function KnowledgePage() {
         {externalUrl && (
           <div className="mb-8 flex flex-col gap-3 rounded-xl border border-brand-200 bg-brand-50 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-semibold text-surface-900">SotongSiteManager</p>
+              <p className="text-sm font-semibold text-surface-900">지식·교육 사이트</p>
               <p className="mt-1 text-sm text-surface-600">
                 지식·교육 전문 서비스 — 무료 정보, 회원·유료·구독 콘텐츠
               </p>
             </div>
             <Button href={externalUrl} variant="primary" className="min-h-11 shrink-0" external>
-              SotongSiteManager 방문 ↗
+              지식·교육 사이트 ↗
             </Button>
           </div>
         )}
@@ -63,6 +64,12 @@ export default function KnowledgePage() {
             <div key={tier.id} className="rounded-xl border border-surface-200 p-4">
               <p className="font-semibold text-surface-900">{tier.label}</p>
               <p className="mt-1 text-sm text-surface-600">{tier.desc}</p>
+              {tier.id === "member" && (
+                <p className="mt-2 text-xs text-surface-500">향후 제공 예정</p>
+              )}
+              {(tier.id === "paid" || tier.id === "subscription") && (
+                <p className="mt-2 text-xs text-surface-500">결제 기능 준비 중</p>
+              )}
               {externalUrl && (
                 <a
                   href={externalUrl}
@@ -120,7 +127,7 @@ export default function KnowledgePage() {
           <ProductEmptyState
             type="knowledge"
             title="교육 콘텐츠가 준비되고 있습니다"
-            description="무료·회원·유료·구독 콘텐츠가 검수 후 순차 공개됩니다. SotongSiteManager에서 먼저 확인해 보세요."
+            description="무료·회원·유료·구독 콘텐츠가 검수 후 순차 공개됩니다. 지식·교육 사이트에서 먼저 확인해 보세요."
           />
         )}
 

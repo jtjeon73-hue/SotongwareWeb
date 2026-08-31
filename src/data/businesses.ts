@@ -1,8 +1,10 @@
 import type { BusinessArea } from "@/types/product";
+import { getExternalSiteUrl } from "@/lib/business-sites";
 
 /**
  * 6대 사업 — 내부 경로 + 외부 전문 사이트 URL 중앙 관리
  * externalSiteUrl은 HTTP 200 검증된 URL만 등록 (가짜 URL 금지)
+ * customDomainUrl은 DNS·SSL ACTIVE 확인 후 production 전환
  */
 export const businessAreas: BusinessArea[] = [
   {
@@ -21,6 +23,9 @@ export const businessAreas: BusinessArea[] = [
     revenueModel: "구축 · 개발 · 유지보수",
     externalSiteUrl: "https://sotong-automation-promo.web.app",
     externalSiteLabel: "산업자동화 전문 사이트 ↗",
+    externalSiteName: "산업자동화 전문 사이트",
+    customDomainUrl: "https://automation.sotongware.com",
+    customDomainStatus: "waiting_dns",
     siteStatus: "active",
     conversionHints: ["자동화 상담", "견적 요청"],
     ctas: [
@@ -44,6 +49,9 @@ export const businessAreas: BusinessArea[] = [
     revenueModel: "앱 서비스 · 개발 의뢰",
     externalSiteUrl: "https://sotongware-apps-promo.web.app",
     externalSiteLabel: "앱 전문 사이트 ↗",
+    externalSiteName: "앱 전문 사이트",
+    customDomainUrl: "https://apps.sotongware.com",
+    customDomainStatus: "waiting_dns",
     siteStatus: "active",
     conversionHints: ["Google Play 출시 준비 중"],
     ctas: [
@@ -66,6 +74,9 @@ export const businessAreas: BusinessArea[] = [
     revenueModel: "전자책 판매 · 제작",
     externalSiteUrl: "https://sotongware-ebook-promo.web.app",
     externalSiteLabel: "전자책 전문 사이트 ↗",
+    externalSiteName: "전자책 전문 사이트",
+    customDomainUrl: "https://ebook.sotongware.com",
+    customDomainStatus: "waiting_dns",
     siteStatus: "active",
     conversionHints: ["구매 채널 준비 중"],
     ctas: [
@@ -87,8 +98,10 @@ export const businessAreas: BusinessArea[] = [
     icon: "info",
     revenueModel: "무료 · 유료 · 구독",
     externalSiteUrl: "https://sotongsitemanager.web.app",
-    externalSiteLabel: "SotongSiteManager ↗",
-    externalSiteName: "SotongSiteManager",
+    externalSiteLabel: "지식·교육 사이트 ↗",
+    externalSiteName: "지식·교육 사이트",
+    customDomainUrl: "https://knowledge.sotongware.com",
+    customDomainStatus: "waiting_dns",
     siteStatus: "active",
     conversionHints: ["무료로 시작하기", "프리미엄 준비 중"],
     ctas: [
@@ -111,6 +124,9 @@ export const businessAreas: BusinessArea[] = [
     revenueModel: "홍보 · 마케팅 서비스",
     externalSiteUrl: "https://sotongware-marketing.web.app",
     externalSiteLabel: "마케팅 전문 사이트 ↗",
+    externalSiteName: "마케팅 전문 사이트",
+    customDomainUrl: "https://marketing.sotongware.com",
+    customDomainStatus: "waiting_dns",
     siteStatus: "active",
     conversionHints: ["홍보 상담", "마케팅 의뢰"],
     ctas: [
@@ -133,6 +149,9 @@ export const businessAreas: BusinessArea[] = [
     revenueModel: "콘텐츠 · 제작 의뢰",
     externalSiteUrl: "https://sotongware-contents-promo.web.app",
     externalSiteLabel: "콘텐츠 전문 사이트 ↗",
+    externalSiteName: "콘텐츠 전문 사이트",
+    customDomainUrl: "https://contents.sotongware.com",
+    customDomainStatus: "waiting_dns",
     siteStatus: "active",
     conversionHints: ["콘텐츠 보기", "제작 의뢰"],
     ctas: [
@@ -150,6 +169,9 @@ export const externalSiteAudit = businessAreas.map((b) => ({
   id: b.id,
   titleKo: b.titleKo,
   externalSiteName: b.externalSiteName ?? b.titleKo,
-  url: b.externalSiteUrl ?? "NO_URL",
+  url: getExternalSiteUrl(b) ?? "NO_URL",
+  legacyUrl: b.externalSiteUrl ?? "NO_URL",
+  customDomainUrl: b.customDomainUrl,
+  customDomainStatus: b.customDomainStatus ?? "none",
   status: b.siteStatus,
 }));

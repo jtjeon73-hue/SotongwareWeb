@@ -108,6 +108,9 @@ export interface SotongProduct {
 
 export type BusinessSiteStatus = "active" | "preparing" | "coming-soon";
 
+/** Firebase Custom Domain 연결 상태 — ACTIVE 전까지 web.app URL 유지 */
+export type CustomDomainStatus = "none" | "waiting_dns" | "active";
+
 export interface BusinessArea {
   id: ProductType;
   slug: string;
@@ -121,11 +124,14 @@ export interface BusinessArea {
   icon: string;
   /** 수익·서비스 모델 (카드 태그) */
   revenueModel: string;
-  /** 외부 전문 사이트 — 검증된 URL만 */
+  /** 외부 전문 사이트 (web.app) — HTTP 200 검증된 URL만 */
   externalSiteUrl?: string;
   externalSiteLabel?: string;
-  /** 분석·문서용 외부 서비스명 (예: SotongSiteManager) */
+  /** 고객 화면용 외부 사이트 표시명 */
   externalSiteName?: string;
+  /** 목표 Custom Domain URL (DNS·SSL ACTIVE 후 production 전환) */
+  customDomainUrl?: string;
+  customDomainStatus?: CustomDomainStatus;
   siteStatus: BusinessSiteStatus;
   /** 한 줄 가치 제안 */
   tagline: string;

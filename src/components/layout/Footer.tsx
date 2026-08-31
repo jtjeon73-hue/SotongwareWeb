@@ -55,7 +55,7 @@ export function Footer() {
           </div>
           <div className="grid grid-cols-2 gap-8 sm:col-span-1 lg:col-span-8 lg:grid-cols-4">
             <FooterLinkGroup title="전문 서비스" links={footerNavigation.externalServices} />
-            <FooterLinkGroup title="디지털 상품" links={footerNavigation.products} />
+            <FooterLinkGroup title="이용 안내" links={footerNavigation.guide} />
             <FooterLinkGroup title="회사" links={footerNavigation.company} />
             <FooterLinkGroup title="법적 안내" links={footerNavigation.legal} />
           </div>

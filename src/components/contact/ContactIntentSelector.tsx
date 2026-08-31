@@ -9,8 +9,10 @@ const INTENT_OPTIONS = [
   { topic: "app", label: "앱 제작" },
   { topic: "website", label: "웹사이트" },
   { topic: "ebook", label: "전자책" },
+  { topic: "knowledge", label: "지식·교육" },
   { topic: "content", label: "콘텐츠" },
   { topic: "marketing", label: "마케팅" },
+  { topic: "general", label: "기타" },
 ] as const;
 
 interface ContactIntentSelectorProps {
@@ -38,7 +40,7 @@ export function ContactIntentSelector({ selectedTopic, onSelect }: ContactIntent
       <p className="mt-1 text-sm text-surface-600">
         아이디어가 완성되어 있지 않아도 괜찮습니다. 필요한 목적부터 알려주세요.
       </p>
-      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {INTENT_OPTIONS.map((opt) => (
           <button
             key={opt.topic}

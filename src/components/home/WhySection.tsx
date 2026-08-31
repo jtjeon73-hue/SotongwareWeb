@@ -37,7 +37,7 @@ export function WhySection() {
           </ul>
         </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {whyPoints.map((point) => (
             <div key={point.title} className="rounded-xl border border-surface-200 p-5 sm:p-6">
               <h3 className="text-base font-semibold text-surface-900">{point.title}</h3>

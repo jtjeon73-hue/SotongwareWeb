@@ -1,12 +1,13 @@
 import { getBusinessById } from "@/data/businesses";
+import { getExternalSiteDisplayName } from "@/lib/business-sites";
 import type { ProductType } from "@/types/product";
 import { BusinessExternalSiteLink, BusinessSiteStatusBadge } from "./BusinessActions";
 
 export function BusinessSiteBanner({ businessId }: { businessId: ProductType }) {
   const area = getBusinessById(businessId);
-  if (!area?.externalSiteUrl || area.siteStatus === "coming-soon") return null;
+  if (!area || area.siteStatus === "coming-soon") return null;
 
-  const siteName = area.externalSiteName ?? `${area.titleKo} 전문 사이트`;
+  const siteName = getExternalSiteDisplayName(area);
 
   return (
     <div className="mb-8 flex flex-col gap-3 rounded-xl border border-brand-200 bg-brand-50/50 p-4 sm:flex-row sm:items-center sm:justify-between">

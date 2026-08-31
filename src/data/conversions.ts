@@ -1,5 +1,6 @@
 import type { BusinessConversion } from "@/types/commerce";
 import { getBusinessById } from "@/data/businesses";
+import { getExternalSiteUrl } from "@/lib/business-sites";
 import { isContactSubmissionAvailable } from "@/config/platform-status";
 
 /** 6대 사업 Main Conversion 정의 */
@@ -52,10 +53,12 @@ export function getConversionByBusinessId(id: string): BusinessConversion | unde
 
   if (id === "knowledge") {
     const area = getBusinessById("knowledge");
+    if (!area) return base;
+    const siteUrl = getExternalSiteUrl(area);
     return {
       ...base,
-      href: area?.externalSiteUrl,
-      status: area?.externalSiteUrl ? "active" : "preparing",
+      href: siteUrl,
+      status: siteUrl ? "active" : "preparing",
     };
   }
 

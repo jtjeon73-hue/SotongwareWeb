@@ -15,6 +15,8 @@ const staticRoutes = [
   "/about",
   "/ai-guide",
   "/contact",
+  "/process",
+  "/guide",
   "/privacy",
   "/terms",
   "/apps",

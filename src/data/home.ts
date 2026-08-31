@@ -8,13 +8,13 @@ export const heroContent = {
     "산업자동화부터 앱·웹·전자책·지식서비스·콘텐츠까지. SotongWare가 직접 만들고 운영하며 고객의 사업과 일상에 연결합니다.",
   ctas: [
     { label: "서비스 찾기", href: "/#business-hub-heading", variant: "primary" as const },
-    { label: "실제 결과물 보기", href: "/products", variant: "secondary" as const },
+    { label: "제작 과정", href: "/process", variant: "secondary" as const },
     { label: "제작 상담", href: "/contact", variant: "secondary" as const },
   ],
   highlights: [
     { label: "6대 전문 서비스", desc: "내부 소개 + 전문 사이트 직접 연결" },
-    { label: "실제 제품·결과물", desc: "앱 · 전자책 · 교육 · 콘텐츠 · 자동화" },
-    { label: "제작 → 운영 → 연결", desc: "문의 · 배포 · 전문 사이트까지" },
+    { label: "체계적인 제작", desc: "기획 → 제작 → 검증 → 배포" },
+    { label: "이용 방식 안내", desc: "무료 · 회원 · 유료 · 상담·제작" },
   ],
 };
 
@@ -28,24 +28,29 @@ export const whyFormula = [
 
 export const whyPoints: WhyPoint[] = [
   {
-    title: "현장을 이해합니다",
+    title: "현장에서 출발한 기술",
     description:
-      "단순 웹에이전시와 달리 산업현장과 설비의 실제 문제를 이해합니다. PLC, MES, Modbus 등 현장 기술을 알고 있습니다.",
+      "산업자동화·설비·소프트웨어 기반의 실전 기술로 출발합니다. PLC, MES, Modbus 등 현장 기술을 이해합니다.",
   },
   {
-    title: "만들어서 끝내지 않습니다",
+    title: "직접 제작",
     description:
-      "제작 → 검증 → 배포 → 운영까지 연결합니다. 앱, 웹, 전자책, 콘텐츠가 실제로 사용되도록 만듭니다.",
+      "앱·웹·전자책·지식·콘텐츠를 실제 디지털 제품으로 제작합니다. 만들고 끝내지 않고 배포·운영까지 연결합니다.",
   },
   {
-    title: "하나의 기술을 여러 상품으로 확장합니다",
+    title: "체계적인 과정",
     description:
-      "앱·웹·전자책·교육·콘텐츠가 서로 연결됩니다. 하나의 결과물이 다른 서비스로 고객을 안내합니다.",
+      "기획 → 제작 → 검증 → 배포. 고객이 이해하기 쉬운 단계로 제작 과정을 운영합니다.",
   },
   {
-    title: "말보다 결과로 보여드립니다",
+    title: "하나의 브랜드, 여러 전문 서비스",
     description:
-      "실제 앱, 실제 운영 사이트, 실제 제작 프로세스를 공개합니다. 검증되지 않은 수치나 실적은 표시하지 않습니다.",
+      "SotongWare에서 6대 전문 서비스를 연결합니다. 필요한 분야의 전문 사이트로 자연스럽게 이동할 수 있습니다.",
+  },
+  {
+    title: "제작 후에도 이어지는 구조",
+    description:
+      "Play Store, 전자책 플랫폼, 웹사이트, 콘텐츠 채널, 자체 서비스 등 실제 이용처까지 확장 가능한 구조입니다.",
   },
 ];
 
@@ -169,17 +174,17 @@ export const worksEmptyContent = {
 export const finalCtaContent = {
   title: "필요한 서비스부터 시작하세요",
   description:
-    "6대 사업 영역과 디지털 상품을 둘러보거나, 전문 사이트에서 바로 서비스를 확인해 보세요.",
+    "6대 전문 서비스를 둘러보거나, 제작 과정·이용 안내를 확인한 뒤 상담을 요청할 수 있습니다.",
   actions: [
     { label: "6대 사업 보기", href: "/#business-hub-heading", variant: "primary" as const },
-    { label: "디지털 상품", href: "/products", variant: "secondary" as const },
+    { label: "이용 안내", href: "/guide", variant: "secondary" as const },
     { label: "제작·사업 문의", href: "/contact", variant: "outline" as const },
   ],
 };
 
 export const trustItems = [
-  { label: "실제 앱", desc: "전기 점검 체크 앱 — 테스트 중", href: "/products/electrical-inspection-check" },
   { label: "운영 사이트", desc: "6개 전문 서비스 채널 운영", href: "/#business-network-heading" },
-  { label: "제작 프로세스", desc: "기획 → 제작 → 검증 → 배포", href: "/#why-heading" },
+  { label: "제작 과정", desc: "기획 → 제작 → 검증 → 배포", href: "/process" },
+  { label: "이용 안내", desc: "무료 · 회원 · 유료 · 상담·제작", href: "/guide" },
   { label: "기술 Stack", desc: "PLC · Web · App · AI · Content", href: "/about" },
 ];

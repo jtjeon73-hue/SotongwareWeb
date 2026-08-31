@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { businessAreas } from "@/data/businesses";
+import { getExternalSiteUrl } from "@/lib/business-sites";
 import { trackEvent } from "@/lib/analytics";
 import { ServiceIcon } from "@/components/ui/Icons";
 import { cn } from "@/lib/utils";
@@ -61,9 +62,9 @@ export function ServicesNavMenu() {
                   >
                     서비스 보기
                   </Link>
-                  {area.externalSiteUrl && area.siteStatus !== "coming-soon" && (
+                  {getExternalSiteUrl(area) && area.siteStatus !== "coming-soon" && (
                     <a
-                      href={area.externalSiteUrl}
+                      href={getExternalSiteUrl(area)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex min-h-9 flex-1 items-center justify-center rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-xs font-medium text-brand-700 hover:bg-brand-50"
