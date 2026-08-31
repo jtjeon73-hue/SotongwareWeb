@@ -1,6 +1,7 @@
 import type { NavItem } from "@/types";
 import { businessAreas } from "@/data/businesses";
-import { getExternalSiteUrl } from "@/lib/business-sites";
+import { canExposeExternalSiteLink } from "@/data/business-access";
+import { getPublicExternalSiteUrl } from "@/lib/business-sites";
 
 export const siteConfig = {
   name: "SotongWare",
@@ -34,10 +35,15 @@ export const businessNavigation: NavItem[] = businessAreas.map((area) => ({
 
 export const footerNavigation = {
   externalServices: businessAreas
-    .filter((area) => getExternalSiteUrl(area) && area.siteStatus !== "coming-soon")
+    .filter(
+      (area) =>
+        canExposeExternalSiteLink(area.id) &&
+        getPublicExternalSiteUrl(area) &&
+        area.siteStatus !== "coming-soon",
+    )
     .map((area) => ({
       label: area.titleKo,
-      href: getExternalSiteUrl(area)!,
+      href: getPublicExternalSiteUrl(area)!,
       external: true as const,
     })),
   guide: [

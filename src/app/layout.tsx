@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { AnalyticsScripts } from "@/components/common/AnalyticsScripts";
+import { AppProviders } from "@/components/providers/AppProviders";
 import { defaultMetadata } from "@/lib/metadata";
 import "@/styles/globals.css";
 
@@ -27,8 +28,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
-        <AnalyticsScripts />
-        <SiteLayout>{children}</SiteLayout>
+        <AppProviders>
+          <AnalyticsScripts />
+          <SiteLayout>{children}</SiteLayout>
+        </AppProviders>
       </body>
     </html>
   );

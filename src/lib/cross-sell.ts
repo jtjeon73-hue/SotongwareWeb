@@ -1,6 +1,6 @@
 import type { ProductType } from "@/types/product";
 import { getBusinessById } from "@/data/businesses";
-import { getExternalSiteUrl } from "@/lib/business-sites";
+import { getPublicExternalSiteUrl } from "@/lib/business-sites";
 
 export interface CrossSellItem {
   businessId: ProductType;
@@ -44,7 +44,7 @@ export function getCrossSellItems(productType: ProductType): CrossSellItem[] {
       titleKo: area.titleKo,
       reason: CROSS_SELL_REASONS[id] ?? area.tagline,
       internalPath: area.internalPath,
-      externalSiteUrl: getExternalSiteUrl(area),
+      externalSiteUrl: getPublicExternalSiteUrl(area),
       externalSiteLabel: area.externalSiteLabel,
     });
   }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { mainNavigation, siteConfig } from "@/data/navigation";
 import { ServicesNavMenu } from "./ServicesNavMenu";
+import { AuthNav } from "@/components/auth/AuthNav";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
@@ -40,7 +41,8 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden items-center gap-3 lg:flex">
+          <AuthNav />
           <Button href="/contact" variant="primary" size="sm" className="min-h-11">
             상담·제작 문의
           </Button>
@@ -97,6 +99,9 @@ export function Header() {
             </Link>
           ))}
           <div className="mt-2 space-y-2 border-t border-surface-100 px-3 pt-4">
+            <div className="pb-2">
+              <AuthNav />
+            </div>
             <Button
               href="/contact"
               variant="primary"

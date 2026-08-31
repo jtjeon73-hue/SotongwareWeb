@@ -2,9 +2,83 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  // 클라이언트 직접 write 금지 — Functions Admin SDK만 접근
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.role == 'admin';
+    }
+
+    function userProfileRef(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+
+    function isActiveUser() {
+      return isSignedIn()
+        && exists(userProfileRef(request.auth.uid))
+        && get(userProfileRef(request.auth.uid)).data.status == 'active';
+    }
+
+    function entitlementRef(businessId) {
+      return /databases/$(database)/documents/users/$(request.auth.uid)/entitlements/$(businessId);
+    }
+
+    function hasActivePremiumEntitlement(businessId) {
+      return isActiveUser()
+        && exists(entitlementRef(businessId))
+        && get(entitlementRef(businessId)).data.status == 'active'
+        && get(entitlementRef(businessId)).data.plan == 'premium'
+        && get(entitlementRef(businessId)).data.businessId == businessId
+        && (
+          !('expiresAt' in get(entitlementRef(businessId)).data)
+          || get(entitlementRef(businessId)).data.expiresAt == null
+          || get(entitlementRef(businessId)).data.expiresAt > request.time
+        );
+    }
+
+    function canReadMemberContent(data) {
+      return data.publicationStatus == 'published'
+        && (
+          data.accessLevel == 'public'
+          || (isActiveUser() && data.accessLevel == 'member')
+          || (isActiveUser() && data.accessLevel == 'premium' && hasActivePremiumEntitlement(data.businessId))
+        );
+    }
+
+    // 문의 — Functions Admin SDK만 접근
     match /contactInquiries/{id} {
       allow read, write: if false;
+    }
+
+    // 사용자 프로필
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId)
+        && request.resource.data.uid == userId
+        && request.resource.data.role == 'member'
+        && request.resource.data.status == 'active';
+      allow update: if isOwner(userId)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status', 'uid']);
+      allow delete: if false;
+    }
+
+    // 이용 권한 — 관리자/서버만 부여, businessId는 문서 ID와 일치해야 함
+    match /users/{userId}/entitlements/{businessId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isAdmin()
+        && request.resource.data.businessId == businessId;
+    }
+
+    // 회원 콘텐츠 — 원문은 Rules로 보호
+    match /memberContents/{contentId} {
+      allow read: if canReadMemberContent(resource.data);
+      allow write: if isAdmin();
     }
 
     match /{document=**} {

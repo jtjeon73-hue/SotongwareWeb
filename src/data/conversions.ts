@@ -1,6 +1,7 @@
 import type { BusinessConversion } from "@/types/commerce";
 import { getBusinessById } from "@/data/businesses";
-import { getExternalSiteUrl } from "@/lib/business-sites";
+import { canExposeExternalSiteLink } from "@/data/business-access";
+import { getPublicExternalSiteUrl } from "@/lib/business-sites";
 import { isContactSubmissionAvailable } from "@/config/platform-status";
 
 /** 6대 사업 Main Conversion 정의 */
@@ -54,12 +55,31 @@ export function getConversionByBusinessId(id: string): BusinessConversion | unde
   if (id === "knowledge") {
     const area = getBusinessById("knowledge");
     if (!area) return base;
-    const siteUrl = getExternalSiteUrl(area);
+    if (canExposeExternalSiteLink("knowledge")) {
+      const siteUrl = getPublicExternalSiteUrl(area);
+      return {
+        ...base,
+        href: siteUrl,
+        status: siteUrl ? "active" : "preparing",
+      };
+    }
     return {
       ...base,
-      href: siteUrl,
-      status: siteUrl ? "active" : "preparing",
+      href: "/signup?redirect=/dashboard",
+      status: "active",
     };
+  }
+
+  if (id === "content") {
+    const area = getBusinessById("content");
+    if (!area) return base;
+    if (!canExposeExternalSiteLink("content")) {
+      return {
+        ...base,
+        href: "/signup?redirect=/dashboard",
+        status: "active",
+      };
+    }
   }
 
   if (base.href?.startsWith("/contact") && !isContactSubmissionAvailable()) {

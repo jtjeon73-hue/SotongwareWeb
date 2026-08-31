@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { BusinessArea } from "@/types/product";
-import { getExternalSiteUrl } from "@/lib/business-sites";
+import { getPublicExternalSiteUrl } from "@/lib/business-sites";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -59,10 +59,10 @@ export function BusinessExternalSiteLink({
   className?: string;
   label?: string;
 }) {
-  if (!getExternalSiteUrl(area) || area.siteStatus === "coming-soon") return null;
+  if (!getPublicExternalSiteUrl(area) || area.siteStatus === "coming-soon") return null;
 
   const displayLabel = label ?? area.externalSiteLabel ?? "전문 사이트 방문 ↗";
-  const siteUrl = getExternalSiteUrl(area)!;
+  const siteUrl = getPublicExternalSiteUrl(area)!;
 
   return (
     <a

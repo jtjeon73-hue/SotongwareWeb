@@ -8,6 +8,7 @@ import {
   RevenueModelTag,
   ConversionHintTags,
 } from "./BusinessActions";
+import { BusinessAccessBadges, BusinessPortalCta } from "@/components/membership/BusinessPortalCta";
 
 export function BusinessHubCard({ area }: { area: BusinessArea }) {
   return (
@@ -17,6 +18,7 @@ export function BusinessHubCard({ area }: { area: BusinessArea }) {
           <ServiceIcon name={area.icon} />
         </div>
         <div className="flex flex-wrap justify-end gap-1">
+          <BusinessAccessBadges area={area} />
           <RevenueModelTag label={area.revenueModel} />
           <BusinessSiteStatusBadge status={area.siteStatus} />
         </div>
@@ -40,6 +42,7 @@ export function BusinessHubCard({ area }: { area: BusinessArea }) {
       </div>
       <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
         <BusinessDetailLink area={area} className="w-full sm:w-auto" />
+        <BusinessPortalCta area={area} />
         <BusinessExternalSiteLink
           area={area}
           className="w-full sm:w-auto"

@@ -4,14 +4,13 @@ import { BusinessSiteBanner } from "@/components/business/BusinessSiteBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { knowledgeItems, knowledgeFields } from "@/data/knowledge";
-import { getBusinessById } from "@/data/businesses";
-import { getExternalSiteUrl } from "@/lib/business-sites";
+import { EXTERNAL_SITE_MEMBER_NOTICE } from "@/data/business-access";
 import { Button } from "@/components/ui/Button";
 import { createPageMetadata } from "@/lib/page-metadata";
 
 export const metadata = createPageMetadata({
   title: "지식·교육 서비스",
-  description: "무료·회원·유료·구독 교육 콘텐츠 — SotongWare 지식 사업. 전문 서비스는 지식·교육 사이트에서 운영합니다.",
+  description: "무료·회원·유료·구독 교육 콘텐츠 — SotongWare 지식 사업. 회원 전용 콘텐츠는 SotongWare 포털에서 이용합니다.",
   path: "/knowledge",
 });
 
@@ -31,33 +30,34 @@ const CONTENT_RAILS = [
 
 export default function KnowledgePage() {
   const published = knowledgeItems.filter((k) => k.status !== "draft");
-  const knowledgeArea = getBusinessById("knowledge");
-  const externalUrl = knowledgeArea ? getExternalSiteUrl(knowledgeArea) : undefined;
-
   return (
     <div className="section-padding bg-white">
       <div className="container-main">
         <SectionHeader
           eyebrow="Knowledge & Education"
           title="지식·교육"
-          description="무료 정보부터 회원·유료·구독 콘텐츠까지 — 반복수익형 지식 사업 구조입니다. 실제 지식·교육 서비스는 지식·교육 사이트에서 운영합니다."
+          description="무료 정보부터 회원·유료·구독 콘텐츠까지 — 반복수익형 지식 사업 구조입니다. 회원·프리미엄 콘텐츠는 SotongWare 포털에서 이용합니다."
         />
 
         <BusinessSiteBanner businessId="knowledge" />
 
-        {externalUrl && (
-          <div className="mb-8 flex flex-col gap-3 rounded-xl border border-brand-200 bg-brand-50 p-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm font-semibold text-surface-900">지식·교육 사이트</p>
-              <p className="mt-1 text-sm text-surface-600">
-                지식·교육 전문 서비스 — 무료 정보, 회원·유료·구독 콘텐츠
-              </p>
-            </div>
-            <Button href={externalUrl} variant="primary" className="min-h-11 shrink-0" external>
-              지식·교육 사이트 ↗
+        <div className="mb-8 rounded-xl border border-surface-200 bg-surface-50 p-5">
+          <p className="text-sm font-semibold text-surface-900">지식·교육 회원 포털</p>
+          <p className="mt-1 text-sm text-surface-600">
+            회원 가입 후 대시보드에서 지식·교육 콘텐츠를 이용할 수 있습니다.
+          </p>
+          <p className="mt-2 text-xs leading-relaxed text-surface-500">
+            {EXTERNAL_SITE_MEMBER_NOTICE}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button href="/signup?redirect=/dashboard" variant="primary" className="min-h-11">
+              무료 회원으로 보기
+            </Button>
+            <Button href="/login?redirect=/dashboard" variant="outline" className="min-h-11">
+              로그인
             </Button>
           </div>
-        )}
+        </div>
 
         <div className="mb-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {TIERS.map((tier) => (
@@ -70,16 +70,12 @@ export default function KnowledgePage() {
               {(tier.id === "paid" || tier.id === "subscription") && (
                 <p className="mt-2 text-xs text-surface-500">결제 기능 준비 중</p>
               )}
-              {externalUrl && (
-                <a
-                  href={externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex min-h-11 items-center text-sm font-medium text-brand-600 hover:text-brand-700"
-                >
-                  {tier.cta} ↗
-                </a>
-              )}
+              <Link
+                href="/signup?redirect=/dashboard"
+                className="mt-3 inline-flex min-h-11 items-center text-sm font-medium text-brand-600 hover:text-brand-700"
+              >
+                {tier.cta} →
+              </Link>
             </div>
           ))}
         </div>
@@ -88,25 +84,16 @@ export default function KnowledgePage() {
           <h2 className="text-lg font-bold text-surface-900">콘텐츠 영역</h2>
           <p className="mt-1 text-sm text-surface-600">향후 콘텐츠가 순차적으로 공개됩니다.</p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {CONTENT_RAILS.map((rail) =>
-              externalUrl ? (
-                <a
-                  key={rail.title}
-                  href={externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group rounded-xl border border-surface-200 p-4 transition-colors hover:border-brand-300 hover:bg-brand-50/30"
-                >
-                  <p className="font-semibold text-surface-900 group-hover:text-brand-700">{rail.title}</p>
-                  <p className="mt-1 text-sm text-surface-600">{rail.desc}</p>
-                </a>
-              ) : (
-                <div key={rail.title} className="rounded-xl border border-surface-200 p-4">
-                  <p className="font-semibold text-surface-900">{rail.title}</p>
-                  <p className="mt-1 text-sm text-surface-600">{rail.desc}</p>
-                </div>
-              ),
-            )}
+            {CONTENT_RAILS.map((rail) => (
+              <Link
+                key={rail.title}
+                href="/signup?redirect=/dashboard"
+                className="group rounded-xl border border-surface-200 p-4 transition-colors hover:border-brand-300 hover:bg-brand-50/30"
+              >
+                <p className="font-semibold text-surface-900 group-hover:text-brand-700">{rail.title}</p>
+                <p className="mt-1 text-sm text-surface-600">{rail.desc}</p>
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -127,7 +114,7 @@ export default function KnowledgePage() {
           <ProductEmptyState
             type="knowledge"
             title="교육 콘텐츠가 준비되고 있습니다"
-            description="무료·회원·유료·구독 콘텐츠가 검수 후 순차 공개됩니다. 지식·교육 사이트에서 먼저 확인해 보세요."
+            description="무료·회원·유료·구독 콘텐츠가 검수 후 순차 공개됩니다. 회원 포털에서 먼저 확인해 보세요."
           />
         )}
 
