@@ -74,4 +74,12 @@
   .container-main {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
+
+  .header-shell {
+    @apply mx-auto w-full max-w-[96rem] px-4 sm:px-6 lg:px-8;
+  }
+
+  .break-keep {
+    word-break: keep-all;
+  }
 }

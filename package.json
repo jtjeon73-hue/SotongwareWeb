@@ -14,7 +14,8 @@
     "test:e2e:contact": "firebase emulators:exec --only functions,firestore --project sotongware \"node scripts/e2e-contact.mjs\"",
     "test:firestore:rules": "firebase emulators:exec --only firestore --project sotongware \"node scripts/firestore-rules.test.mjs\"",
     "test:i18n:parity": "node scripts/i18n-parity.test.mjs",
-    "test:i18n:rendered": "node scripts/i18n-rendered.test.mjs"
+    "test:i18n:rendered": "node scripts/i18n-rendered.test.mjs",
+    "test:header:layout": "node scripts/header-layout.test.mjs"
   },
   "dependencies": {
     "firebase": "^11.10.0",

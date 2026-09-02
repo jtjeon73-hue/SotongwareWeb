@@ -40,6 +40,8 @@ export interface SiteNavDictionary {
   about: string;
   contact: string;
   contactCta: string;
+  contactCtaAria: string;
+  resources: string;
   process: string;
   guide: string;
   homeAria: string;
