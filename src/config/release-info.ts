@@ -4,3 +4,10 @@ export const releaseInfo = {
 } as const;
 
 export const releaseLabel = `v${releaseInfo.version} · 최종 업데이트 ${releaseInfo.updatedAt}`;
+
+export function getReleaseLabel(locale: "ko" | "en"): string {
+  if (locale === "en") {
+    return `v${releaseInfo.version} · Last updated ${releaseInfo.updatedAt}`;
+  }
+  return releaseLabel;
+}

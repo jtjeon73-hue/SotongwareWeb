@@ -98,6 +98,8 @@ export const koHome: HomeDictionary = {
     title: "디지털 사업 포트폴리오",
     description:
       "전자책·앱·사이트·콘텐츠·지식교육 — 각 사업 부문의 특성에 맞는 전용 레이아웃과 출시 상태를 제공합니다.",
+    exploreCta: "디지털 사업 둘러보기",
+    exploreHref: "/products",
     units: [
       {
         id: "ebook",

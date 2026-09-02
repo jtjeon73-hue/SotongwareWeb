@@ -18,6 +18,10 @@ export const koSite: SiteDictionary = {
     viewService: "서비스 보기",
     viewAllServices: "전체 서비스 보기",
     externalSite: "전문 사이트 ↗",
+    brandSubtitle: "소통웨어",
+    digitalVenturesBadge: "Core",
+    digitalVenturesBlurb: "SotongWare의 핵심 성장 사업 — 앱·전자책·사이트·콘텐츠·교육·자동화",
+    digitalVenturesHubCta: "디지털 사업 포트폴리오",
     technologyItems: [
       { label: "산업자동화", slug: "industrial-automation" },
       { label: "스마트팜·농업자동화", slug: "smart-farm" },
@@ -25,15 +29,18 @@ export const koSite: SiteDictionary = {
       { label: "앱·웹·원격관제", slug: "multiplatform-control" },
     ],
     ventureItems: [
-      { label: "전자책", href: "/ebooks" },
       { label: "앱", href: "/apps" },
+      { label: "전자책", href: "/ebooks" },
       { label: "사이트", href: "/marketing" },
       { label: "콘텐츠", href: "/contents" },
       { label: "지식·교육", href: "/knowledge" },
+      { label: "자동화 솔루션", href: "/automation" },
     ],
   },
   footer: {
     tagline: "디지털 사업 플랫폼",
+    description:
+      "산업자동화, 앱, 전자책, 지식·교육, 마케팅, 콘텐츠를 만들고 운영·판매하는 SotongWare 디지털 사업 플랫폼",
     externalServices: "전문 서비스",
     guide: "이용 안내",
     company: "회사",

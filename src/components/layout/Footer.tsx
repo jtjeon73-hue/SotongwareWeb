@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { footerNavigation, siteConfig } from "@/data/navigation";
-import { releaseLabel } from "@/config/release-info";
+import { footerNavigation, getFooterExternalServices, siteConfig } from "@/data/navigation";
+import { getReleaseLabel } from "@/config/release-info";
 import { useLocale } from "@/contexts/LocaleProvider";
 import { localizePath } from "@/i18n/localized-path";
 
@@ -75,14 +75,14 @@ export function Footer() {
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">S</span>
               <div>
                 <p className="text-sm font-bold text-surface-900">{siteConfig.name}</p>
-                <p className="text-xs text-surface-500">{siteConfig.nameKo}</p>
+                <p className="text-xs text-surface-500">{nav.brandSubtitle}</p>
               </div>
             </Link>
             <p className="mt-3 text-sm font-medium text-brand-700">{f.tagline}</p>
-            <p className="mt-2 text-sm leading-relaxed text-surface-600">{siteConfig.description}</p>
+            <p className="mt-2 text-sm leading-relaxed text-surface-600">{f.description}</p>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:col-span-1 lg:col-span-8 lg:grid-cols-4">
-            <FooterLinkGroup title={f.externalServices} links={footerNavigation.externalServices} locale={locale} />
+            <FooterLinkGroup title={f.externalServices} links={getFooterExternalServices(locale)} locale={locale} />
             <FooterLinkGroup title={f.guide} links={guideLinks} locale={locale} />
             <FooterLinkGroup title={f.company} links={companyLinks} locale={locale} />
             <FooterLinkGroup title={f.legal} links={legalLinks} locale={locale} />
@@ -92,7 +92,7 @@ export function Footer() {
           <p className="text-xs text-surface-500">
             © {year} {siteConfig.name}. {f.rights}
           </p>
-          <p className="text-xs font-medium text-brand-700">{releaseLabel}</p>
+          <p className="text-xs font-medium text-brand-700">{getReleaseLabel(locale)}</p>
         </div>
       </div>
     </footer>

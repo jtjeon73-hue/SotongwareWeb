@@ -86,6 +86,8 @@ export const enHome: HomeDictionary = {
     title: "Product portfolio",
     description:
       "E-books, apps, websites, content, and education—each with a dedicated layout and honest release status.",
+    exploreCta: "Explore digital ventures",
+    exploreHref: "/products",
     units: [
       {
         id: "ebook",

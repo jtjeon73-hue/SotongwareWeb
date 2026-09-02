@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthProvider";
-import { getAuthErrorMessage } from "@/lib/auth-errors";
+import { useAuthLocale } from "@/hooks/useAuthLocale";
+import { authLabels, getAuthErrorMessage } from "@/i18n/auth-labels";
 import {
   AuthCard,
   FormAlert,
@@ -13,10 +14,16 @@ import {
 
 export function ForgotPasswordForm() {
   const { resetPassword, configured } = useAuth();
+  const locale = useAuthLocale();
+  const labels = authLabels[locale];
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.lang = locale === "en" ? "en" : "ko";
+  }, [locale]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,7 +33,7 @@ export function ForgotPasswordForm() {
       await resetPassword(email.trim());
       setSuccess(true);
     } catch (err) {
-      setError(getAuthErrorMessage(err));
+      setError(getAuthErrorMessage(err, locale));
     } finally {
       setLoading(false);
     }
@@ -34,45 +41,41 @@ export function ForgotPasswordForm() {
 
   if (!configured) {
     return (
-      <AuthCard title="비밀번호 재설정" description="Firebase 설정이 필요합니다.">
-        <FormAlert
-          message="인증 서비스가 아직 설정되지 않았습니다."
-          variant="info"
-        />
+      <AuthCard title={labels.forgotTitle} description={labels.firebaseNotConfigured}>
+        <FormAlert message={labels.firebaseNotConfiguredDetail} variant="info" />
       </AuthCard>
     );
   }
 
   return (
     <AuthCard
-      title="비밀번호 재설정"
-      description="가입한 이메일 주소로 비밀번호 재설정 링크를 보내드립니다."
+      title={labels.forgotTitle}
+      description={labels.forgotDescription}
       footer={
         <p className="text-center text-sm text-surface-600">
           <Link href="/login" className="font-medium text-brand-600 hover:text-brand-700">
-            로그인으로 돌아가기
+            {labels.backToLogin}
           </Link>
         </p>
       }
     >
       {success ? (
-        <FormAlert
-          message="비밀번호 재설정 이메일을 발송했습니다. 받은편지함을 확인해 주세요."
-          variant="info"
-        />
+        <FormAlert message={labels.resetSent} variant="info" />
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           {error && <FormAlert message={error} />}
           <FormField
             id="reset-email"
-            label="이메일"
+            label={labels.email}
             type="email"
             value={email}
             onChange={setEmail}
             autoComplete="email"
             required
           />
-          <SubmitButton loading={loading}>재설정 링크 보내기</SubmitButton>
+          <SubmitButton loading={loading} loadingLabel={labels.processing}>
+            {labels.submitForgot}
+          </SubmitButton>
         </form>
       )}
     </AuthCard>

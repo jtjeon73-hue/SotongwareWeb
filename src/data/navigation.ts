@@ -1,7 +1,9 @@
 import type { NavItem } from "@/types";
+import type { Locale } from "@/i18n/config";
 import { businessAreas } from "@/data/businesses";
 import { canExposeExternalSiteLink } from "@/data/business-access";
 import { getPublicExternalSiteUrl } from "@/lib/business-sites";
+import { getLocalizedBusinessTitle } from "@/lib/business-i18n";
 
 export const siteConfig = {
   name: "SotongWare",
@@ -33,8 +35,8 @@ export const businessNavigation: NavItem[] = businessAreas.map((area) => ({
   href: area.internalPath,
 }));
 
-export const footerNavigation = {
-  externalServices: businessAreas
+export function getFooterExternalServices(locale: Locale) {
+  return businessAreas
     .filter(
       (area) =>
         canExposeExternalSiteLink(area.id) &&
@@ -42,10 +44,16 @@ export const footerNavigation = {
         area.siteStatus !== "coming-soon",
     )
     .map((area) => ({
-      label: area.titleKo,
+      label: getLocalizedBusinessTitle(area, locale),
       href: getPublicExternalSiteUrl(area)!,
       external: true as const,
-    })),
+    }));
+}
+
+export const footerNavigation = {
+  get externalServices() {
+    return getFooterExternalServices("ko");
+  },
   guide: [
     { label: "제작 과정", href: "/process" },
     { label: "서비스 이용 안내", href: "/guide" },

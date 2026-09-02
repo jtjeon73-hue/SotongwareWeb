@@ -62,6 +62,8 @@ export interface HomeDictionary {
     eyebrow: string;
     title: string;
     description: string;
+    exploreCta: string;
+    exploreHref: string;
     units: {
       id: string;
       title: string;

@@ -50,12 +50,17 @@ export interface SiteNavDictionary {
   viewService: string;
   viewAllServices: string;
   externalSite: string;
+  brandSubtitle: string;
+  digitalVenturesBadge: string;
+  digitalVenturesBlurb: string;
+  digitalVenturesHubCta: string;
   technologyItems: { label: string; slug: CapabilitySlug }[];
   ventureItems: { label: string; href: string }[];
 }
 
 export interface SiteFooterDictionary {
   tagline: string;
+  description: string;
   externalServices: string;
   guide: string;
   company: string;

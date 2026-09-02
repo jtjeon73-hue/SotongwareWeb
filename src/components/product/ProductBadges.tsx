@@ -1,11 +1,11 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/i18n/config";
 import type { SotongProduct } from "@/types/product";
-import {
-  getRevenueDisplayBadges,
-  REVENUE_BADGE_LABELS,
-  type RevenueDisplayBadge,
-} from "@/lib/commerce";
-import { ACCESS_LABELS, STATUS_LABELS, APP_RELEASE_LABELS } from "@/lib/products";
+import { getRevenueDisplayBadges, type RevenueDisplayBadge } from "@/lib/commerce";
+import { REVENUE_BADGE_LABELS, ACCESS_LABELS, STATUS_LABELS, APP_RELEASE_LABELS } from "@/i18n/product-labels";
+import { useLocale } from "@/contexts/LocaleProvider";
 
 const REVENUE_BADGE_STYLES: Record<RevenueDisplayBadge, string> = {
   free: "bg-emerald-50 text-emerald-700 ring-emerald-200",
@@ -22,12 +22,17 @@ export function RevenueStatusBadges({
   product,
   className,
   max = 4,
+  locale: localeProp,
 }: {
   product: SotongProduct;
   className?: string;
   max?: number;
+  locale?: Locale;
 }) {
+  const { locale: ctxLocale } = useLocale();
+  const locale = localeProp ?? ctxLocale;
   const badges = getRevenueDisplayBadges(product).slice(0, max);
+  const labels = REVENUE_BADGE_LABELS[locale];
 
   if (badges.length === 0) return null;
 
@@ -41,21 +46,25 @@ export function RevenueStatusBadges({
             REVENUE_BADGE_STYLES[badge],
           )}
         >
-          {REVENUE_BADGE_LABELS[badge]}
+          {labels[badge]}
         </span>
       ))}
     </div>
   );
 }
 
-/** @deprecated RevenueStatusBadges 사용 권장 — 하위 호환 */
 export function ProductStatusBadge({
   status,
   className,
+  locale: localeProp,
 }: {
   status: SotongProduct["status"];
   className?: string;
+  locale?: Locale;
 }) {
+  const { locale: ctxLocale } = useLocale();
+  const locale = localeProp ?? ctxLocale;
+
   return (
     <span
       className={cn(
@@ -67,7 +76,7 @@ export function ProductStatusBadge({
         className,
       )}
     >
-      {STATUS_LABELS[status]}
+      {STATUS_LABELS[locale][status]}
     </span>
   );
 }
@@ -75,10 +84,15 @@ export function ProductStatusBadge({
 export function AccessModeBadge({
   accessMode,
   className,
+  locale: localeProp,
 }: {
   accessMode: SotongProduct["accessMode"];
   className?: string;
+  locale?: Locale;
 }) {
+  const { locale: ctxLocale } = useLocale();
+  const locale = localeProp ?? ctxLocale;
+
   return (
     <span
       className={cn(
@@ -88,16 +102,18 @@ export function AccessModeBadge({
         className,
       )}
     >
-      {ACCESS_LABELS[accessMode]}
+      {ACCESS_LABELS[locale][accessMode]}
     </span>
   );
 }
 
-export function AppReleaseBadge({ status }: { status?: string }) {
+export function AppReleaseBadge({ status, locale: localeProp }: { status?: string; locale?: Locale }) {
+  const { locale: ctxLocale } = useLocale();
+  const locale = localeProp ?? ctxLocale;
   if (!status) return null;
   return (
     <span className="inline-flex rounded-md bg-surface-100 px-2 py-0.5 text-xs font-medium text-surface-700">
-      {APP_RELEASE_LABELS[status] ?? status}
+      {APP_RELEASE_LABELS[locale][status] ?? status}
     </span>
   );
 }

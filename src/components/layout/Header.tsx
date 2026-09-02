@@ -2,19 +2,28 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AuthNav } from "@/components/auth/AuthNav";
 import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import { TechnologyNavMenu, DigitalVenturesNavMenu } from "@/components/layout/TechnologyNavMenu";
 import { LocalizedLink } from "@/components/locale/LocalizedLink";
 import { Button } from "@/components/ui/Button";
 import { useLocale } from "@/contexts/LocaleProvider";
+import { useAuthLocale } from "@/hooks/useAuthLocale";
+import { getFullDictionary } from "@/i18n/get-dictionary";
 import { siteConfig } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 import { localizePath } from "@/i18n/localized-path";
+import type { Locale } from "@/i18n/config";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { locale, dict } = useLocale();
+  const pathname = usePathname() ?? "/";
+  const isAuthPath = /^\/(login|signup|forgot-password)(\/|$)/.test(pathname);
+  const authLocale = useAuthLocale();
+  const { locale: routeLocale } = useLocale();
+  const locale: Locale = isAuthPath ? authLocale : routeLocale;
+  const dict = getFullDictionary(locale);
   const nav = dict.site.nav;
 
   const topLinks = [
@@ -26,7 +35,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-surface-200/80 bg-white/95 backdrop-blur-sm">
-      <div className="container-main flex h-14 items-center justify-between sm:h-16">
+      <div className="container-main flex h-14 items-center gap-2 sm:h-16 sm:gap-3">
         <Link
           href={localizePath("/", locale)}
           className="flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
@@ -35,13 +44,13 @@ export function Header() {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
             S
           </span>
-          <div className="flex flex-col leading-tight">
+          <div className="flex min-w-0 flex-col leading-tight">
             <span className="text-sm font-bold text-surface-900">{siteConfig.name}</span>
-            <span className="hidden text-[11px] text-surface-500 sm:block">{siteConfig.nameKo}</span>
+            <span className="hidden truncate text-[11px] text-surface-500 sm:block">{nav.brandSubtitle}</span>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex" aria-label={nav.mainMenu}>
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 px-2 lg:flex xl:gap-1" aria-label={nav.mainMenu}>
           <TechnologyNavMenu />
           <DigitalVenturesNavMenu />
           {topLinks.map((item) => (
@@ -55,9 +64,9 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden shrink-0 items-center gap-2 sm:gap-3 lg:flex">
           <LocaleSwitcher />
-          <AuthNav />
+          <AuthNav locale={locale} />
           <Button href={localizePath("/contact", locale)} variant="primary" size="sm" className="min-h-11">
             {nav.contactCta}
           </Button>
@@ -65,7 +74,7 @@ export function Header() {
 
         <button
           type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-lg text-surface-700 transition-colors hover:bg-surface-100 lg:hidden"
+          className="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-surface-700 transition-colors hover:bg-surface-100 lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
@@ -100,7 +109,7 @@ export function Header() {
               {item.label}
             </LocalizedLink>
           ))}
-          <p className="mt-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">{nav.digitalVentures}</p>
+          <p className="mt-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-brand-600">{nav.digitalVentures}</p>
           {nav.ventureItems.map((item) => (
             <LocalizedLink
               key={item.href}
@@ -124,7 +133,7 @@ export function Header() {
           <div className="mt-2 space-y-2 border-t border-surface-100 px-3 pt-4">
             <LocaleSwitcher className="w-full justify-center" />
             <div className="pb-2">
-              <AuthNav />
+              <AuthNav locale={locale} />
             </div>
             <Button
               href={localizePath("/contact", locale)}

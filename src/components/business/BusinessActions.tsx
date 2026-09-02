@@ -3,6 +3,8 @@
 import Link from "next/link";
 import type { BusinessArea } from "@/types/product";
 import { getPublicExternalSiteUrl } from "@/lib/business-sites";
+import { businessSiteStatusLabels, getLocalizedExternalSiteLabel } from "@/lib/business-i18n";
+import { useLocale } from "@/contexts/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
@@ -59,9 +61,10 @@ export function BusinessExternalSiteLink({
   className?: string;
   label?: string;
 }) {
+  const { locale } = useLocale();
   if (!getPublicExternalSiteUrl(area) || area.siteStatus === "coming-soon") return null;
 
-  const displayLabel = label ?? area.externalSiteLabel ?? "전문 사이트 방문 ↗";
+  const displayLabel = label ?? getLocalizedExternalSiteLabel(area, locale);
   const siteUrl = getPublicExternalSiteUrl(area)!;
 
   return (
@@ -106,8 +109,10 @@ export function BusinessContactLink({
 }
 
 export function BusinessSiteStatusBadge({ status }: { status: BusinessArea["siteStatus"] }) {
+  const { locale } = useLocale();
   if (status === "active") return null;
-  const label = status === "preparing" ? "서비스 확장 중" : "준비 중";
+  const labels = businessSiteStatusLabels[locale];
+  const label = status === "preparing" ? labels.preparing : labels["coming-soon"];
   return (
     <span className="inline-flex rounded-md bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800 ring-1 ring-amber-200">
       {label}

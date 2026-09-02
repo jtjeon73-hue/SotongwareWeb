@@ -18,6 +18,10 @@ export const enSite: SiteDictionary = {
     viewService: "View service",
     viewAllServices: "All services",
     externalSite: "Dedicated site ↗",
+    brandSubtitle: "Digital business platform",
+    digitalVenturesBadge: "Core",
+    digitalVenturesBlurb: "SotongWare's core growth businesses — apps, e-books, sites, content, education, and automation",
+    digitalVenturesHubCta: "Product portfolio",
     technologyItems: [
       { label: "Industrial automation", slug: "industrial-automation" },
       { label: "Smart farm & ag automation", slug: "smart-farm" },
@@ -25,15 +29,18 @@ export const enSite: SiteDictionary = {
       { label: "Apps, web & remote control", slug: "multiplatform-control" },
     ],
     ventureItems: [
-      { label: "E-books", href: "/ebooks" },
       { label: "Apps", href: "/apps" },
+      { label: "E-books", href: "/ebooks" },
       { label: "Websites", href: "/marketing" },
       { label: "Content", href: "/contents" },
       { label: "Knowledge & education", href: "/knowledge" },
+      { label: "Automation solutions", href: "/automation" },
     ],
   },
   footer: {
     tagline: "Digital business platform",
+    description:
+      "SotongWare builds and operates industrial automation, apps, e-books, learning, marketing, and content as digital products.",
     externalServices: "Service channels",
     guide: "Usage guide",
     company: "Company",

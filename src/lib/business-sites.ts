@@ -1,5 +1,7 @@
 import type { BusinessArea } from "@/types/product";
 import { canExposeExternalSiteLink } from "@/data/business-access";
+import type { Locale } from "@/i18n/config";
+import { getLocalizedExternalSiteName } from "@/lib/business-i18n";
 
 /** Custom Domain이 ACTIVE·HTTPS 검증된 경우에만 subdomain URL 반환 */
 export function getExternalSiteUrl(area: BusinessArea): string | undefined {
@@ -24,6 +26,6 @@ export function getPublicExternalSiteUrl(area: BusinessArea): string | undefined
 }
 
 /** 고객 화면용 외부 사이트 표시명 */
-export function getExternalSiteDisplayName(area: BusinessArea): string {
-  return area.externalSiteName ?? area.titleKo;
+export function getExternalSiteDisplayName(area: BusinessArea, locale: Locale = "ko"): string {
+  return getLocalizedExternalSiteName(area, locale);
 }

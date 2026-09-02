@@ -1,7 +1,8 @@
 import type { SotongProduct } from "@/types/product";
+import type { SotongProductI18n } from "@/lib/product-i18n";
 
 /** SotongWare 제작 앱 — 향후 Sotong24Work 자동 등록 */
-export const apps: SotongProduct[] = [
+export const apps: (SotongProduct & { i18n?: SotongProductI18n })[] = [
   {
     id: "app-electrical-inspection-check",
     slug: "electrical-inspection-check",
@@ -19,6 +20,21 @@ export const apps: SotongProduct[] = [
     publishedAt: "2026-08-01",
     updatedAt: "2026-08-29",
     featured: true,
+    i18n: {
+      en: {
+        title: "Electrical Inspection Checklist",
+        subtitle: "Field support for electrical facility inspections",
+        description:
+          "A mobile app that supports checklists and inspection records for electrical facility work. Currently in development and validation to help standardize on-site inspection workflows.",
+        category: "Industrial · Electrical",
+        priceLabel: "Free after launch",
+        features: [
+          "Manage electrical inspection items",
+          "Support on-site inspection checks",
+          "Track inspection records",
+        ],
+      },
+    },
     storeLinks: {},
     commerceChannels: [
       {

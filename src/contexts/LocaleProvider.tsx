@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/config";
 import { defaultLocale } from "@/i18n/config";
 import { detectLocaleFromPath } from "@/i18n/localized-path";
 import { getFullDictionary } from "@/i18n/get-dictionary";
+import { useLocaleRoute } from "@/contexts/LocaleRouteContext";
 import type { FullDictionary } from "@/i18n/site-types";
 import type { HomeDictionary } from "@/i18n/types";
 
@@ -23,7 +24,8 @@ const LocaleContext = createContext<LocaleContextValue>({
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const locale = detectLocaleFromPath(pathname ?? "/");
+  const routeLocale = useLocaleRoute();
+  const locale = routeLocale ?? detectLocaleFromPath(pathname ?? "/");
 
   const value = useMemo(
     () => ({ locale, dict: getFullDictionary(locale) }),

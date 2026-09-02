@@ -37,6 +37,11 @@ export function DigitalVenturesSection({ dict }: DigitalVenturesSectionProps) {
           align="center"
           className="[&_h2]:text-white [&_p]:text-surface-300 [&_p:first-child]:text-brand-300"
         />
+        <div className="mt-6 flex justify-center">
+          <LocalizedButton href={ventures.exploreHref} variant="primary" className="min-h-11 px-6">
+            {ventures.exploreCta}
+          </LocalizedButton>
+        </div>
 
         <div className="mt-12 space-y-6">
           {ventures.units.map((unit, index) => {

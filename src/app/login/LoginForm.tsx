@@ -4,7 +4,8 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthProvider";
-import { getAuthErrorMessage } from "@/lib/auth-errors";
+import { useAuthLocale } from "@/hooks/useAuthLocale";
+import { authLabels, getAuthErrorMessage } from "@/i18n/auth-labels";
 import { sanitizeRedirectPath } from "@/lib/safe-redirect";
 import {
   AuthCard,
@@ -19,11 +20,17 @@ function LoginFormInner() {
   const searchParams = useSearchParams();
   const redirect = sanitizeRedirectPath(searchParams.get("redirect"));
   const { signInWithEmail, signInWithGoogle, user, configured } = useAuth();
+  const locale = useAuthLocale();
+  const labels = authLabels[locale];
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.lang = locale === "en" ? "en" : "ko";
+  }, [locale]);
 
   useEffect(() => {
     if (user) {
@@ -43,7 +50,7 @@ function LoginFormInner() {
       await signInWithEmail(email.trim(), password);
       router.replace(redirect);
     } catch (err) {
-      setError(getAuthErrorMessage(err));
+      setError(getAuthErrorMessage(err, locale));
     } finally {
       setLoading(false);
     }
@@ -56,7 +63,7 @@ function LoginFormInner() {
       await signInWithGoogle();
       router.replace(redirect);
     } catch (err) {
-      setError(getAuthErrorMessage(err));
+      setError(getAuthErrorMessage(err, locale));
     } finally {
       setLoading(false);
     }
@@ -64,24 +71,24 @@ function LoginFormInner() {
 
   if (!configured) {
     return (
-      <AuthCard title="로그인" description="Firebase 설정이 필요합니다.">
-        <FormAlert
-          message="인증 서비스가 아직 설정되지 않았습니다. 관리자에게 문의해 주세요."
-          variant="info"
-        />
+      <AuthCard title={labels.loginTitle} description={labels.firebaseNotConfigured}>
+        <FormAlert message={labels.firebaseNotConfiguredDetail} variant="info" />
       </AuthCard>
     );
   }
 
   return (
     <AuthCard
-      title="로그인"
-      description="SotongWare 회원 계정으로 로그인하고 사업 포털을 이용하세요."
+      title={labels.loginTitle}
+      description={labels.loginDescription}
       footer={
         <p className="text-center text-sm text-surface-600">
-          계정이 없으신가요?{" "}
-          <Link href={`/signup?redirect=${encodeURIComponent(redirect)}`} className="font-medium text-brand-600 hover:text-brand-700">
-            회원가입
+          {labels.noAccount}{" "}
+          <Link
+            href={`/signup?redirect=${encodeURIComponent(redirect)}`}
+            className="font-medium text-brand-600 hover:text-brand-700"
+          >
+            {labels.signUp}
           </Link>
         </p>
       }
@@ -90,7 +97,7 @@ function LoginFormInner() {
         {error && <FormAlert message={error} />}
         <FormField
           id="login-email"
-          label="이메일"
+          label={labels.email}
           type="email"
           value={email}
           onChange={setEmail}
@@ -99,7 +106,7 @@ function LoginFormInner() {
         />
         <FormField
           id="login-password"
-          label="비밀번호"
+          label={labels.password}
           type="password"
           value={password}
           onChange={setPassword}
@@ -107,24 +114,23 @@ function LoginFormInner() {
           required
         />
         <div className="flex justify-end">
-          <Link
-            href="/forgot-password"
-            className="text-sm font-medium text-brand-600 hover:text-brand-700"
-          >
-            비밀번호를 잊으셨나요?
+          <Link href="/forgot-password" className="text-sm font-medium text-brand-600 hover:text-brand-700">
+            {labels.forgotPassword}
           </Link>
         </div>
-        <SubmitButton loading={loading}>로그인</SubmitButton>
+        <SubmitButton loading={loading} loadingLabel={labels.processing}>
+          {labels.submitLogin}
+        </SubmitButton>
       </form>
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
           <div className="w-full border-t border-surface-200" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-surface-500">또는</span>
+          <span className="bg-white px-2 text-surface-500">{labels.or}</span>
         </div>
       </div>
-      <GoogleSignInButton onClick={handleGoogle} loading={loading} />
+      <GoogleSignInButton onClick={handleGoogle} loading={loading} label={labels.googleContinue} />
     </AuthCard>
   );
 }

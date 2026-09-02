@@ -1,18 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import type { Locale } from "@/i18n/config";
 import type { SotongProduct } from "@/types/product";
-import { productDetailPath, formatPrice } from "@/lib/products";
+import { formatProductPrice, getLocalizedProduct } from "@/lib/product-i18n";
+import { productDetailPath } from "@/lib/products";
+import { localizePath } from "@/i18n/localized-path";
+import { useLocale } from "@/contexts/LocaleProvider";
 import { trackEvent } from "@/lib/analytics";
 import { RevenueStatusBadges } from "./ProductBadges";
 import { ServiceIcon } from "@/components/ui/Icons";
 
 interface ProductCardProps {
   product: SotongProduct;
+  locale?: Locale;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
-  const href = productDetailPath(product);
+export function ProductCard({ product, locale: localeProp }: ProductCardProps) {
+  const { locale: ctxLocale } = useLocale();
+  const locale = localeProp ?? ctxLocale;
+  const localized = getLocalizedProduct(product, locale);
+  const href = localizePath(productDetailPath(product), locale);
 
   return (
     <article className="group flex flex-col rounded-xl border border-surface-200 bg-white transition-colors hover:border-brand-300 hover:shadow-sm">
@@ -37,22 +45,22 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
           <div className="flex flex-wrap justify-end gap-1">
-            <RevenueStatusBadges product={product} max={3} />
+            <RevenueStatusBadges product={product} locale={locale} max={3} />
           </div>
         </div>
         <h3 className="mt-4 text-base font-semibold text-surface-900 group-hover:text-brand-700">
-          {product.title}
+          {localized.title}
         </h3>
-        {product.subtitle && (
-          <p className="mt-1 text-sm text-brand-600">{product.subtitle}</p>
+        {localized.subtitle && (
+          <p className="mt-1 text-sm text-brand-600">{localized.subtitle}</p>
         )}
         <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-surface-600">
-          {product.description}
+          {localized.description}
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-surface-100 pt-4">
-          <span className="text-sm font-semibold text-surface-900">{formatPrice(product)}</span>
-          {product.category && (
-            <span className="text-xs text-surface-500">{product.category}</span>
+          <span className="text-sm font-semibold text-surface-900">{formatProductPrice(product, locale)}</span>
+          {localized.category && (
+            <span className="text-xs text-surface-500">{localized.category}</span>
           )}
         </div>
       </Link>
