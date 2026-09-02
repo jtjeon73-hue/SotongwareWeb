@@ -15,7 +15,8 @@
     "test:firestore:rules": "firebase emulators:exec --only firestore --project sotongware \"node scripts/firestore-rules.test.mjs\"",
     "test:i18n:parity": "node scripts/i18n-parity.test.mjs",
     "test:i18n:rendered": "node scripts/i18n-rendered.test.mjs",
-    "test:header:layout": "node scripts/header-layout.test.mjs"
+    "test:header:layout": "node scripts/header-layout.test.mjs",
+    "test:publication:gate": "node scripts/publication-gate.test.mjs"
   },
   "dependencies": {
     "firebase": "^11.10.0",

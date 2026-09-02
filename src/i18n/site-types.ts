@@ -37,6 +37,7 @@ export interface SiteNavDictionary {
   technology: string;
   digitalVentures: string;
   portfolio: string;
+  portfolioItems: { label: string; href: string; description: string }[];
   about: string;
   contact: string;
   contactCta: string;

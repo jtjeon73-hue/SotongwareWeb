@@ -36,13 +36,13 @@ const checks = [
   {
     route: "ko.html",
     label: "KO home",
-    mustInclude: ["header-shell", "whitespace-nowrap", "data-testid=\"site-header\"", "상담 문의", "안내"],
+    mustInclude: ["header-shell", "whitespace-nowrap", "data-testid=\"site-header\"", "상담 문의", "안내", "포트폴리오", "기술역량", "디지털 사업"],
     mustExclude: ["상담·제작 문의</"],
   },
   {
     route: "en.html",
     label: "EN home",
-    mustInclude: ["header-shell", "whitespace-nowrap", "Resources", "Contact", "data-testid=\"header-desktop-nav\""],
+    mustInclude: ["header-shell", "whitespace-nowrap", "Resources", "Portfolio", "Technology", "Digital Ventures", "data-testid=\"header-desktop-nav\""],
     mustExclude: ["Consultation & inquiry", "Usage guide</a>"],
   },
 ];
@@ -62,6 +62,7 @@ for (const { route, label, mustInclude, mustExclude } of checks) {
   }
 
   const desktopNav = header.match(/data-testid="header-desktop-nav"[\s\S]*?<\/nav>/i)?.[0] ?? "";
+  const desktopNavTriggers = desktopNav.replace(/role="menu"[\s\S]*$/i, "");
 
   for (const token of mustInclude) {
     if (!header.includes(token)) {
@@ -72,7 +73,7 @@ for (const { route, label, mustInclude, mustExclude } of checks) {
   }
 
   for (const token of mustExclude) {
-    const scope = token.includes("</a>") ? desktopNav || header : header.replace(/aria-label="[^"]*"/g, "");
+    const scope = token.includes("</a>") ? desktopNavTriggers || desktopNav : header.replace(/aria-label="[^"]*"/g, "");
     if (scope.includes(token)) {
       fail(`${label}: header should not include "${token}"`);
     } else {

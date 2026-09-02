@@ -177,8 +177,9 @@ export const koHome: HomeDictionary = {
     eyebrow: "Verified Results",
     title: "제작 사례 및 출시 준비 결과물",
     description: "검증된 프로젝트와 준비 중인 결과물만 표시합니다. 상태를 Demo·검증 중·출시 준비·출시됨으로 구분합니다.",
-    emptyTitle: "첫 결과물이 준비되고 있습니다",
-    emptyDescription: "기획·제작·검증·배포가 완료되는 순서대로 공개합니다. 실제 결과물만 등록합니다.",
+    emptyTitle: "검증된 디지털 결과물을 준비하고 있습니다",
+    emptyDescription:
+      "품질과 정책 검토를 완료한 결과물만 공개합니다.",
     statusLabels: {
       demo: "Demo",
       testing: "검증 중",

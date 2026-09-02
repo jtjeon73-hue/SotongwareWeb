@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 import { locales } from "@/i18n/config";
-import { allProducts, getProductBySlug } from "@/data/products";
+import { getProductBySlug, getPublishedProducts } from "@/data/products";
 import { ProductDetailView } from "@/components/product/ProductDetailView";
 import { createLocalePageMetadata } from "@/i18n/metadata";
 import { localizePath } from "@/i18n/localized-path";
@@ -12,9 +12,7 @@ const BUILD_PLACEHOLDER = "__build__";
 type PageProps = { params: Promise<{ locale: Locale; slug: string }> };
 
 export function generateStaticParams() {
-  const slugs = allProducts
-    .filter((p) => p.status !== "draft")
-    .map((p) => p.slug);
+  const slugs = getPublishedProducts().map((p) => p.slug);
   if (slugs.length === 0) {
     return locales.flatMap((locale) => [{ locale, slug: BUILD_PLACEHOLDER }]);
   }

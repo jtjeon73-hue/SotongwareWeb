@@ -1,4 +1,5 @@
 import type { CommerceChannel } from "@/types/commerce";
+import type { PublicationGateRecord } from "@/types/publication";
 
 export type ProductType =
   | "app"
@@ -104,6 +105,8 @@ export interface SotongProduct {
   contentMeta?: ContentMeta;
   /** 판매·배포·전환 채널 (storeLinks보다 우선) */
   commerceChannels?: CommerceChannel[];
+  /** 공개 승인 Gate — SotongWareControl 연동 예정. 미설정 시 fail-closed */
+  publicationGate?: PublicationGateRecord;
 }
 
 export type BusinessSiteStatus = "active" | "preparing" | "coming-soon";

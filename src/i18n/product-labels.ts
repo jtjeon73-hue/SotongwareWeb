@@ -120,7 +120,8 @@ export const catalogUi: Record<
   ko: {
     heroEyebrow: "Product Catalog",
     heroTitle: "디지털 상품",
-    heroDescription: "SotongWare가 제작·운영하는 디지털 제품 목록입니다.",
+    heroDescription:
+      "검증된 디지털 결과물만 공개합니다. 품질·정책 검토를 완료한 제품만 이곳에 표시됩니다.",
     featuredTitle: "현재 공개 중인 제품",
     featuredDescriptionSingle: "현재 공개 중인 SotongWare 디지털 제품입니다.",
     featuredDescriptionMulti: "실제 제작·검증 중이거나 공개된 제품입니다.",
@@ -163,7 +164,8 @@ export const catalogUi: Record<
   en: {
     heroEyebrow: "Product Catalog",
     heroTitle: "Digital products",
-    heroDescription: "Products built and operated by SotongWare.",
+    heroDescription:
+      "We publish only verified digital products that passed quality and compliance review.",
     featuredTitle: "Available products",
     featuredDescriptionSingle: "The digital product we currently publish and validate.",
     featuredDescriptionMulti: "Products in validation or already available.",
@@ -227,9 +229,13 @@ export const emptyStateLabels: Record<
   Locale,
   {
     catalog: string;
+    catalogForType: (type: string) => string;
     title: string;
     description: string;
     note: string;
+    criteriaTitle: string;
+    criteriaItems: string[];
+    pipelineTitle: string;
     ctaServices: string;
     ctaContact: string;
     ctaProducts: string;
@@ -237,21 +243,39 @@ export const emptyStateLabels: Record<
 > = {
   ko: {
     catalog: "SotongWare Products",
-    title: "새로운 결과물을 준비하고 있습니다",
-    description: "SotongWare에서 제작·검증을 마친 제품과 콘텐츠만 이곳에 공개합니다.",
-    note: "앱, 전자책, 교육, 콘텐츠, 자동화 — 제작·검수 완료 후 순차 공개됩니다.",
-    ctaServices: "서비스 둘러보기",
-    ctaContact: "제작 문의",
-    ctaProducts: "디지털 상품",
+    catalogForType: (type) => `${type} 카탈로그`,
+    title: "검증된 디지털 결과물을 준비하고 있습니다",
+    description:
+      "품질과 정책 검토를 완료한 결과물만 공개합니다.",
+    note: "앱, 전자책, 음악, 콘텐츠, 지식·교육, 산업·스마트팜 사례 — 검토 완료 후 순차 공개됩니다.",
+    criteriaTitle: "공개 기준",
+    criteriaItems: [
+      "제작 완료 및 단계별 검증 PASS",
+      "품질·저작권·정책·보안 검토 완료",
+      "소통총관제 사용자 최종 승인",
+    ],
+    pipelineTitle: "준비 중인 분야",
+    ctaServices: "사업부 둘러보기",
+    ctaContact: "제작·상담 문의",
+    ctaProducts: "포트폴리오 안내",
   },
   en: {
     catalog: "SotongWare Products",
-    title: "New outcomes are in preparation",
-    description: "Only products and content validated by SotongWare appear here.",
-    note: "Apps, e-books, learning, content, and automation publish after review.",
-    ctaServices: "Explore services",
-    ctaContact: "Contact us",
-    ctaProducts: "Digital products",
+    catalogForType: (type) => `${type} catalog`,
+    title: "Our verified digital products are being prepared",
+    description:
+      "We publish only products that have completed quality and compliance review.",
+    note: "Apps, e-books, music, content, knowledge, and industrial cases publish after review.",
+    criteriaTitle: "Publication criteria",
+    criteriaItems: [
+      "Production complete with step validators passed",
+      "Quality, copyright, policy, and security review complete",
+      "Final user approval in SotongWare Control",
+    ],
+    pipelineTitle: "Areas in preparation",
+    ctaServices: "Explore business areas",
+    ctaContact: "Consultation & inquiry",
+    ctaProducts: "Portfolio overview",
   },
 };
 

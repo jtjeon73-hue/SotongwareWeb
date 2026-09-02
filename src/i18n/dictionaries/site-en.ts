@@ -5,6 +5,12 @@ export const enSite: SiteDictionary = {
     technology: "Technology",
     digitalVentures: "Digital Ventures",
     portfolio: "Portfolio",
+    portfolioItems: [
+      { label: "Full portfolio", href: "/products", description: "Verified digital outcomes" },
+      { label: "Digital products", href: "/products", description: "Apps, e-books, content" },
+      { label: "Case studies", href: "/works", description: "Outcomes by business area" },
+      { label: "Launch prep areas", href: "/products", description: "Domains under review" },
+    ],
     about: "About",
     contact: "Contact",
     contactCta: "Contact",

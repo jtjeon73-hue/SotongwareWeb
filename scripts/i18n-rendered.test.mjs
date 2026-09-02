@@ -77,16 +77,27 @@ for (const route of EN_ROUTES) {
     pass(`${route}: no Korean in visible text`);
   }
 
+  if (text.includes("Electrical Inspection") || text.includes("Electrical Inspection Check")) {
+    fail(`${route}: unpublished product visible on EN page`);
+  } else if (route === "en.html" || route === "en/products.html") {
+    pass(`${route}: no unpublished EN product copy`);
+  }
+
   if (route === "en/products.html") {
     if (EN_FORBIDDEN_UI.test(text)) {
       fail("en/products.html: forbidden Korean UI strings");
     } else {
       pass("en/products.html: no forbidden Korean UI strings");
     }
-    if (!text.includes("Electrical Inspection") && !text.includes("Available products")) {
-      fail("en/products.html: missing expected English product copy");
+    if (text.includes("Electrical Inspection") || text.includes("전기 점검")) {
+      fail("en/products.html: unpublished electrical app visible");
     } else {
-      pass("en/products.html: English product copy present");
+      pass("en/products.html: no unpublished electrical app");
+    }
+    if (!text.includes("being prepared") && !text.includes("verified digital")) {
+      fail("en/products.html: missing publication empty-state copy");
+    } else {
+      pass("en/products.html: publication empty-state copy present");
     }
     if (!text.includes("Log In") || !text.includes("Sign Up")) {
       fail("en/products.html: missing Log In / Sign Up in header");
@@ -94,6 +105,7 @@ for (const route of EN_ROUTES) {
       pass("en/products.html: Log In / Sign Up present");
     }
   }
+
 }
 
 for (const route of KO_ROUTES) {
@@ -108,6 +120,11 @@ for (const route of KO_ROUTES) {
     fail(`${route}: English auth labels on Korean page`);
   } else {
     pass(`${route}: no English-only auth labels`);
+  }
+  if (route === "ko/products.html" && text.includes("전기 점검")) {
+    fail("ko/products.html: unpublished electrical app visible");
+  } else if (route === "ko/products.html") {
+    pass("ko/products.html: no unpublished electrical app");
   }
 }
 

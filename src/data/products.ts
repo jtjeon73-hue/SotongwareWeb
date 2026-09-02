@@ -5,6 +5,7 @@ import { contents } from "@/data/contents";
 import { marketingProducts } from "@/data/marketing";
 import { automationProducts } from "@/data/automation";
 import type { AccessMode, ProductStatus, ProductType, SotongProduct } from "@/types/product";
+import { isProductPublic } from "@/lib/publication-eligibility";
 
 export const allProducts: SotongProduct[] = [
   ...apps,
@@ -20,15 +21,22 @@ export function getProductById(id: string): SotongProduct | undefined {
 }
 
 export function getProductBySlug(slug: string): SotongProduct | undefined {
-  return allProducts.find((p) => p.slug === slug && p.status !== "draft");
+  const product = allProducts.find((p) => p.slug === slug);
+  if (!product || !isProductPublic(product)) return undefined;
+  return product;
+}
+
+/** 카탈로그 원본 조회 (Gate 미적용 — 내부·대시보드용) */
+export function getCatalogProductBySlug(slug: string): SotongProduct | undefined {
+  return allProducts.find((p) => p.slug === slug);
 }
 
 export function getProductsByType(type: ProductType): SotongProduct[] {
-  return allProducts.filter((p) => p.type === type && p.status !== "draft");
+  return allProducts.filter((p) => p.type === type && isProductPublic(p));
 }
 
 export function getPublishedProducts(): SotongProduct[] {
-  return allProducts.filter((p) => p.status === "published" || p.status === "ready");
+  return allProducts.filter(isProductPublic);
 }
 
 export interface ProductFilter {
@@ -39,7 +47,7 @@ export interface ProductFilter {
 }
 
 export function filterProducts(filter: ProductFilter): SotongProduct[] {
-  let list = allProducts.filter((p) => p.status !== "draft");
+  let list = allProducts.filter(isProductPublic);
 
   if (filter.type && filter.type !== "all") {
     list = list.filter((p) => p.type === filter.type);
@@ -65,11 +73,11 @@ export function filterProducts(filter: ProductFilter): SotongProduct[] {
 export function getRelatedProducts(product: SotongProduct, limit = 4): SotongProduct[] {
   if (!product.relatedProductIds?.length) {
     return allProducts
-      .filter((p) => p.id !== product.id && p.type === product.type && p.status !== "draft")
+      .filter((p) => p.id !== product.id && p.type === product.type && isProductPublic(p))
       .slice(0, limit);
   }
   return product.relatedProductIds
     .map((id) => getProductById(id))
-    .filter((p): p is SotongProduct => !!p && p.status !== "draft")
+    .filter((p): p is SotongProduct => !!p && isProductPublic(p))
     .slice(0, limit);
 }

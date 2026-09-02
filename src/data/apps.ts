@@ -19,7 +19,15 @@ export const apps: (SotongProduct & { i18n?: SotongProductI18n })[] = [
     priceLabel: "출시 후 무료 예정",
     publishedAt: "2026-08-01",
     updatedAt: "2026-08-29",
-    featured: true,
+    featured: false,
+    publicationGate: {
+      productionStatus: "completed",
+      validationStatus: "internal_validation",
+      qualityStatus: "pending",
+      complianceStatus: "pending",
+      publicationStatus: "internal_validation",
+      userFinalApproval: false,
+    },
     i18n: {
       en: {
         title: "Electrical Inspection Checklist",

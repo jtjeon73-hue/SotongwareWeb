@@ -1,11 +1,12 @@
 import type { SotongProduct } from "@/types/product";
 import { allProducts } from "@/data/products";
+import { isProductPublic } from "@/lib/publication-eligibility";
 
 export type ProductCountTier = "empty" | "single" | "few" | "many";
 
-/** draft 제외 공개 대상 상품 */
+/** 공개 승인 Gate를 통과한 상품만 반환 (fail-closed) */
 export function getVisibleProducts(): SotongProduct[] {
-  return allProducts.filter((p) => p.status !== "draft");
+  return allProducts.filter(isProductPublic);
 }
 
 export function getProductCountTier(count?: number): ProductCountTier {
@@ -43,9 +44,9 @@ export function getWorksSectionCopy(tier: ProductCountTier) {
     case "empty":
       return {
         eyebrow: "SotongWare Works",
-        title: "새로운 결과물을 준비하고 있습니다",
+        title: "검증된 디지털 결과물을 준비하고 있습니다",
         description:
-          "SotongWare에서 제작·검증을 마친 제품과 콘텐츠만 이곳에 공개합니다. 가짜 데이터는 등록하지 않습니다.",
+          "품질과 정책 검토를 완료한 결과물만 공개합니다. 가짜 데이터는 등록하지 않습니다.",
       };
     case "single":
       return {

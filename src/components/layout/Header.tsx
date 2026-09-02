@@ -8,7 +8,9 @@ import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import {
   TechnologyNavMenu,
   DigitalVenturesNavMenu,
+  PortfolioNavMenu,
   ResourcesNavMenu,
+  HeaderContactIcon,
 } from "@/components/layout/TechnologyNavMenu";
 import { LocalizedLink } from "@/components/locale/LocalizedLink";
 import { Button } from "@/components/ui/Button";
@@ -19,9 +21,6 @@ import { siteConfig } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 import { localizePath } from "@/i18n/localized-path";
 import type { Locale } from "@/i18n/config";
-
-const primaryNavLinkClass =
-  "shrink-0 whitespace-nowrap rounded-lg px-2.5 py-2 text-sm font-medium text-surface-600 transition-colors hover:bg-surface-100 hover:text-surface-900 break-keep";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -37,7 +36,10 @@ export function Header() {
     { label: nav.about, href: "/about" },
     { label: nav.process, href: "/process" },
     { label: nav.guide, href: "/guide" },
+    { label: nav.contact, href: "/contact" },
   ];
+
+  const portfolioMobileLinks = nav.portfolioItems;
 
   return (
     <header
@@ -55,40 +57,48 @@ export function Header() {
           </span>
           <div className="hidden min-w-0 flex-col leading-tight sm:flex">
             <span className="whitespace-nowrap text-sm font-bold text-surface-900">{siteConfig.name}</span>
-            <span className="hidden whitespace-nowrap text-[11px] text-surface-500 xl:block">
+            <span className="hidden whitespace-nowrap text-[11px] text-surface-500 2xl:block">
               {nav.brandSubtitle}
             </span>
           </div>
         </Link>
 
         <nav
-          className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex"
+          className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 lg:flex"
           aria-label={nav.mainMenu}
           data-testid="header-desktop-nav"
         >
           <TechnologyNavMenu />
           <DigitalVenturesNavMenu />
-          <LocalizedLink href="/products" className={primaryNavLinkClass}>
-            {nav.portfolio}
-          </LocalizedLink>
-          <ResourcesNavMenu />
+          <PortfolioNavMenu />
+          <div className="2xl:hidden">
+            <ResourcesNavMenu compact />
+          </div>
+          <div className="hidden 2xl:block">
+            <ResourcesNavMenu />
+          </div>
         </nav>
 
-        <div className="hidden shrink-0 items-center gap-1.5 xl:flex xl:gap-2" data-testid="header-actions">
+        <div className="hidden shrink-0 items-center gap-1.5 lg:flex lg:gap-2" data-testid="header-actions">
           <LocaleSwitcher compact />
-          <AuthNav locale={locale} />
-          <Button
-            href={localizePath("/contact", locale)}
-            variant="primary"
-            size="sm"
-            className="min-h-9 shrink-0 whitespace-nowrap px-3"
-            aria-label={nav.contactCtaAria}
-          >
-            {nav.contactCta}
-          </Button>
+          <div className="hidden items-center gap-1.5 2xl:flex 2xl:gap-2">
+            <AuthNav locale={locale} />
+            <Button
+              href={localizePath("/contact", locale)}
+              variant="primary"
+              size="sm"
+              className="min-h-9 shrink-0 whitespace-nowrap px-3"
+              aria-label={nav.contactCtaAria}
+            >
+              {nav.contactCta}
+            </Button>
+          </div>
+          <div className="flex items-center gap-1.5 2xl:hidden">
+            <HeaderContactIcon />
+          </div>
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-2 xl:hidden">
+        <div className="ml-auto flex shrink-0 items-center gap-2 lg:hidden">
           <LocaleSwitcher compact />
           <button
             type="button"
@@ -113,7 +123,7 @@ export function Header() {
 
       <div
         id="mobile-menu"
-        className={cn("border-t border-surface-200 bg-white xl:hidden", mobileOpen ? "block" : "hidden")}
+        className={cn("border-t border-surface-200 bg-white lg:hidden", mobileOpen ? "block" : "hidden")}
         aria-hidden={!mobileOpen}
       >
         <nav className="header-shell flex max-h-[80vh] flex-col overflow-y-auto py-3" aria-label={nav.mobileMenu}>
@@ -139,13 +149,17 @@ export function Header() {
               {item.label}
             </LocalizedLink>
           ))}
-          <LocalizedLink
-            href="/products"
-            className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
-            onClick={() => setMobileOpen(false)}
-          >
-            {nav.portfolio}
-          </LocalizedLink>
+          <p className="mt-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">{nav.portfolio}</p>
+          {portfolioMobileLinks.map((item) => (
+            <LocalizedLink
+              key={item.label + item.href}
+              href={item.href}
+              className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
+              onClick={() => setMobileOpen(false)}
+            >
+              {item.label}
+            </LocalizedLink>
+          ))}
           <p className="mt-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">{nav.resources}</p>
           {resourceLinks.map((item) => (
             <LocalizedLink

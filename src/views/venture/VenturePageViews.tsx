@@ -20,10 +20,8 @@ import { PricingTiers } from "@/components/pricing/PricingTiers";
 import { StructuredData } from "@/components/common/StructuredData";
 import { serviceJsonLd } from "@/lib/structured-data";
 import { getProductsByType } from "@/data/products";
-import { ebooks } from "@/data/ebooks";
-import { contents } from "@/data/contents";
-import { knowledgeItems, knowledgeFields } from "@/data/knowledge";
-import { automationPortfolio, automationProducts } from "@/data/automation";
+import { knowledgeFields } from "@/data/knowledge";
+import { automationPortfolio } from "@/data/automation";
 import { marketingTiers } from "@/data/marketing";
 import { isContactSubmissionAvailable } from "@/config/platform-status";
 import { EXTERNAL_SITE_MEMBER_NOTICE } from "@/data/business-access";
@@ -59,6 +57,7 @@ export function AppsPageView({ locale }: { locale: Locale }) {
         ) : (
           <ProductEmptyState
             type="app"
+            typeLabel={labels.typeLabel}
             title={labels.emptyTitle ?? ""}
             description={labels.emptyDescription ?? ""}
           />
@@ -71,7 +70,7 @@ export function AppsPageView({ locale }: { locale: Locale }) {
 
 export function EbooksPageView({ locale }: { locale: Locale }) {
   const labels = ventureLabels[locale].ebooks;
-  const published = ebooks.filter((e) => e.status !== "draft");
+  const published = getProductsByType("ebook");
 
   return (
     <div className="section-padding bg-white">
@@ -132,7 +131,7 @@ export function MarketingPageView({ locale }: { locale: Locale }) {
 
 export function ContentsPageView({ locale }: { locale: Locale }) {
   const labels = ventureLabels[locale].contents;
-  const published = contents.filter((c) => c.status !== "draft");
+  const published = getProductsByType("content");
   const categories = contentCategoryLabels[locale];
 
   return (
@@ -167,7 +166,7 @@ export function KnowledgePageView({ locale }: { locale: Locale }) {
   const sections = labels.sections ?? {};
   const tiers = knowledgeTierLabels[locale];
   const rails = knowledgeRailLabels[locale];
-  const published = knowledgeItems.filter((k) => k.status !== "draft");
+  const published = getProductsByType("knowledge");
 
   return (
     <div className="section-padding bg-white">
@@ -262,7 +261,7 @@ export function AutomationPageView({ locale }: { locale: Locale }) {
   const labels = ventureLabels[locale].automation;
   const sections = labels.sections ?? {};
   const capabilities = automationCapabilityLabels[locale];
-  const published = automationProducts.filter((p) => p.status !== "draft");
+  const published = getProductsByType("automation");
   const pageDesc = labels.description;
 
   return (

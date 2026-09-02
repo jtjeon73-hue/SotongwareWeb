@@ -165,8 +165,9 @@ export const enHome: HomeDictionary = {
     eyebrow: "Verified Results",
     title: "Featured work & launch-ready outcomes",
     description: "Only verified projects and items in preparation—labeled Demo, in validation, launch prep, or live.",
-    emptyTitle: "First outcomes are on the way",
-    emptyDescription: "We publish in order: plan, build, validate, deploy. Only real results—no placeholders.",
+    emptyTitle: "Our verified digital products are being prepared",
+    emptyDescription:
+      "We publish only products that have completed quality and compliance review.",
     statusLabels: {
       demo: "Demo",
       testing: "In validation",

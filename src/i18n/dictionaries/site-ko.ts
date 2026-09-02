@@ -4,7 +4,13 @@ export const koSite: SiteDictionary = {
   nav: {
     technology: "기술역량",
     digitalVentures: "디지털 사업",
-    portfolio: "결과물",
+    portfolio: "포트폴리오",
+    portfolioItems: [
+      { label: "전체 포트폴리오", href: "/products", description: "검증 완료된 디지털 결과물 모음" },
+      { label: "디지털 제품", href: "/products", description: "앱·전자책·콘텐츠 등 상품" },
+      { label: "제작 사례", href: "/works", description: "사업부별 제작·검증 결과" },
+      { label: "출시 준비 분야", href: "/products", description: "검토 중인 사업 영역" },
+    ],
     about: "소통웨어",
     contact: "문의",
     contactCta: "상담 문의",

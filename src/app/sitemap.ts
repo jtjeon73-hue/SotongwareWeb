@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/data/navigation";
 import { services } from "@/data/services";
-import { allProducts } from "@/data/products";
+import { getPublishedProducts } from "@/data/products";
 import { CAPABILITY_SLUGS } from "@/i18n/capabilities-config";
 import { locales } from "@/i18n/config";
 
@@ -31,7 +31,7 @@ const solutionSlugs = ["digital-business", "business-automation", "ai-utilizatio
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.url;
-  const productSlugs = allProducts.filter((p) => p.status !== "draft").map((p) => `products/${p.slug}`);
+  const productSlugs = getPublishedProducts().map((p) => `products/${p.slug}`);
   const serviceSlugs = services.map((s) => `services/${s.slug}`);
   const workPaths = workSlugs.map((s) => `works/${s}`);
   const solutionPaths = solutionSlugs.map((s) => `solutions/${s}`);
