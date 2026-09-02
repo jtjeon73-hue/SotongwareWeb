@@ -1,0 +1,233 @@
+import type { HomeDictionary } from "../types";
+
+export const enHome: HomeDictionary = {
+  meta: {
+    title: "From the factory floor to digital products",
+    description:
+      "SotongWare designs industrial automation, smart-farm, and AI software in the field—then ships apps, e-books, websites, content, and learning products you can actually use and sell.",
+  },
+  nav: {
+    services: "Services",
+    process: "How we build",
+    guide: "Usage guide",
+    about: "About SotongWare",
+    contact: "Contact",
+    contactCta: "Consultation & inquiry",
+    homeAria: "SotongWare home",
+    mainMenu: "Main menu",
+    mobileMenu: "Mobile menu",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
+  },
+  hero: {
+    eyebrow: "FIELD SOFTWARE × DIGITAL COMMERCE",
+    headline: "We understand the field, build software, and connect it to sellable digital outcomes",
+    subheadline:
+      "From industrial automation, smart farming, and remote operations to practical AI development—apps, e-books, websites, content, and education. SotongWare designs, validates, and deploys real products grounded in field experience.",
+    ctas: [
+      { label: "View capabilities", href: "#capabilities-heading", variant: "primary" },
+      { label: "Browse outcomes", href: "#results-heading", variant: "secondary" },
+      { label: "Contact us", href: "/contact", variant: "secondary" },
+    ],
+    highlights: [
+      { label: "Industrial & smart farm", desc: "PLC · MES · climate, irrigation & energy data" },
+      { label: "Practical AI", desc: "Build → validate → deploy workflow" },
+      { label: "Digital business", desc: "Apps · e-books · sites · content · education" },
+    ],
+  },
+  capabilities: {
+    eyebrow: "Core Capabilities",
+    title: "What we deliver",
+    description:
+      "No hype—only what we can actually execute: industrial software, smart-farm systems, AI tooling, and multi-platform product development.",
+    items: [
+      {
+        id: "industrial",
+        title: "Industrial automation software",
+        description:
+          "We understand equipment, PLCs, inspection, MES, and monitoring data flows—and build field-fit software around them.",
+        tags: ["PLC", "MES", "HMI", "Vision inspection", "Data acquisition"],
+      },
+      {
+        id: "smartfarm",
+        title: "Smart farm & ag automation",
+        description:
+          "Connect temperature, humidity, irrigation, crop, and energy data—with remote monitoring and alert-to-action workflows.",
+        tags: ["Environmental sensors", "Irrigation control", "Remote ops", "Energy management"],
+      },
+      {
+        id: "ai",
+        title: "AI software development & operations",
+        description:
+          "AI as a practical tool—not a slogan. We structure requirements, automation, validation, and deployment as one pipeline.",
+        tags: ["Requirements", "Automation", "Validation", "Deployment"],
+      },
+      {
+        id: "platform",
+        title: "Apps, web, desktop & remote control",
+        description:
+          "Design multi-device experiences so the field and the office see the same data on PC, tablet, and phone.",
+        tags: ["Android", "Web app", "Remote control", "Responsive"],
+      },
+    ],
+    cta: "Explore services",
+    ctaHref: "/services",
+  },
+  workflow: {
+    eyebrow: "How We Work",
+    title: "How it works",
+    description: "From field problems to revenue and performance improvement—a clear build-and-operate flow.",
+    steps: [
+      { step: 1, title: "Discover the field problem", description: "Define real issues and goals on the plant or farm floor." },
+      { step: 2, title: "Analyze requirements & data", description: "Study field data, operations, and technical constraints." },
+      { step: 3, title: "Design & develop", description: "Design and implement software, content, and interfaces." },
+      { step: 4, title: "Validate", description: "Test against field conditions and agreed requirements." },
+      { step: 5, title: "Deploy & operate", description: "Ship to apps, web, and on-site systems with operational hooks." },
+      { step: 6, title: "Improve revenue & outcomes", description: "Iterate using traffic, conversion, and operations data." },
+    ],
+    cta: "Full production process",
+    ctaHref: "/process",
+  },
+  showcase: {
+    eyebrow: "Digital Business Units",
+    title: "Online business units",
+    description:
+      "Each unit has its own visual language—e-books, apps, websites, content, and education—with honest status labels.",
+    units: [
+      {
+        id: "ebook",
+        title: "E-books",
+        subtitle: "Knowledge as a readable product",
+        description: "Covers, table of contents, audience, and formats (PDF, EPUB, mobile)—with clear free, paid, or upcoming labels.",
+        status: "Launch prep",
+        features: ["Bookshelf preview", "TOC & audience", "Detail & preview routes"],
+        cta: "Browse e-books",
+        ctaHref: "/ebooks",
+        visual: "ebook",
+      },
+      {
+        id: "app",
+        title: "Apps",
+        subtitle: "Mobile for field and daily work",
+        description: "Phone mockups and real UI flows show features, audience, and problems solved—with transparent Android release status.",
+        status: "In validation",
+        features: ["UI flow preview", "Features & audience", "Store & trial links"],
+        cta: "Try our apps",
+        ctaHref: "/apps",
+        visual: "app",
+      },
+      {
+        id: "site",
+        title: "Websites",
+        subtitle: "Search, marketing & knowledge hubs",
+        description: "Browser and mobile previews for corporate, marketing, industrial, and smart-farm site capabilities.",
+        status: "Live",
+        features: ["Responsive preview", "SEO & payments ready", "Build consultation"],
+        cta: "View site work",
+        ctaHref: "/marketing",
+        visual: "site",
+      },
+      {
+        id: "content",
+        title: "Content",
+        subtitle: "Music, shorts, video & promotion",
+        description: "Expand through real channel structures—no fake view counts when content is not live yet.",
+        status: "Expansion prep",
+        features: ["Media wall layout", "YouTube integration", "Channels & playlists"],
+        cta: "Watch music & shorts",
+        ctaHref: "/contents",
+        visual: "content",
+      },
+      {
+        id: "knowledge",
+        title: "Knowledge & education",
+        subtitle: "Practical knowledge, structured",
+        description: "Beginner to advanced paths linked to e-books, courses, and labs—with a member portal for paid expansion.",
+        status: "Member portal",
+        features: ["Learning tiers", "Source verification", "Free & paid paths"],
+        cta: "Start learning",
+        ctaHref: "/knowledge",
+        visual: "knowledge",
+      },
+    ],
+  },
+  results: {
+    eyebrow: "Verified Results",
+    title: "Real outcomes & cases",
+    description: "Only verified projects and items in preparation—labeled Demo, in validation, launch prep, or live.",
+    emptyTitle: "First outcomes are on the way",
+    emptyDescription: "We publish in order: plan, build, validate, deploy. Only real results—no placeholders.",
+    statusLabels: {
+      demo: "Demo",
+      testing: "In validation",
+      ready: "Launch prep",
+      published: "Live",
+      comingSoon: "Coming soon",
+    },
+    viewAll: "All outcomes",
+    viewDetail: "View details",
+  },
+  conversion: {
+    eyebrow: "Get Started",
+    title: "Take the next step",
+    description: "Before payments go live, connect through free resources, previews, consultation, and launch alerts.",
+    items: [
+      {
+        id: "resources",
+        title: "Free resources & guide",
+        description: "Learn how services work, our process, and free vs member vs paid access.",
+        cta: "Usage guide",
+        ctaHref: "/guide",
+        badge: "Free",
+      },
+      {
+        id: "preview",
+        title: "Preview outcomes",
+        description: "Preview apps, e-books, sites, and content on each dedicated channel.",
+        cta: "Browse outcomes",
+        ctaHref: "#results-heading",
+      },
+      {
+        id: "consult",
+        title: "Consultation & quote",
+        description: "Request help with automation, apps, web, e-books, or content production.",
+        cta: "Contact us",
+        ctaHref: "/contact",
+      },
+      {
+        id: "notify",
+        title: "Purchase, subscription & alerts",
+        description: "Payments are in preparation—connect via launch alerts and consultation for now.",
+        cta: "Request launch alert",
+        ctaHref: "/contact?topic=notify",
+        badge: "Coming soon",
+      },
+    ],
+  },
+  trust: {
+    eyebrow: "Trust & Policy",
+    title: "Trust, policy & contact",
+    description: "We publish only verified information and maintain a compliance review structure.",
+    items: [
+      { label: "Six service lines", desc: "Industrial · apps · e-books · knowledge · marketing · content", href: "#showcase-heading" },
+      { label: "Production process", desc: "Plan → build → validate → deploy", href: "/process" },
+      { label: "Usage guide", desc: "Free · member · paid · consultation", href: "/guide" },
+      { label: "About SotongWare", desc: "Stack & operating philosophy", href: "/about" },
+    ],
+    policyNote: "Products and content pass ComplianceStatus review and final approval before publication.",
+    policies: [
+      { label: "Privacy policy", href: "/privacy" },
+      { label: "Terms of use", href: "/terms" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
+  finalCta: {
+    title: "From field technology to digital business—start here",
+    description: "Review capabilities and outcome channels, then reach out for consultation or production.",
+    actions: [
+      { label: "View capabilities", href: "#capabilities-heading", variant: "primary" },
+      { label: "Usage guide", href: "/guide", variant: "secondary" },
+      { label: "Consultation & inquiry", href: "/contact", variant: "outline" },
+    ],
+  },
+};

@@ -22,6 +22,9 @@ export function BusinessSiteBanner({ businessId }: { businessId: ProductType }) 
         <p className="mt-1 text-sm text-surface-600">
           {area.tagline}. SotongWare {area.titleKo} 채널의 실제 운영 서비스입니다.
         </p>
+        <p className="mt-1 text-xs font-medium text-brand-700">
+          v{area.externalSiteVersion} · 최종 업데이트 {area.externalSiteUpdatedAt}
+        </p>
         {!showExternalLink && (
           <p className="mt-2 text-xs leading-relaxed text-surface-500">
             {EXTERNAL_SITE_MEMBER_NOTICE}

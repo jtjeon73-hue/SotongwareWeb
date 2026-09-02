@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { footerNavigation, siteConfig } from "@/data/navigation";
+import { releaseLabel } from "@/config/release-info";
 
 function FooterLinkGroup({
   title,
@@ -62,6 +63,7 @@ export function Footer() {
         </div>
         <div className="mt-8 flex flex-col gap-4 border-t border-surface-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-surface-500">© {year} {siteConfig.name}. All rights reserved.</p>
+          <p className="text-xs font-medium text-brand-700">{releaseLabel}</p>
         </div>
       </div>
     </footer>

@@ -1,0 +1,233 @@
+import type { HomeDictionary } from "../types";
+
+export const koHome: HomeDictionary = {
+  meta: {
+    title: "산업 현장에서 디지털 상품까지",
+    description:
+      "산업자동화·스마트팜·AI 소프트웨어를 현장에서 설계하고, 앱·전자책·사이트·콘텐츠까지 실제 결과물로 완성하는 SotongWare 공식 사업 허브",
+  },
+  nav: {
+    services: "서비스",
+    process: "제작 과정",
+    guide: "이용 안내",
+    about: "SotongWare 소개",
+    contact: "상담·문의",
+    contactCta: "상담·제작 문의",
+    homeAria: "소통웨어 홈",
+    mainMenu: "주요 메뉴",
+    mobileMenu: "모바일 메뉴",
+    openMenu: "메뉴 열기",
+    closeMenu: "메뉴 닫기",
+  },
+  hero: {
+    eyebrow: "FIELD SOFTWARE × DIGITAL COMMERCE",
+    headline: "현장을 이해하고, 소프트웨어를 만들고, 판매 가능한 디지털 결과물까지 연결합니다",
+    subheadline:
+      "산업자동화·스마트팜·원격관제부터 AI 활용 개발, 앱·전자책·사이트·콘텐츠·지식교육까지. SotongWare는 현장 경험을 바탕으로 실제 제품을 설계·검증·배포합니다.",
+    ctas: [
+      { label: "기술 역량 보기", href: "#capabilities-heading", variant: "primary" },
+      { label: "결과물 둘러보기", href: "#results-heading", variant: "secondary" },
+      { label: "상담·문의", href: "/contact", variant: "secondary" },
+    ],
+    highlights: [
+      { label: "산업·스마트팜 현장", desc: "PLC · MES · 환경·관수·에너지 데이터" },
+      { label: "AI 실용 개발", desc: "자동제작 → 검증 → 배포 흐름" },
+      { label: "디지털 사업 확장", desc: "앱 · 전자책 · 사이트 · 콘텐츠 · 교육" },
+    ],
+  },
+  capabilities: {
+    eyebrow: "Core Capabilities",
+    title: "핵심 기술 역량",
+    description:
+      "과장하지 않습니다. 현장에서 실제로 수행 가능한 범위로 산업 소프트웨어, 스마트팜, AI, 멀티플랫폼 개발 역량을 제공합니다.",
+    items: [
+      {
+        id: "industrial",
+        title: "산업자동화 소프트웨어",
+        description:
+          "설비·PLC·검사·MES·모니터링 데이터 흐름을 이해하고, 현장 맞춤 소프트웨어를 설계·개발합니다.",
+        tags: ["PLC", "MES", "HMI", "비전검사", "데이터 수집"],
+      },
+      {
+        id: "smartfarm",
+        title: "스마트팜·농업자동화",
+        description:
+          "온도·습도·관수·생육·에너지 관리 데이터를 연결하고, 원격관제와 경보·조치 흐름을 소프트웨어로 구현합니다.",
+        tags: ["환경 센서", "관수 제어", "원격관제", "에너지 관리"],
+      },
+      {
+        id: "ai",
+        title: "AI 소프트웨어 개발·운영",
+        description:
+          "AI를 마케팅 문구가 아닌 실무 도구로 활용합니다. 요구 분석, 자동화, 검증, 배포까지 연결 가능한 구조로 개발합니다.",
+        tags: ["요구 분석", "자동화", "검증", "배포"],
+      },
+      {
+        id: "platform",
+        title: "앱·웹·데스크톱·원격관제",
+        description:
+          "PC·태블릿·휴대폰에서 현장과 사무실이 같은 데이터를 보도록 멀티 디바이스 경험을 설계합니다.",
+        tags: ["Android", "Web App", "원격관제", "반응형"],
+      },
+    ],
+    cta: "서비스 상세 보기",
+    ctaHref: "/services",
+  },
+  workflow: {
+    eyebrow: "How We Work",
+    title: "작동 방식",
+    description: "현장 문제에서 시작해 수익·성과 개선까지 이어지는 제작·운영 흐름입니다.",
+    steps: [
+      { step: 1, title: "현장 문제 발견", description: "설비·농장·업무 현장의 실제 문제와 목표를 정의합니다." },
+      { step: 2, title: "요구사항·데이터 분석", description: "현장 데이터, 운영 흐름, 기술 제약을 분석합니다." },
+      { step: 3, title: "설계·개발", description: "소프트웨어·콘텐츠·UI를 설계하고 구현합니다." },
+      { step: 4, title: "검증", description: "현장 조건과 요구사항에 맞는지 검수·테스트합니다." },
+      { step: 5, title: "배포·운영", description: "앱·웹·현장 시스템에 배포하고 운영 구조를 연결합니다." },
+      { step: 6, title: "수익·성과 개선", description: "유입·전환·운영 데이터를 바탕으로 지속 개선합니다." },
+    ],
+    cta: "제작 과정 전체 보기",
+    ctaHref: "/process",
+  },
+  showcase: {
+    eyebrow: "Digital Business Units",
+    title: "온라인 사업부 맛보기",
+    description:
+      "같은 카드가 아닙니다. 전자책·앱·사이트·콘텐츠·지식교육 각각의 특성에 맞게 결과물과 확장 구조를 보여줍니다.",
+    units: [
+      {
+        id: "ebook",
+        title: "전자책",
+        subtitle: "지식을 읽을 수 있는 상품으로",
+        description: "표지·목차·독자 대상·열람 형식(PDF·EPUB·모바일)을 구분하고, 무료·유료·출시 예정을 명확히 표시합니다.",
+        status: "출시 준비",
+        features: ["책장형 미리보기", "목차·독자 정보", "상세·미리보기 확장"],
+        cta: "전자책 둘러보기",
+        ctaHref: "/ebooks",
+        visual: "ebook",
+      },
+      {
+        id: "app",
+        title: "앱",
+        subtitle: "현장과 일상을 연결하는 모바일",
+        description: "휴대폰 목업과 실제 UI 흐름으로 기능·대상·해결 문제를 보여줍니다. Android 출시 준비 상태를 투명하게 표시합니다.",
+        status: "검증 중",
+        features: ["UI 흐름 미리보기", "기능·대상 설명", "스토어·체험 연결"],
+        cta: "앱 체험하기",
+        ctaHref: "/apps",
+        visual: "app",
+      },
+      {
+        id: "site",
+        title: "사이트",
+        subtitle: "검색·마케팅·지식정보 허브",
+        description: "브라우저·모바일 반응형 미리보기로 홈페이지·마케팅·산업·스마트팜 분류 역량을 보여줍니다.",
+        status: "운영 중",
+        features: ["반응형 미리보기", "SEO·결제 확장", "제작 상담 연결"],
+        cta: "사이트 사례 보기",
+        ctaHref: "/marketing",
+        visual: "site",
+      },
+      {
+        id: "content",
+        title: "콘텐츠",
+        subtitle: "음악·쇼츠·영상·홍보",
+        description: "소통뮤직·소통냥랜드 등 실제 채널 구조로 확장합니다. 콘텐츠가 없으면 가짜 조회수를 만들지 않습니다.",
+        status: "확장 준비",
+        features: ["미디어 월 레이아웃", "YouTube 연결 구조", "채널·재생목록"],
+        cta: "음악·쇼츠 감상하기",
+        ctaHref: "/contents",
+        visual: "content",
+      },
+      {
+        id: "knowledge",
+        title: "지식·교육",
+        subtitle: "실용 지식의 체계적 정리",
+        description: "초급·중급·고급 학습 구조와 전자책·강좌·실습 연동. 회원·유료 과정 확장을 위한 포털 구조를 갖춥니다.",
+        status: "회원 포털 운영",
+        features: ["학습 단계 구조", "출처·최신성 검증", "무료·유료 확장"],
+        cta: "지식·교육 시작하기",
+        ctaHref: "/knowledge",
+        visual: "knowledge",
+      },
+    ],
+  },
+  results: {
+    eyebrow: "Verified Results",
+    title: "실제 결과물·사례",
+    description: "검증된 프로젝트와 준비 중인 결과물만 표시합니다. 상태를 Demo·검증 중·출시 준비·출시됨으로 구분합니다.",
+    emptyTitle: "첫 결과물이 준비되고 있습니다",
+    emptyDescription: "기획·제작·검증·배포가 완료되는 순서대로 공개합니다. 실제 결과물만 등록합니다.",
+    statusLabels: {
+      demo: "Demo",
+      testing: "검증 중",
+      ready: "출시 준비",
+      published: "출시됨",
+      comingSoon: "Coming Soon",
+    },
+    viewAll: "전체 결과물",
+    viewDetail: "상세 보기",
+  },
+  conversion: {
+    eyebrow: "Get Started",
+    title: "고객 전환",
+    description: "결제 연동 전에도 무료 자료·미리보기·상담·출시 알림으로 자연스럽게 연결합니다.",
+    items: [
+      {
+        id: "resources",
+        title: "무료 자료·이용 안내",
+        description: "서비스 이용 방식, 제작 과정, 무료·회원·유료 구분을 확인하세요.",
+        cta: "이용 안내",
+        ctaHref: "/guide",
+        badge: "무료",
+      },
+      {
+        id: "preview",
+        title: "결과물 미리보기",
+        description: "앱·전자책·사이트·콘텐츠를 각 전문 채널에서 미리 확인하세요.",
+        cta: "결과물 둘러보기",
+        ctaHref: "#results-heading",
+      },
+      {
+        id: "consult",
+        title: "상담·견적",
+        description: "자동화·앱·웹·전자책·콘텐츠 제작 상담을 요청하세요.",
+        cta: "상담·제작 문의",
+        ctaHref: "/contact",
+      },
+      {
+        id: "notify",
+        title: "구매·구독·출시 알림",
+        description: "결제 연동 준비 중입니다. 출시 알림과 상담으로 먼저 연결됩니다.",
+        cta: "출시 알림 요청",
+        ctaHref: "/contact?topic=notify",
+        badge: "준비 중",
+      },
+    ],
+  },
+  trust: {
+    eyebrow: "Trust & Policy",
+    title: "신뢰·정책·문의",
+    description: "확인된 정보만 게시합니다. 정책·합법성 검토 구조를 갖추고 있습니다.",
+    items: [
+      { label: "6대 전문 서비스", desc: "산업·앱·전자책·지식·마케팅·콘텐츠", href: "#showcase-heading" },
+      { label: "제작 과정", desc: "기획 → 개발 → 검증 → 배포", href: "/process" },
+      { label: "이용 안내", desc: "무료 · 회원 · 유료 · 상담", href: "/guide" },
+      { label: "SotongWare 소개", desc: "기술 스택·운영 철학", href: "/about" },
+    ],
+    policyNote: "상품·콘텐츠 공개 전 ComplianceStatus 검토와 최종 승인을 거칩니다.",
+    policies: [
+      { label: "개인정보처리방침", href: "/privacy" },
+      { label: "이용약관", href: "/terms" },
+      { label: "상담·문의", href: "/contact" },
+    ],
+  },
+  finalCta: {
+    title: "현장 기술부터 디지털 사업까지, 함께 시작하세요",
+    description: "필요한 역량과 결과물 채널을 확인한 뒤 상담·제작 문의로 연결할 수 있습니다.",
+    actions: [
+      { label: "기술 역량 보기", href: "#capabilities-heading", variant: "primary" },
+      { label: "이용 안내", href: "/guide", variant: "secondary" },
+      { label: "상담·제작 문의", href: "/contact", variant: "outline" },
+    ],
+  },
+};

@@ -33,6 +33,9 @@ export function BusinessNetworkSection() {
               {area.platforms && (
                 <p className="mt-2 text-xs text-surface-500">{area.platforms}</p>
               )}
+              <p className="mt-2 text-xs font-medium text-brand-700">
+                v{area.externalSiteVersion} · 업데이트 {area.externalSiteUpdatedAt}
+              </p>
               <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                 <BusinessDetailLink
                   area={area}

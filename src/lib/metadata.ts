@@ -84,6 +84,10 @@ export const defaultMetadata: Metadata = {
   },
   alternates: {
     canonical: siteConfig.url,
+    languages: {
+      ko: `${siteConfig.url}/ko`,
+      en: `${siteConfig.url}/en`,
+    },
   },
   icons: {
     icon: "/icon.svg",

@@ -25,6 +25,11 @@
   --color-surface-900: #0f172a;
   --color-surface-950: #020617;
 
+  --color-farm-50: #f0fdf4;
+  --color-farm-500: #22c55e;
+  --color-farm-700: #15803d;
+  --color-farm-900: #14532d;
+
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }

@@ -37,6 +37,9 @@ export function BusinessHubCard({ area }: { area: BusinessArea }) {
       {area.audience && (
         <p className="mt-1 text-xs text-surface-400">대상: {area.audience}</p>
       )}
+      <p className="mt-2 text-xs font-medium text-brand-700">
+        전문 사이트 v{area.externalSiteVersion} · 업데이트 {area.externalSiteUpdatedAt}
+      </p>
       <div className="mt-4">
         <ConversionHintTags hints={area.conversionHints} />
       </div>

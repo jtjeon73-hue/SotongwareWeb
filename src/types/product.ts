@@ -129,6 +129,10 @@ export interface BusinessArea {
   externalSiteLabel?: string;
   /** 고객 화면용 외부 사이트 표시명 */
   externalSiteName?: string;
+  /** 외부 전문 사이트 공개 버전 */
+  externalSiteVersion: string;
+  /** 외부 전문 사이트 최종 업데이트 날짜 (YYYY-MM-DD) */
+  externalSiteUpdatedAt: string;
   /** 목표 Custom Domain URL (DNS·SSL ACTIVE 후 production 전환) */
   customDomainUrl?: string;
   customDomainStatus?: CustomDomainStatus;
