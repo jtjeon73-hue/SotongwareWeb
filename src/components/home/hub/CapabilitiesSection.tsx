@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/Button";
+import { LocalizedButton } from "@/components/locale/LocalizedButton";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { LocalizedLink } from "@/components/locale/LocalizedLink";
 import type { HomeDictionary } from "@/i18n/types";
 import { CapabilityVisual } from "./CapabilityVisual";
 
@@ -40,15 +41,21 @@ export function CapabilitiesSection({ dict }: CapabilitiesSectionProps) {
                       </li>
                     ))}
                   </ul>
+                  <LocalizedLink
+                    href={`/capabilities/${item.slug}`}
+                    className="mt-4 inline-flex min-h-10 items-center text-sm font-semibold text-brand-700 hover:text-brand-800"
+                  >
+                    {dict.nav.learnMore} →
+                  </LocalizedLink>
                 </div>
               </div>
             </article>
           ))}
         </div>
         <div className="mt-10 text-center">
-          <Button href={capabilities.ctaHref} variant="outline" className="min-h-11">
+          <LocalizedButton href={capabilities.ctaHref} variant="outline" className="min-h-11">
             {capabilities.cta}
-          </Button>
+          </LocalizedButton>
         </div>
       </div>
     </section>

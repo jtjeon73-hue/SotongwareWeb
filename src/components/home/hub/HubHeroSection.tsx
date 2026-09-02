@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button";
+import { LocalizedButton } from "@/components/locale/LocalizedButton";
 import { siteConfig } from "@/data/navigation";
 import type { HomeDictionary } from "@/i18n/types";
 import { HubHeroVisual } from "./HubHeroVisual";
@@ -37,11 +37,11 @@ export function HubHeroSection({ dict }: HubHeroSectionProps) {
               {hero.subheadline}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <Button href={primary.href} variant="primary" size="lg" className="min-h-11 w-full sm:w-auto">
+              <LocalizedButton href={primary.href} variant="primary" size="lg" className="min-h-11 w-full sm:w-auto">
                 {primary.label}
-              </Button>
+              </LocalizedButton>
               {secondaryCtas.map((cta) => (
-                <Button
+                <LocalizedButton
                   key={cta.href + cta.label}
                   href={cta.href}
                   variant="secondary"
@@ -49,7 +49,7 @@ export function HubHeroSection({ dict }: HubHeroSectionProps) {
                   className="min-h-11 w-full !border-white/25 !bg-white/10 !text-white hover:!bg-white/20 sm:w-auto"
                 >
                   {cta.label}
-                </Button>
+                </LocalizedButton>
               ))}
             </div>
           </div>

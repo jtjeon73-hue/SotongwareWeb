@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button";
+import { LocalizedButton } from "@/components/locale/LocalizedButton";
 import type { HomeDictionary } from "@/i18n/types";
 
 interface HubFinalCtaSectionProps {
@@ -17,11 +17,11 @@ export function HubFinalCtaSection({ dict }: HubFinalCtaSectionProps) {
         </h2>
         <p className="mt-4 text-base leading-relaxed text-brand-100">{finalCta.description}</p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
-          <Button href={primary.href} variant="primary" size="lg" className="min-h-11 w-full sm:w-auto">
+          <LocalizedButton href={primary.href} variant="primary" size="lg" className="min-h-11 w-full sm:w-auto">
             {primary.label}
-          </Button>
+          </LocalizedButton>
           {others.map((action) => (
-            <Button
+            <LocalizedButton
               key={action.href + action.label}
               href={action.href}
               variant="secondary"
@@ -29,7 +29,7 @@ export function HubFinalCtaSection({ dict }: HubFinalCtaSectionProps) {
               className="min-h-11 w-full !border-white/25 !bg-white/10 !text-white hover:!bg-white/20 sm:w-auto"
             >
               {action.label}
-            </Button>
+            </LocalizedButton>
           ))}
         </div>
       </div>

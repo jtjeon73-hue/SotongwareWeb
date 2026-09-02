@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button";
+import { LocalizedButton } from "@/components/locale/LocalizedButton";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import type { HomeDictionary } from "@/i18n/types";
 
@@ -35,9 +35,9 @@ export function ConversionHubSection({ dict }: ConversionHubSectionProps) {
               </div>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-surface-600">{item.description}</p>
               <div className="mt-5">
-                <Button href={item.ctaHref} variant={item.id === "consult" ? "primary" : "outline"} className="min-h-11">
+                <LocalizedButton href={item.ctaHref} variant={item.id === "consult" ? "primary" : "outline"} className="min-h-11">
                   {item.cta}
-                </Button>
+                </LocalizedButton>
               </div>
             </article>
           ))}

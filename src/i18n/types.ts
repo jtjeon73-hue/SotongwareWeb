@@ -27,6 +27,7 @@ export interface HomeDictionary {
     mobileMenu: string;
     openMenu: string;
     closeMenu: string;
+    learnMore: string;
   };
   hero: {
     eyebrow: string;
@@ -41,6 +42,7 @@ export interface HomeDictionary {
     description: string;
     items: {
       id: string;
+      slug: string;
       title: string;
       description: string;
       tags: string[];
@@ -56,7 +58,7 @@ export interface HomeDictionary {
     cta: string;
     ctaHref: string;
   };
-  showcase: {
+  ventures: {
     eyebrow: string;
     title: string;
     description: string;
@@ -66,6 +68,9 @@ export interface HomeDictionary {
       subtitle: string;
       description: string;
       status: string;
+      statusType: "launchPrep" | "inValidation" | "live" | "expansion";
+      audience?: string;
+      formats?: string[];
       features: string[];
       cta: string;
       ctaHref: string;

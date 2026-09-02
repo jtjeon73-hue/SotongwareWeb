@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/Button";
+import { LocalizedButton } from "@/components/locale/LocalizedButton";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import type { HomeDictionary } from "@/i18n/types";
 
@@ -34,13 +34,13 @@ export function WorkflowSection({ dict }: WorkflowSectionProps) {
           ))}
         </ol>
         <div className="mt-10 text-center">
-          <Button
+          <LocalizedButton
             href={workflow.ctaHref}
             variant="secondary"
             className="min-h-11 !border-white/25 !bg-white/10 !text-white hover:!bg-white/20"
           >
             {workflow.cta}
-          </Button>
+          </LocalizedButton>
         </div>
       </div>
     </section>

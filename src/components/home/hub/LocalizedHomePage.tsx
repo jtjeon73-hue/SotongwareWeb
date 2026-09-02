@@ -3,7 +3,7 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { HubHeroSection } from "@/components/home/hub/HubHeroSection";
 import { CapabilitiesSection } from "@/components/home/hub/CapabilitiesSection";
 import { WorkflowSection } from "@/components/home/hub/WorkflowSection";
-import { BusinessShowcaseSection } from "@/components/home/hub/BusinessShowcaseSection";
+import { DigitalVenturesSection } from "@/components/home/hub/DigitalVenturesSection";
 import { ResultsSection } from "@/components/home/hub/ResultsSection";
 import { ConversionHubSection } from "@/components/home/hub/ConversionHubSection";
 import { TrustPolicySection } from "@/components/home/hub/TrustPolicySection";
@@ -24,8 +24,8 @@ export function LocalizedHomePage({ locale }: LocalizedHomePageProps) {
       <HubHeroSection dict={dict} />
       <CapabilitiesSection dict={dict} />
       <WorkflowSection dict={dict} />
-      <BusinessShowcaseSection dict={dict} />
-      <ResultsSection dict={dict} />
+      <DigitalVenturesSection dict={dict} />
+      <ResultsSection dict={dict} locale={locale} />
       <ConversionHubSection dict={dict} />
       <TrustPolicySection dict={dict} />
       <HubFinalCtaSection dict={dict} />

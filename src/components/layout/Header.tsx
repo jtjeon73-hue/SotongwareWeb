@@ -2,30 +2,33 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { mainNavigation, siteConfig } from "@/data/navigation";
-import { ServicesNavMenu } from "./ServicesNavMenu";
 import { AuthNav } from "@/components/auth/AuthNav";
 import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
+import { TechnologyNavMenu, DigitalVenturesNavMenu } from "@/components/layout/TechnologyNavMenu";
+import { LocalizedLink } from "@/components/locale/LocalizedLink";
 import { Button } from "@/components/ui/Button";
 import { useLocale } from "@/contexts/LocaleProvider";
+import { siteConfig } from "@/data/navigation";
 import { cn } from "@/lib/utils";
+import { localizePath } from "@/i18n/localized-path";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { dict } = useLocale();
-  const nav = dict.nav;
+  const { locale, dict } = useLocale();
+  const nav = dict.site.nav;
 
-  const navItems = [
+  const topLinks = [
+    { label: nav.portfolio, href: "/products" },
+    { label: nav.about, href: "/about" },
     { label: nav.process, href: "/process" },
     { label: nav.guide, href: "/guide" },
-    { label: nav.about, href: "/about" },
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-surface-200/80 bg-white/95 backdrop-blur-sm">
       <div className="container-main flex h-14 items-center justify-between sm:h-16">
         <Link
-          href="/ko"
+          href={localizePath("/", locale)}
           className="flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           aria-label={nav.homeAria}
         >
@@ -39,22 +42,23 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex" aria-label={nav.mainMenu}>
-          <ServicesNavMenu servicesLabel={nav.services} />
-          {navItems.map((item) => (
-            <Link
+          <TechnologyNavMenu />
+          <DigitalVenturesNavMenu />
+          {topLinks.map((item) => (
+            <LocalizedLink
               key={item.href}
               href={item.href}
               className="rounded-lg px-3 py-2 text-sm font-medium text-surface-600 transition-colors hover:bg-surface-100 hover:text-surface-900"
             >
               {item.label}
-            </Link>
+            </LocalizedLink>
           ))}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
           <LocaleSwitcher />
           <AuthNav />
-          <Button href="/contact" variant="primary" size="sm" className="min-h-11">
+          <Button href={localizePath("/contact", locale)} variant="primary" size="sm" className="min-h-11">
             {nav.contactCta}
           </Button>
         </div>
@@ -81,33 +85,41 @@ export function Header() {
 
       <div
         id="mobile-menu"
-        className={cn(
-          "border-t border-surface-200 bg-white lg:hidden",
-          mobileOpen ? "block" : "hidden",
-        )}
+        className={cn("border-t border-surface-200 bg-white lg:hidden", mobileOpen ? "block" : "hidden")}
         aria-hidden={!mobileOpen}
       >
-        <nav className="container-main flex flex-col py-3" aria-label={nav.mobileMenu}>
-          <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">{nav.services}</p>
-          {mainNavigation.find((i) => i.label === "서비스")?.children?.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
+        <nav className="container-main flex max-h-[80vh] flex-col overflow-y-auto py-3" aria-label={nav.mobileMenu}>
+          <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">{nav.technology}</p>
+          {nav.technologyItems.map((item) => (
+            <LocalizedLink
+              key={item.slug}
+              href={`/capabilities/${item.slug}`}
               className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
               onClick={() => setMobileOpen(false)}
             >
               {item.label}
-            </Link>
+            </LocalizedLink>
           ))}
-          {navItems.map((item) => (
-            <Link
+          <p className="mt-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">{nav.digitalVentures}</p>
+          {nav.ventureItems.map((item) => (
+            <LocalizedLink
               key={item.href}
               href={item.href}
               className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
               onClick={() => setMobileOpen(false)}
             >
               {item.label}
-            </Link>
+            </LocalizedLink>
+          ))}
+          {topLinks.map((item) => (
+            <LocalizedLink
+              key={item.href}
+              href={item.href}
+              className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
+              onClick={() => setMobileOpen(false)}
+            >
+              {item.label}
+            </LocalizedLink>
           ))}
           <div className="mt-2 space-y-2 border-t border-surface-100 px-3 pt-4">
             <LocaleSwitcher className="w-full justify-center" />
@@ -115,7 +127,7 @@ export function Header() {
               <AuthNav />
             </div>
             <Button
-              href="/contact"
+              href={localizePath("/contact", locale)}
               variant="primary"
               size="md"
               className="w-full min-h-11"
