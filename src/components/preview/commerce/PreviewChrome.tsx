@@ -1,5 +1,7 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { PREVIEW_BANNER, PREVIEW_BASE } from "@/data/preview-commerce";
+import { CompareBar } from "@/components/preview/commerce/showcase/ShowcaseChrome";
 
 export function PreviewBanner() {
   return (
@@ -21,13 +23,14 @@ export function PreviewShell({
 }: {
   title: string;
   subtitle?: string;
-  children: React.ReactNode;
+  children: ReactNode;
   backHref?: string;
   backLabel?: string;
 }) {
   return (
     <div className="bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_40%,#f1f5f9_100%)]">
       <PreviewBanner />
+      <CompareBar active="v2" />
       <div className="border-b border-surface-200/80 bg-white/80 backdrop-blur">
         <div className="container-main flex flex-wrap items-center justify-between gap-3 py-3">
           <div className="flex min-w-0 items-center gap-3">
@@ -41,7 +44,7 @@ export function PreviewShell({
             ) : null}
             <div className="min-w-0">
               <p className="text-xs font-medium tracking-wide text-brand-700">
-                SotongWare · 시제품
+                SotongWare · 시제품 V2
               </p>
               <h1 className="truncate text-lg font-semibold text-surface-900 sm:text-xl">
                 {title}
@@ -84,7 +87,7 @@ export function PreviewCta({
   variant = "primary",
 }: {
   href: string;
-  children: React.ReactNode;
+  children: ReactNode;
   variant?: "primary" | "secondary" | "quiet";
 }) {
   const styles =

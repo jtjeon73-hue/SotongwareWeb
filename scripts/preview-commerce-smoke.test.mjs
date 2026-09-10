@@ -10,6 +10,7 @@ const out = path.join(root, "out");
 
 const routes = [
   "preview/commerce.html",
+  "preview/commerce/showcase.html",
   "preview/commerce/pricing.html",
   "preview/commerce/checkout.html",
   "preview/commerce/payment-result.html",
@@ -56,6 +57,24 @@ for (const rel of routes) {
     continue;
   }
   console.log("OK", rel);
+}
+
+const showcase = path.join(out, "preview/commerce/showcase.html");
+if (fs.existsSync(showcase)) {
+  const sh = fs.readFileSync(showcase, "utf8");
+  if (!sh.includes("Global Premium") && !sh.includes("화려한 V3") && !sh.includes("Showcase")) {
+    console.error("SHOWCASE_MARKERS_MISSING");
+    failed += 1;
+  } else {
+    console.log("OK showcase markers");
+  }
+  if (!sh.includes("깔끔한 V2")) {
+    console.error("SHOWCASE_MISSING_V2_COMPARE");
+    failed += 1;
+  }
+} else {
+  console.error("MISSING showcase");
+  failed += 1;
 }
 
 const ko = path.join(out, "ko.html");
