@@ -45,13 +45,19 @@ for (const rel of routes) {
     failed += 1;
     continue;
   }
-  if (/firestore\.(collection|doc)\(|createUserWithEmail|getFunctions\(|initializeApp\(/.test(html) && html.includes("preview/commerce") && /apiKey/.test(html)) {
-    // Firebase client bundle may appear in shared chunks — only fail if page embeds secrets
+  if (
+    html.includes("/ko/preview/") ||
+    html.includes("/en/preview/") ||
+    html.includes('"/ko/preview"') ||
+    html.includes('"/en/preview"')
+  ) {
+    console.error("BAD_LOCALE_HREF", rel);
+    failed += 1;
+    continue;
   }
   console.log("OK", rel);
 }
 
-// Public regression: ko home still present
 const ko = path.join(out, "ko.html");
 if (!fs.existsSync(ko)) {
   console.error("MISSING public route ko.html");

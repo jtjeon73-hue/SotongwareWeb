@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { locales, type Locale } from "@/i18n/config";
-import { switchLocalePath } from "@/i18n/localized-path";
+import {
+  isPreviewPath,
+  switchLocalePath,
+} from "@/i18n/localized-path";
 import { cn } from "@/lib/utils";
 
 const LOCALE_STORAGE_KEY = "sotongware-locale";
@@ -22,6 +25,7 @@ export function LocaleSwitcher({
 }) {
   const pathname = usePathname() ?? "/";
   const current = pathname.match(/^\/(ko|en)/)?.[1] as Locale | undefined;
+  const preview = isPreviewPath(pathname);
 
   function handleSwitch(locale: Locale) {
     try {
@@ -42,7 +46,27 @@ export function LocaleSwitcher({
     >
       {locales.map((locale) => {
         const href = switchLocalePath(pathname, locale);
-        const isActive = current === locale || (!current && locale === "ko" && pathname === "/");
+        const isActive =
+          current === locale ||
+          (!current && locale === "ko" && (pathname === "/" || preview));
+
+        if (preview && locale === "en") {
+          return (
+            <span
+              key={locale}
+              className={cn(
+                "min-h-9 cursor-not-allowed whitespace-nowrap rounded-md px-2 py-1.5 text-xs font-semibold text-surface-400",
+                compact ? "min-w-[2.25rem] text-center" : "px-2.5",
+              )}
+              aria-disabled="true"
+              aria-label="English — 영문 준비 중"
+              title="영문 준비 중"
+              lang="en"
+            >
+              {compact ? compactLabels.en : "영문 준비 중"}
+            </span>
+          );
+        }
 
         return (
           <Link
