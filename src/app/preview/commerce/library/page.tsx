@@ -13,6 +13,12 @@ import {
   MemberStateSwitcher,
   useMockMemberState,
 } from "@/components/preview/commerce/PreviewMemberState";
+import {
+  IconJourneyLibrary,
+  IconStatusAllowed,
+  IconStatusBlocked,
+  MemberStatusIcon,
+} from "@/components/preview/commerce/PreviewIcons";
 
 function LibraryInner() {
   const member = useMockMemberState();
@@ -29,13 +35,26 @@ function LibraryInner() {
         <MemberStateSwitcher basePath={`${PREVIEW_BASE}/library`} />
 
         <section className="rounded-2xl border border-surface-200 bg-white p-5">
-          <p className="text-sm text-surface-500">현재 예시 상태</p>
-          <p className="mt-1 text-xl font-semibold text-surface-900">
-            {mockMemberLabels[member]}
-          </p>
-          <p className="mt-2 text-sm text-surface-600">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
+              <MemberStatusIcon
+                state={member}
+                size="md"
+                decorative={false}
+                title={mockMemberLabels[member]}
+              />
+            </span>
+            <div>
+              <p className="text-sm text-surface-500">현재 예시 상태</p>
+              <p className="text-xl font-semibold text-surface-900">
+                {mockMemberLabels[member]}
+              </p>
+            </div>
+          </div>
+          <p className="mt-3 text-sm text-surface-600">
             {member === "basic_active" && "정기이용이 유지되는 예시입니다."}
-            {member === "basic_expired" && "기간이 끝나 Free로 바뀐 예시입니다. Basic 포함 자료는 차단됩니다."}
+            {member === "basic_expired" &&
+              "기간이 끝나 Free로 바뀐 예시입니다. Basic 포함 자료는 차단됩니다."}
             {member === "basic_cancelled" &&
               "해지 예약이 잡혀 있고, 기간이 끝날 때까지는 이용 가능한 예시입니다."}
             {member === "free" && "무료 회원으로 단건 구매 자료만 이용하는 예시입니다."}
@@ -58,7 +77,10 @@ function LibraryInner() {
         ) : (
           <>
             <section>
-              <h2 className="text-lg font-semibold text-surface-900">구매한 자료</h2>
+              <div className="flex items-center gap-2">
+                <IconJourneyLibrary size="sm" className="text-brand-700" decorative />
+                <h2 className="text-lg font-semibold text-surface-900">구매한 자료</h2>
+              </div>
               <ul className="mt-4 space-y-3">
                 {mockLibraryItems.map((item) => {
                   const locked = item.status === "Basic 필요" && !basicOk;
@@ -67,11 +89,20 @@ function LibraryInner() {
                       key={item.id}
                       className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-surface-200 bg-white px-4 py-4"
                     >
-                      <div>
-                        <p className="font-medium text-surface-900">{item.title}</p>
-                        <p className="text-sm text-surface-500">
-                          {item.type} · {locked ? "이용권한 없음" : item.status}
-                        </p>
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 text-surface-500">
+                          {locked ? (
+                            <IconStatusBlocked size="sm" decorative={false} title="접근 제한" />
+                          ) : (
+                            <IconStatusAllowed size="sm" decorative={false} title="접근 허용" />
+                          )}
+                        </span>
+                        <div>
+                          <p className="font-medium text-surface-900">{item.title}</p>
+                          <p className="text-sm text-surface-500">
+                            {item.type} · {locked ? "이용권한 없음" : item.status}
+                          </p>
+                        </div>
                       </div>
                       {locked ? (
                         <Link
@@ -98,7 +129,10 @@ function LibraryInner() {
               <h2 className="text-lg font-semibold text-surface-900">구매 내역</h2>
               <ul className="mt-4 divide-y divide-surface-100 overflow-hidden rounded-2xl border border-surface-200 bg-white">
                 {mockOrders.map((order) => (
-                  <li key={order.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-4 text-sm">
+                  <li
+                    key={order.id}
+                    className="flex flex-wrap items-center justify-between gap-2 px-4 py-4 text-sm"
+                  >
                     <div>
                       <p className="font-medium text-surface-900">{order.title}</p>
                       <p className="text-surface-500">

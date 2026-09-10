@@ -11,6 +11,11 @@ import {
   AccessGateDemo,
   MemberStateSwitcher,
 } from "@/components/preview/commerce/PreviewMemberState";
+import {
+  BusinessIcon,
+  IconJourneyPreview,
+  IconPlate,
+} from "@/components/preview/commerce/PreviewIcons";
 
 export function generateStaticParams() {
   return previewProductSlugs.map((slug) => ({ slug }));
@@ -51,17 +56,37 @@ export default async function PreviewProductPage({
     >
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <div className={`overflow-hidden rounded-3xl ${product.coverTone} px-6 py-16 text-white`}>
-            <p className="text-sm text-white/80">{biz?.title}</p>
-            <h2 className="mt-2 text-3xl font-semibold">{product.title}</h2>
-            <p className="mt-3 max-w-md text-white/90">{product.priceLabel}</p>
-            {product.basicDiscountLabel ? (
-              <p className="mt-2 text-sm text-amber-100">{product.basicDiscountLabel}</p>
-            ) : null}
+          <div
+            className={`relative overflow-hidden rounded-3xl ${product.coverTone} px-6 py-14 text-white sm:py-16`}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm text-white/80">{biz?.title}</p>
+                <h2 className="mt-2 text-3xl font-semibold">{product.title}</h2>
+                <p className="mt-3 max-w-md text-white/90">{product.priceLabel}</p>
+                {product.basicDiscountLabel ? (
+                  <p className="mt-2 text-sm text-amber-100">{product.basicDiscountLabel}</p>
+                ) : null}
+              </div>
+              <IconPlate>
+                <BusinessIcon
+                  slug={product.business}
+                  size="lg"
+                  decorative={false}
+                  title={biz?.title}
+                  className="text-white"
+                />
+              </IconPlate>
+            </div>
           </div>
 
           <section className="mt-8 rounded-2xl border border-surface-200 bg-white p-6">
-            <h3 className="text-lg font-semibold text-surface-900">무료 미리보기</h3>
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+                <IconJourneyPreview size="sm" decorative />
+              </span>
+              <h3 className="text-lg font-semibold text-surface-900">무료 미리보기</h3>
+            </div>
             <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-surface-700">
               {product.previewText}
             </p>

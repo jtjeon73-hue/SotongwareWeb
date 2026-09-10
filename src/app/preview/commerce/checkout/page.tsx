@@ -8,6 +8,7 @@ import {
   previewPlans,
 } from "@/data/preview-commerce";
 import { PreviewCta, PreviewShell } from "@/components/preview/commerce/PreviewChrome";
+import { IconJourneyPay } from "@/components/preview/commerce/PreviewIcons";
 
 function CheckoutInner() {
   const params = useSearchParams();
@@ -33,6 +34,9 @@ function CheckoutInner() {
       backHref={product ? `${PREVIEW_BASE}/product/${product.slug}` : `${PREVIEW_BASE}/pricing`}
     >
       <div className="mx-auto max-w-lg rounded-3xl border border-surface-200 bg-white p-6 shadow-sm sm:p-8">
+        <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-600 text-white">
+          <IconJourneyPay size="md" decorative={false} title="요금·결제" />
+        </div>
         <p className="text-sm text-surface-500">주문 요약</p>
         <h2 className="mt-2 text-2xl font-semibold text-surface-900">{title}</h2>
         <dl className="mt-6 space-y-3 text-sm">

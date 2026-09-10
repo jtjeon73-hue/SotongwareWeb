@@ -8,6 +8,11 @@ import {
   type PreviewBusinessSlug,
 } from "@/data/preview-commerce";
 import { PreviewCta, PreviewShell } from "@/components/preview/commerce/PreviewChrome";
+import {
+  BusinessIcon,
+  IconPlate,
+  previewCardMotion,
+} from "@/components/preview/commerce/PreviewIcons";
 
 export function generateStaticParams() {
   return previewBusinessSlugs.map((slug) => ({ slug }));
@@ -31,19 +36,34 @@ export default async function PreviewBusinessPage({
       backHref={PREVIEW_BASE}
       backLabel="허브"
     >
-      <section className={`overflow-hidden rounded-3xl bg-gradient-to-br ${biz.accent} px-6 py-10 text-white sm:px-10`}>
-        <p className="text-sm text-white/80">{biz.mood}</p>
-        <h2 className="mt-2 max-w-xl text-3xl font-semibold tracking-tight">{biz.short}</h2>
-        <ul className="mt-6 flex flex-wrap gap-2">
-          {biz.experience.map((item) => (
-            <li
-              key={item}
-              className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-sm"
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
+      <section
+        className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${biz.accent} px-6 py-10 text-white sm:px-10`}
+      >
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-xl">
+            <p className="text-sm text-white/80">{biz.mood}</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight">{biz.short}</h2>
+            <ul className="mt-6 flex flex-wrap gap-2">
+              {biz.experience.map((item) => (
+                <li
+                  key={item}
+                  className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-sm"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <IconPlate className="self-start sm:self-center">
+            <BusinessIcon
+              slug={biz.slug}
+              size="xl"
+              decorative={false}
+              title={biz.title}
+              className="text-white"
+            />
+          </IconPlate>
+        </div>
       </section>
 
       <section className="mt-10">
@@ -102,7 +122,10 @@ export default async function PreviewBusinessPage({
         {slug === "knowledge" ? (
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {["무료 정보", "퀴즈", "회원 노트"].map((label) => (
-              <div key={label} className="rounded-2xl border border-emerald-200 bg-white p-4 text-sm font-medium text-emerald-950">
+              <div
+                key={label}
+                className="rounded-2xl border border-emerald-200 bg-white p-4 text-sm font-medium text-emerald-950"
+              >
                 {label}
               </div>
             ))}
@@ -119,7 +142,10 @@ export default async function PreviewBusinessPage({
         {slug === "contents" ? (
           <div className="mt-6 flex flex-wrap gap-3">
             {["음악", "쇼츠", "만화", "이미지"].map((label) => (
-              <span key={label} className="rounded-full bg-cyan-100 px-4 py-2 text-sm text-cyan-950">
+              <span
+                key={label}
+                className="rounded-full bg-cyan-100 px-4 py-2 text-sm text-cyan-950"
+              >
                 {label} 감상
               </span>
             ))}
@@ -134,9 +160,13 @@ export default async function PreviewBusinessPage({
             <li key={product.slug}>
               <Link
                 href={`${PREVIEW_BASE}/product/${product.slug}`}
-                className="flex h-full gap-4 rounded-2xl border border-surface-200 bg-white p-4 hover:border-brand-300"
+                className={`flex h-full gap-4 rounded-2xl border border-surface-200 bg-white p-4 hover:border-brand-300 ${previewCardMotion}`}
               >
-                <div className={`h-20 w-16 shrink-0 rounded-lg ${product.coverTone}`} />
+                <div
+                  className={`flex h-20 w-16 shrink-0 items-center justify-center rounded-lg text-white ${product.coverTone}`}
+                >
+                  <BusinessIcon slug={product.business} size="md" decorative />
+                </div>
                 <div className="min-w-0">
                   <h3 className="font-semibold text-surface-900">{product.title}</h3>
                   <p className="mt-1 line-clamp-2 text-sm text-surface-600">{product.subtitle}</p>

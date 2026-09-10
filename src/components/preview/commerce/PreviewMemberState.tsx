@@ -8,6 +8,11 @@ import {
   mockMemberLabels,
   type MockMemberState,
 } from "@/data/preview-commerce";
+import {
+  IconStatusAllowed,
+  IconStatusBlocked,
+  MemberStatusIcon,
+} from "@/components/preview/commerce/PreviewIcons";
 
 const STATES: MockMemberState[] = [
   "guest",
@@ -50,12 +55,13 @@ export function MemberStateSwitcher({ basePath }: { basePath: string }) {
             <Link
               key={state}
               href={href}
-              className={`inline-flex min-h-11 items-center rounded-lg border px-3 text-sm ${
+              className={`inline-flex min-h-11 items-center gap-2 rounded-lg border px-3 text-sm ${
                 active
                   ? "border-brand-600 bg-brand-50 font-medium text-brand-800"
                   : "border-surface-200 bg-surface-50 text-surface-700 hover:bg-white"
               }`}
             >
+              <MemberStatusIcon state={state} size="sm" decorative />
               {mockMemberLabels[state]}
             </Link>
           );
@@ -81,14 +87,29 @@ export function AccessGateDemo({
   return (
     <div
       className={`mt-6 rounded-2xl border p-5 ${
-        allowed
-          ? "border-farm-500/40 bg-farm-50"
-          : "border-rose-300 bg-rose-50"
+        allowed ? "border-farm-500/40 bg-farm-50" : "border-rose-300 bg-rose-50"
       }`}
     >
-      <p className="text-sm font-semibold text-surface-900">
-        이용권한 {allowed ? "허용" : "차단"} 예시
-      </p>
+      <div className="flex items-center gap-3">
+        {allowed ? (
+          <IconStatusAllowed
+            size="md"
+            decorative={false}
+            title="접근 허용"
+            className="text-farm-700"
+          />
+        ) : (
+          <IconStatusBlocked
+            size="md"
+            decorative={false}
+            title="접근 제한"
+            className="text-rose-700"
+          />
+        )}
+        <p className="text-sm font-semibold text-surface-900">
+          이용권한 {allowed ? "허용" : "차단"} 예시
+        </p>
+      </div>
       <p className="mt-2 text-sm text-surface-700">
         {allowed
           ? `「${productTitle}」 전체를 열람할 수 있는 상태로 보입니다.`
