@@ -11,6 +11,7 @@ const out = path.join(root, "out");
 const routes = [
   "preview/commerce.html",
   "preview/commerce/showcase.html",
+  "preview/commerce/showcase-v4.html",
   "preview/commerce/pricing.html",
   "preview/commerce/checkout.html",
   "preview/commerce/payment-result.html",
@@ -74,6 +75,22 @@ if (fs.existsSync(showcase)) {
   }
 } else {
   console.error("MISSING showcase");
+  failed += 1;
+}
+
+const v4 = path.join(out, "preview/commerce/showcase-v4.html");
+if (fs.existsSync(v4)) {
+  const vh = fs.readFileSync(v4, "utf8");
+  if (!vh.includes("Premium 3D") && !vh.includes("입체 V4") && !vh.includes("Showcase V4")) {
+    console.error("V4_MARKERS_MISSING");
+    failed += 1;
+  } else console.log("OK v4 markers");
+  if (!vh.includes("화려한 V3") && !vh.includes("/showcase")) {
+    console.error("V4_MISSING_V3_COMPARE");
+    failed += 1;
+  }
+} else {
+  console.error("MISSING showcase-v4");
   failed += 1;
 }
 

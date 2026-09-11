@@ -75,6 +75,7 @@ assert.match(switcher, /aria-disabled/);
 const previewRoutes = [
   "/preview/commerce",
   "/preview/commerce/showcase",
+  "/preview/commerce/showcase-v4",
   "/preview/commerce/pricing",
   "/preview/commerce/checkout",
   "/preview/commerce/payment-result",
