@@ -3,7 +3,11 @@ import { auth } from "firebase-functions/v1";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { initializeApp, getApps } from "firebase-admin/app";
 
-const POLICY_VERSION = "2026-09-11";
+/** Server-authoritative policy versions — client must match exactly to accept. */
+export const CURRENT_TERMS_VERSION = "2026-09-11";
+export const CURRENT_PRIVACY_VERSION = "2026-09-11";
+
+type ProfileData = Record<string, unknown>;
 
 function getDb() {
   if (!getApps().length) {
@@ -12,36 +16,111 @@ function getDb() {
   return getFirestore();
 }
 
-/** Server-owned Free membership document — never elevates privileges. */
-export function buildFreeMemberDoc(input: {
+function authEmail(token: Record<string, unknown>): string {
+  return typeof token.email === "string" ? token.email : "";
+}
+
+function authEmailVerified(token: Record<string, unknown>): boolean {
+  return Boolean(token.email_verified);
+}
+
+/**
+ * Pending profile after Auth create — NO fabricated consent.
+ * status=pending keeps member features fail-closed (Rules isActiveUser).
+ */
+export function buildPendingMemberDoc(input: {
   uid: string;
   email: string;
-  displayName?: string;
   emailVerified: boolean;
   locale?: string;
-  consentAt?: string | null;
-  policyVersion?: string | null;
 }) {
   return {
     uid: input.uid,
     email: input.email,
-    displayName: input.displayName ?? "",
+    displayName: "",
     role: "member",
-    status: "active",
+    status: "pending",
     membershipGrade: "free",
     emailVerified: input.emailVerified,
-    locale: input.locale ?? "ko",
-    consentAt: input.consentAt ?? null,
-    policyVersion: input.policyVersion ?? POLICY_VERSION,
+    locale: input.locale === "en" ? "en" : "ko",
+    termsVersion: null,
+    termsAcceptedAt: null,
+    privacyVersion: null,
+    privacyAcceptedAt: null,
+    // Legacy compat — server-owned, null until consent
+    consentAt: null,
+    policyVersion: null,
     createdAt: FieldValue.serverTimestamp(),
     lastLoginAt: FieldValue.serverTimestamp(),
     provisionedBy: "server",
   };
 }
 
+function hasCurrentConsent(data: ProfileData | undefined): boolean {
+  if (!data) return false;
+  return (
+    data.termsVersion === CURRENT_TERMS_VERSION &&
+    data.privacyVersion === CURRENT_PRIVACY_VERSION &&
+    data.termsAcceptedAt != null &&
+    data.privacyAcceptedAt != null
+  );
+}
+
+function parseLocale(value: unknown): "ko" | "en" {
+  return value === "en" ? "en" : "ko";
+}
+
+function validateConsentRequest(data: {
+  termsVersion?: unknown;
+  privacyVersion?: unknown;
+}): { termsVersion: string; privacyVersion: string } | null {
+  const hasTerms = data.termsVersion !== undefined && data.termsVersion !== null && data.termsVersion !== "";
+  const hasPrivacy =
+    data.privacyVersion !== undefined && data.privacyVersion !== null && data.privacyVersion !== "";
+
+  if (!hasTerms && !hasPrivacy) {
+    return null;
+  }
+  if (!hasTerms || !hasPrivacy) {
+    throw new HttpsError(
+      "invalid-argument",
+      "이용약관과 개인정보처리방침 버전을 모두 보내야 합니다.",
+    );
+  }
+  if (typeof data.termsVersion !== "string" || typeof data.privacyVersion !== "string") {
+    throw new HttpsError("invalid-argument", "정책 버전 형식이 올바르지 않습니다.");
+  }
+  if (data.termsVersion !== CURRENT_TERMS_VERSION) {
+    throw new HttpsError("failed-precondition", "이용약관 버전이 유효하지 않습니다.");
+  }
+  if (data.privacyVersion !== CURRENT_PRIVACY_VERSION) {
+    throw new HttpsError("failed-precondition", "개인정보처리방침 버전이 유효하지 않습니다.");
+  }
+  return { termsVersion: data.termsVersion, privacyVersion: data.privacyVersion };
+}
+
+function profileResponse(uid: string, d: ProfileData) {
+  return {
+    uid,
+    email: d.email ?? "",
+    displayName: d.displayName ?? "",
+    role: d.role ?? "member",
+    status: d.status ?? "pending",
+    membershipGrade: d.membershipGrade ?? "free",
+    emailVerified: Boolean(d.emailVerified),
+    locale: d.locale ?? "ko",
+    termsVersion: d.termsVersion ?? null,
+    privacyVersion: d.privacyVersion ?? null,
+    consentAt: d.consentAt ?? null,
+    policyVersion: d.policyVersion ?? null,
+    currentTermsVersion: CURRENT_TERMS_VERSION,
+    currentPrivacyVersion: CURRENT_PRIVACY_VERSION,
+  };
+}
+
 /**
- * Auth user created → provision Free profile (idempotent).
- * Does not set Admin claims. Does not grant paid entitlements.
+ * Auth user created → pending profile only (idempotent).
+ * Does not invent consent. Does not set Admin claims.
  */
 export const provisionMemberProfile = auth.user().onCreate(async (user) => {
   const db = getDb();
@@ -51,10 +130,9 @@ export const provisionMemberProfile = auth.user().onCreate(async (user) => {
     return;
   }
   await ref.set(
-    buildFreeMemberDoc({
+    buildPendingMemberDoc({
       uid: user.uid,
       email: user.email ?? "",
-      displayName: user.displayName ?? "",
       emailVerified: Boolean(user.emailVerified),
     }),
     { merge: false },
@@ -62,8 +140,8 @@ export const provisionMemberProfile = auth.user().onCreate(async (user) => {
 });
 
 /**
- * Authenticated recovery if trigger lagged or client needs profile.
- * Idempotent: creates Free profile only when missing; never upgrades role/grade.
+ * Authenticated provisioning + consent acceptance.
+ * Writes only to users/{request.auth.uid}.
  */
 export const ensureMyMemberProfile = onCall({ cors: true, maxInstances: 20 }, async (request) => {
   if (!request.auth?.uid) {
@@ -71,54 +149,78 @@ export const ensureMyMemberProfile = onCall({ cors: true, maxInstances: 20 }, as
   }
 
   const uid = request.auth.uid;
-  const token = request.auth.token;
+  const token = request.auth.token as Record<string, unknown>;
+
   const data = (request.data ?? {}) as {
     locale?: string;
-    consentAt?: string;
-    policyVersion?: string;
-    displayName?: string;
+    termsVersion?: string;
+    privacyVersion?: string;
+    targetUid?: string;
+    uid?: string;
   };
+
+  if (
+    (typeof data.targetUid === "string" && data.targetUid !== uid) ||
+    (typeof data.uid === "string" && data.uid !== uid)
+  ) {
+    throw new HttpsError("permission-denied", "다른 사용자의 프로필을 처리할 수 없습니다.");
+  }
+
+  const consent = validateConsentRequest(data);
+  const locale = parseLocale(data.locale);
+  const email = authEmail(token);
+  const emailVerified = authEmailVerified(token);
 
   const db = getDb();
   const ref = db.collection("users").doc(uid);
   const snap = await ref.get();
 
   if (!snap.exists) {
-    await ref.set(
-      buildFreeMemberDoc({
-        uid,
-        email: typeof token.email === "string" ? token.email : "",
-        displayName: typeof data.displayName === "string" ? data.displayName.slice(0, 80) : "",
-        emailVerified: Boolean(token.email_verified),
-        locale: data.locale === "en" ? "en" : "ko",
-        consentAt: typeof data.consentAt === "string" ? data.consentAt : null,
-        policyVersion:
-          typeof data.policyVersion === "string" ? data.policyVersion.slice(0, 32) : POLICY_VERSION,
-      }),
-    );
+    if (consent) {
+      await ref.set({
+        ...buildPendingMemberDoc({ uid, email, emailVerified, locale }),
+        status: "active",
+        termsVersion: consent.termsVersion,
+        termsAcceptedAt: FieldValue.serverTimestamp(),
+        privacyVersion: consent.privacyVersion,
+        privacyAcceptedAt: FieldValue.serverTimestamp(),
+        consentAt: FieldValue.serverTimestamp(),
+        policyVersion: consent.privacyVersion,
+      });
+    } else {
+      await ref.set(buildPendingMemberDoc({ uid, email, emailVerified, locale }));
+    }
   } else {
-    // Touch only safe client-visible sync fields; never role/status/grade
-    await ref.set(
-      {
-        lastLoginAt: FieldValue.serverTimestamp(),
-        emailVerified: Boolean(token.email_verified),
-        email: typeof token.email === "string" ? token.email : snap.get("email") ?? "",
-      },
-      { merge: true },
-    );
+    const existing = (snap.data() ?? {}) as ProfileData;
+    const patch: ProfileData = {
+      lastLoginAt: FieldValue.serverTimestamp(),
+      email,
+      emailVerified,
+    };
+    if (data.locale === "en" || data.locale === "ko") {
+      patch.locale = locale;
+    }
+
+    if (consent) {
+      if (!(hasCurrentConsent(existing) && existing.status === "active")) {
+        patch.termsVersion = consent.termsVersion;
+        patch.termsAcceptedAt = FieldValue.serverTimestamp();
+        patch.privacyVersion = consent.privacyVersion;
+        patch.privacyAcceptedAt = FieldValue.serverTimestamp();
+        patch.consentAt = FieldValue.serverTimestamp();
+        patch.policyVersion = consent.privacyVersion;
+        if (existing.status === "pending" || existing.status === undefined) {
+          patch.status = "active";
+        }
+        if (existing.role !== "admin" && !existing.membershipGrade) {
+          patch.membershipGrade = "free";
+        }
+      }
+    }
+
+    await ref.set(patch, { merge: true });
   }
 
   const fresh = await ref.get();
-  const d = fresh.data() ?? {};
-  return {
-    uid,
-    email: d.email ?? "",
-    displayName: d.displayName ?? "",
-    role: d.role ?? "member",
-    status: d.status ?? "active",
-    membershipGrade: d.membershipGrade ?? "free",
-    emailVerified: Boolean(d.emailVerified),
-    locale: d.locale ?? "ko",
-    policyVersion: d.policyVersion ?? POLICY_VERSION,
-  };
+  return profileResponse(uid, (fresh.data() ?? {}) as ProfileData);
 });

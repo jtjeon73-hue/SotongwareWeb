@@ -1,6 +1,6 @@
 /**
- * Auth Phase 2A — privilege / ownership Rules tests (extends core suite patterns)
- * Run via: npm run test:firestore:rules (included) OR npm run test:auth:phase2a
+ * Auth Phase 2A — privilege / ownership / consent field Rules tests
+ * Run: npm run test:auth:phase2a
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -27,7 +27,12 @@ async function seed() {
       status: "active",
       membershipGrade: "free",
       provisionedBy: "server",
+      emailVerified: false,
       locale: "ko",
+      consentAt: null,
+      policyVersion: null,
+      termsVersion: "2026-09-11",
+      privacyVersion: "2026-09-11",
     });
     await db.doc("users/user-b").set({
       uid: "user-b",
@@ -78,6 +83,14 @@ async function main() {
         }),
       );
     }),
+    run("create with email 거부", async () => {
+      await assertFails(
+        db("user-d").doc("users/user-d").set({
+          uid: "user-d",
+          email: "d@example.com",
+        }),
+      );
+    }),
     run("클라이언트가 admin role로 create 거부", async () => {
       await assertFails(
         db("evil").doc("users/evil").set({
@@ -102,8 +115,35 @@ async function main() {
     run("status 변경 거부", async () => {
       await assertFails(db("user-a").doc("users/user-a").update({ status: "suspended" }));
     }),
+    run("email 업데이트 거부", async () => {
+      await assertFails(db("user-a").doc("users/user-a").update({ email: "attacker@evil.com" }));
+    }),
+    run("emailVerified 업데이트 거부", async () => {
+      await assertFails(db("user-a").doc("users/user-a").update({ emailVerified: true }));
+    }),
+    run("consentAt 업데이트 거부", async () => {
+      await assertFails(
+        db("user-a").doc("users/user-a").update({ consentAt: "1999-01-01T00:00:00.000Z" }),
+      );
+    }),
+    run("policyVersion 업데이트 거부", async () => {
+      await assertFails(db("user-a").doc("users/user-a").update({ policyVersion: "attacker" }));
+    }),
+    run("termsVersion merge 거부", async () => {
+      await assertFails(
+        db("user-a").doc("users/user-a").set({ termsVersion: "attacker" }, { merge: true }),
+      );
+    }),
+    run("임의 paid 필드 삽입 거부", async () => {
+      await assertFails(db("user-a").doc("users/user-a").set({ paid: true }, { merge: true }));
+    }),
     run("안전한 locale 업데이트 허용", async () => {
       await assertSucceeds(db("user-a").doc("users/user-a").update({ locale: "en" }));
+    }),
+    run("locale+email partial 우회 거부", async () => {
+      await assertFails(
+        db("user-a").doc("users/user-a").update({ locale: "ko", email: "x@evil.com" }),
+      );
     }),
     run("비로그인 프로필 읽기 거부", async () => {
       await assertFails(anon().doc("users/user-a").get());
@@ -128,7 +168,6 @@ async function main() {
     }),
   ]);
 
-  // Static safety markers
   const safetyPath = path.join(__dirname, "..", "src", "lib", "auth-safety.ts");
   const profilePath = path.join(__dirname, "..", "src", "lib", "user-profile.ts");
   const safety = fs.readFileSync(safetyPath, "utf8");
@@ -136,7 +175,7 @@ async function main() {
   results.push(
     await run("auth-safety fail-safe 존재", async () => {
       if (!safety.includes("assertAuthEnvironmentSafe")) throw new Error("missing assert");
-      if (!safety.includes("NEXT_PUBLIC_FIREBASE_USE_EMULATOR")) throw new Error("missing emu flag");
+      if (!safety.includes("CURRENT_TERMS_VERSION")) throw new Error("missing terms version");
     }),
   );
   results.push(
@@ -145,6 +184,9 @@ async function main() {
         throw new Error("client still creates privileged profile");
       }
       if (!profile.includes("ensureMyMemberProfile")) throw new Error("callable missing");
+      if (profile.includes("emailVerified: user.emailVerified")) {
+        throw new Error("client still writes emailVerified");
+      }
     }),
   );
 

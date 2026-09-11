@@ -8,6 +8,7 @@ import { AuthGuard } from "@/components/auth/AuthGuard";
 import { getAuthErrorMessage } from "@/lib/auth-errors";
 import { AuthEmulatorBanner, FormAlert } from "@/components/auth/AuthFormParts";
 import { membershipGradeLabel } from "@/lib/membership-grade";
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "@/lib/auth-safety";
 import { Button } from "@/components/ui/Button";
 
 function AccountContent() {
@@ -21,6 +22,7 @@ function AccountContent() {
     signOut,
     sendVerificationEmail,
     refreshProfile,
+    acceptPolicies,
   } = useAuth();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -62,6 +64,27 @@ function AccountContent() {
     }
   }
 
+  async function handleAcceptPolicies() {
+    setError(null);
+    setMessage(null);
+    setLoading(true);
+    try {
+      await acceptPolicies();
+      setMessage("동의가 서버에 기록되었습니다. 무료 회원(Free)이 활성화됩니다.");
+    } catch (err) {
+      setError(getAuthErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const statusLabel =
+    profile?.status === "pending"
+      ? "동의 대기 (제한)"
+      : profile?.status === "suspended"
+        ? "정지"
+        : "정상";
+
   return (
     <div className="section-padding bg-gradient-to-b from-slate-50 to-white">
       <div className="container-main max-w-2xl">
@@ -73,12 +96,23 @@ function AccountContent() {
           {message && <FormAlert message={message} variant="info" />}
           {error && <FormAlert message={error} />}
 
+          {profile?.status === "pending" && (
+            <FormAlert
+              message="회원 기능이 아직 활성화되지 않았습니다. 현재 정책에 동의하면 Free 회원으로 전환됩니다."
+              variant="info"
+            />
+          )}
+
           <section className="rounded-2xl border border-slate-200/80 bg-white/90 p-5 shadow-sm">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500">회원 정보</h2>
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex justify-between gap-4">
                 <dt className="text-slate-500">이메일</dt>
                 <dd className="font-medium text-slate-900">{user?.email}</dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">회원 상태</dt>
+                <dd className="font-medium text-slate-900">{statusLabel}</dd>
               </div>
               <div className="flex justify-between gap-4">
                 <dt className="text-slate-500">회원 등급</dt>
@@ -98,8 +132,12 @@ function AccountContent() {
                 </dd>
               </div>
               <div className="flex justify-between gap-4">
-                <dt className="text-slate-500">동의 정책</dt>
-                <dd className="font-medium text-slate-900">{profile?.policyVersion || "—"}</dd>
+                <dt className="text-slate-500">이용약관</dt>
+                <dd className="font-medium text-slate-900">{profile?.termsVersion || "—"}</dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">개인정보처리방침</dt>
+                <dd className="font-medium text-slate-900">{profile?.privacyVersion || "—"}</dd>
               </div>
               <div className="flex justify-between gap-4">
                 <dt className="text-slate-500">화면 언어</dt>
@@ -113,6 +151,19 @@ function AccountContent() {
               </div>
             </dl>
 
+            {profile?.status === "pending" && (
+              <button
+                type="button"
+                onClick={() => void handleAcceptPolicies()}
+                disabled={loading}
+                className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-[#0f2744] px-4 py-2 text-sm font-medium text-white hover:bg-[#163556] disabled:opacity-60"
+              >
+                {loading
+                  ? "처리 중…"
+                  : `약관 ${CURRENT_TERMS_VERSION} / 개인정보 ${CURRENT_PRIVACY_VERSION} 동의`}
+              </button>
+            )}
+
             {!user?.emailVerified && (
               <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
                 <p>이메일 미인증 상태입니다. 둘러보기·계정 확인은 가능하지만, 일부 보호 기능은 제한될 수 있습니다.</p>
@@ -120,7 +171,7 @@ function AccountContent() {
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={handleVerifyEmail}
+                    onClick={() => void handleVerifyEmail()}
                     disabled={loading}
                     className="inline-flex min-h-11 items-center rounded-lg border border-sky-300 bg-sky-50 px-4 py-2 text-sm font-medium text-sky-800 hover:bg-sky-100 disabled:opacity-60"
                   >
@@ -128,7 +179,7 @@ function AccountContent() {
                   </button>
                   <button
                     type="button"
-                    onClick={handleRefresh}
+                    onClick={() => void handleRefresh()}
                     disabled={loading}
                     className="inline-flex min-h-11 items-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
                   >
@@ -156,7 +207,7 @@ function AccountContent() {
               </Button>
               <button
                 type="button"
-                onClick={handleSignOut}
+                onClick={() => void handleSignOut()}
                 className="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
               >
                 로그아웃

@@ -3,7 +3,11 @@
  * Never print secrets. Emulator vs production must be explicit.
  */
 
+/** @deprecated Prefer CURRENT_TERMS_VERSION / CURRENT_PRIVACY_VERSION — legacy display alias */
 export const AUTH_POLICY_VERSION = "2026-09-11";
+
+export const CURRENT_TERMS_VERSION = "2026-09-11";
+export const CURRENT_PRIVACY_VERSION = "2026-09-11";
 
 export function isAuthEmulatorEnabled(): boolean {
   return process.env.NEXT_PUBLIC_FIREBASE_USE_EMULATOR === "true";

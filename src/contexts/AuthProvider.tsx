@@ -24,7 +24,8 @@ import { getFirebaseAuth, isFirebaseConfigured } from "@/lib/firebase";
 import { ensureUserProfile, fetchUserEntitlements } from "@/lib/user-profile";
 import {
   assertAuthEnvironmentSafe,
-  AUTH_POLICY_VERSION,
+  CURRENT_PRIVACY_VERSION,
+  CURRENT_TERMS_VERSION,
   isAuthEmulatorEnabled,
   isEmailSignupEnabled,
   isGoogleAuthUiEnabled,
@@ -61,6 +62,7 @@ interface AuthContextValue {
   resetPassword: (email: string) => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  acceptPolicies: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -131,7 +133,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const auth = getFirebaseAuth();
     if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
     const credential = await createUserWithEmailAndPassword(auth, options.email, options.password);
-    const consentAt = new Date().toISOString();
     try {
       await sendEmailVerification(credential.user);
       if (typeof window !== "undefined") {
@@ -140,10 +141,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Emulator / unset email templates — profile still provisions
     }
+    // Server validates versions and records server Timestamps — never send client clocks
     await ensureUserProfile(credential.user, {
       locale: options.locale ?? "ko",
-      consentAt,
-      policyVersion: AUTH_POLICY_VERSION,
+      termsVersion: CURRENT_TERMS_VERSION,
+      privacyVersion: CURRENT_PRIVACY_VERSION,
     });
   }, []);
 
@@ -194,6 +196,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await loadUserData(auth.currentUser);
   }, [loadUserData]);
 
+  const acceptPolicies = useCallback(async () => {
+    assertAuthEnvironmentSafe();
+    const auth = getFirebaseAuth();
+    if (!auth?.currentUser) throw new Error("로그인이 필요합니다.");
+    const userProfile = await ensureUserProfile(auth.currentUser, {
+      locale: "ko",
+      termsVersion: CURRENT_TERMS_VERSION,
+      privacyVersion: CURRENT_PRIVACY_VERSION,
+    });
+    setProfile(userProfile);
+  }, []);
+
   const membershipGrade = resolveMembershipUxGrade(user, claims, profile);
   const isAdmin = isAdminFromClaims(claims);
 
@@ -217,6 +231,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       resetPassword,
       sendVerificationEmail,
       refreshProfile,
+      acceptPolicies,
     }),
     [
       user,
@@ -237,6 +252,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       resetPassword,
       sendVerificationEmail,
       refreshProfile,
+      acceptPolicies,
     ],
   );
 

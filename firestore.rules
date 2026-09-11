@@ -20,6 +20,7 @@ service cloud.firestore {
       return /databases/$(database)/documents/users/$(uid);
     }
 
+    // fail-closed: pending / suspended cannot read member content
     function isActiveUser() {
       return isSignedIn()
         && exists(userProfileRef(request.auth.uid))
@@ -52,33 +53,14 @@ service cloud.firestore {
         );
     }
 
-    // Client-safe profile keys only (privilege fields are server-only)
+    // Client may only change explicit UI prefs — never identity/consent/privilege fields
     function onlySafeUserProfileUpdates() {
       return request.resource.data.diff(resource.data).affectedKeys()
-        .hasOnly([
-          'displayName',
-          'lastLoginAt',
-          'emailVerified',
-          'locale',
-          'consentAt',
-          'policyVersion',
-          'updatedAt',
-          'email'
-        ]);
+        .hasOnly(['locale']);
     }
 
-    // 문의 — Functions Admin SDK만 접근
-    match /contactInquiries/{id} {
-      allow read, write: if false;
-    }
-
-    // 사용자 프로필
-    // create: Admin SDK / Cloud Functions only (client cannot invent role/plan)
-    match /users/{userId} {
-      allow read: if isOwner(userId) || isAdmin();
-      allow create: if false;
-      allow update: if isOwner(userId) && onlySafeUserProfileUpdates()
-        && request.resource.data.uid == resource.data.uid
+    function privilegeFieldsUnchanged() {
+      return request.resource.data.uid == resource.data.uid
         && request.resource.data.role == resource.data.role
         && request.resource.data.status == resource.data.status
         && (
@@ -88,7 +70,53 @@ service cloud.firestore {
         && (
           !('provisionedBy' in resource.data)
           || request.resource.data.provisionedBy == resource.data.provisionedBy
+        )
+        && (
+          !('email' in resource.data)
+          || request.resource.data.email == resource.data.email
+        )
+        && (
+          !('emailVerified' in resource.data)
+          || request.resource.data.emailVerified == resource.data.emailVerified
+        )
+        && (
+          !('consentAt' in resource.data)
+          || request.resource.data.consentAt == resource.data.consentAt
+        )
+        && (
+          !('policyVersion' in resource.data)
+          || request.resource.data.policyVersion == resource.data.policyVersion
+        )
+        && (
+          !('termsVersion' in resource.data)
+          || request.resource.data.termsVersion == resource.data.termsVersion
+        )
+        && (
+          !('termsAcceptedAt' in resource.data)
+          || request.resource.data.termsAcceptedAt == resource.data.termsAcceptedAt
+        )
+        && (
+          !('privacyVersion' in resource.data)
+          || request.resource.data.privacyVersion == resource.data.privacyVersion
+        )
+        && (
+          !('privacyAcceptedAt' in resource.data)
+          || request.resource.data.privacyAcceptedAt == resource.data.privacyAcceptedAt
         );
+    }
+
+    // 문의 — Functions Admin SDK만 접근
+    match /contactInquiries/{id} {
+      allow read, write: if false;
+    }
+
+    // 사용자 프로필 — create/동의/신원/권한은 Admin SDK / Cloud Functions만
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if false;
+      allow update: if isOwner(userId)
+        && onlySafeUserProfileUpdates()
+        && privilegeFieldsUnchanged();
       allow delete: if false;
     }
 

@@ -232,8 +232,8 @@ READ-ONLY 감사 결과, Auth·회원 프로필·entitlement Rules 골격은 존
 ### `users/{uid}`
 
 - **목적**: 프로필·계정 상태
-- **주요 필드**: uid, email, displayName, status, emailVerified, createdAt, lastLoginAt
-- **작성**: client create(제한) / Functions·Admin(정지 등)
+- **주요 필드**: uid, email, displayName, status(pending|active|suspended), emailVerified, membershipGrade, termsVersion/termsAcceptedAt, privacyVersion/privacyAcceptedAt, locale, createdAt, lastLoginAt (legacy consentAt/policyVersion = server mirrors only)
+- **작성**: Functions/Admin SDK만 create·동의·신원·권한 필드 작성; 클라이언트는 locale 등 명시 allowlist만 (Auth Phase 2A blocker repair). email/emailVerified/consent 계열은 클라이언트 쓰기 금지.
 - **읽기**: owner, admin
 - **연결**: orders, subscriptions, entitlements, refunds, downloadGrants
 - **보존**: 탈퇴 시 삭제 또는 익명화; 세무·분쟁용 최소 식별자는 법정 기간 보존(법무 확정)

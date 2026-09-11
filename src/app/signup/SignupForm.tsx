@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthProvider";
 import { useAuthLocale } from "@/hooks/useAuthLocale";
 import { authLabels, getAuthErrorMessage } from "@/i18n/auth-labels";
 import { sanitizeRedirectPath } from "@/lib/safe-redirect";
-import { AUTH_POLICY_VERSION } from "@/lib/auth-safety";
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "@/lib/auth-safety";
 import {
   AuthCard,
   FormAlert,
@@ -189,7 +189,7 @@ function SignupFormInner() {
               {labels.privacyLink}
             </Link>
             <span className="mt-1 block text-xs text-slate-500">
-              {labels.policyVersionLabel}: {AUTH_POLICY_VERSION}
+              약관 {CURRENT_TERMS_VERSION} · 개인정보 {CURRENT_PRIVACY_VERSION}
             </span>
           </span>
         </label>

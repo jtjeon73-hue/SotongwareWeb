@@ -9,7 +9,8 @@ export type PublicationStatus = "draft" | "published" | "comingSoon";
 /** Server-stored role — never written by client */
 export type UserRole = "member" | "admin";
 
-export type UserStatus = "active" | "suspended";
+/** pending = awaiting server-validated consent (fail-closed) */
+export type UserStatus = "pending" | "active" | "suspended";
 
 /** Server-owned membership grade; Basic reserved, not activated in Phase 2A */
 export type MembershipGradeField = "free" | "basic";
@@ -27,10 +28,16 @@ export interface UserProfile {
   displayName: string;
   role: UserRole;
   status: UserStatus;
-  /** Future Basic reserved; Phase 2A always free for customers */
+  /** Future Basic reserved; Phase 2A customers are free after consent */
   membershipGrade?: MembershipGradeField;
   locale?: "ko" | "en";
+  termsVersion?: string | null;
+  termsAcceptedAt?: string | null;
+  privacyVersion?: string | null;
+  privacyAcceptedAt?: string | null;
+  /** Legacy mirror of consent — server-owned only */
   consentAt?: string | null;
+  /** Legacy mirror — server-owned only */
   policyVersion?: string | null;
   createdAt: string;
   lastLoginAt: string;
