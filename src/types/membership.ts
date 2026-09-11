@@ -6,9 +6,16 @@ export type AccessLevel = "public" | "member" | "premium";
 /** 콘텐츠·사업 공개 상태 */
 export type PublicationStatus = "draft" | "published" | "comingSoon";
 
+/** Server-stored role — never written by client */
 export type UserRole = "member" | "admin";
 
 export type UserStatus = "active" | "suspended";
+
+/** Server-owned membership grade; Basic reserved, not activated in Phase 2A */
+export type MembershipGradeField = "free" | "basic";
+
+/** UX-facing grade */
+export type MembershipUxGrade = "guest" | "free" | "admin";
 
 export type EntitlementPlan = "free" | "member" | "premium";
 
@@ -20,6 +27,11 @@ export interface UserProfile {
   displayName: string;
   role: UserRole;
   status: UserStatus;
+  /** Future Basic reserved; Phase 2A always free for customers */
+  membershipGrade?: MembershipGradeField;
+  locale?: "ko" | "en";
+  consentAt?: string | null;
+  policyVersion?: string | null;
   createdAt: string;
   lastLoginAt: string;
   emailVerified: boolean;

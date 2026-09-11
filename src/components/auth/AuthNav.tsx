@@ -35,7 +35,7 @@ export function AuthNav({ locale: localeProp }: { locale?: Locale }) {
   }
 
   if (user) {
-    const name = profile?.displayName || user.email?.split("@")[0] || labels.member;
+    const name = user.email?.split("@")[0] || profile?.displayName || labels.member;
     return (
       <div className="flex items-center gap-2">
         <Link

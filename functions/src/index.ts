@@ -121,3 +121,6 @@ export const submitContactInquiry = onCall(
     return { success: true, id: docRef.id };
   },
 );
+
+export { provisionMemberProfile, ensureMyMemberProfile } from "./member-profile";
+

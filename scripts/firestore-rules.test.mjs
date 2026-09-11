@@ -201,6 +201,22 @@ async function main() {
         authedDb("active-user").doc(`memberContents/${CONTENT.memberComingSoon}`).get(),
       );
     }),
+    runTest("클라이언트 users create 거부", async () => {
+      await assertFails(
+        authedDb("new-user").doc("users/new-user").set({
+          uid: "new-user",
+          email: "new@example.com",
+          role: "member",
+          status: "active",
+        }),
+      );
+    }),
+    runTest("role 상승 업데이트 거부", async () => {
+      await assertFails(authedDb("active-user").doc("users/active-user").update({ role: "admin" }));
+    }),
+    runTest("다른 사용자 프로필 읽기 거부", async () => {
+      await assertFails(authedDb("active-user").doc("users/premium-user").get());
+    }),
   ]);
 
   await testEnv.cleanup();

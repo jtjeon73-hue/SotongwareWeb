@@ -18,21 +18,44 @@ import {
   sendEmailVerification,
   signInWithPopup,
   GoogleAuthProvider,
-  updateProfile,
   type User,
 } from "firebase/auth";
 import { getFirebaseAuth, isFirebaseConfigured } from "@/lib/firebase";
 import { ensureUserProfile, fetchUserEntitlements } from "@/lib/user-profile";
-import type { Entitlement, UserProfile } from "@/types/membership";
+import {
+  assertAuthEnvironmentSafe,
+  AUTH_POLICY_VERSION,
+  isAuthEmulatorEnabled,
+  isEmailSignupEnabled,
+  isGoogleAuthUiEnabled,
+} from "@/lib/auth-safety";
+import { isAdminFromClaims, resolveMembershipUxGrade } from "@/lib/membership-grade";
+import type { Entitlement, MembershipUxGrade, UserProfile } from "@/types/membership";
+
+const VERIFY_COOLDOWN_MS = 60_000;
+const VERIFY_STORAGE_KEY = "sw_verify_email_last_sent";
+
+export interface SignUpOptions {
+  email: string;
+  password: string;
+  locale?: "ko" | "en";
+  consentAccepted: boolean;
+}
 
 interface AuthContextValue {
   user: User | null;
   profile: UserProfile | null;
   entitlements: Entitlement[];
+  claims: Record<string, unknown> | null;
   loading: boolean;
   configured: boolean;
+  usingEmulator: boolean;
+  membershipGrade: MembershipUxGrade;
+  isAdmin: boolean;
+  emailSignupEnabled: boolean;
+  googleAuthEnabled: boolean;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string, displayName: string) => Promise<void>;
+  signUpWithEmail: (options: SignUpOptions) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -46,10 +69,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [entitlements, setEntitlements] = useState<Entitlement[]>([]);
+  const [claims, setClaims] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const configured = isFirebaseConfigured();
+  const usingEmulator = isAuthEmulatorEnabled();
+  const emailSignupEnabled = isEmailSignupEnabled();
+  const googleAuthEnabled = isGoogleAuthUiEnabled();
 
   const loadUserData = useCallback(async (authUser: User) => {
+    const token = await authUser.getIdTokenResult();
+    setClaims(token.claims as Record<string, unknown>);
     const userProfile = await ensureUserProfile(authUser);
     const userEntitlements = await fetchUserEntitlements(authUser.uid);
     setProfile(userProfile);
@@ -71,10 +100,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch {
           setProfile(null);
           setEntitlements([]);
+          setClaims(null);
         }
       } else {
         setProfile(null);
         setEntitlements([]);
+        setClaims(null);
       }
       setLoading(false);
     });
@@ -83,26 +114,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [loadUserData]);
 
   const signInWithEmail = useCallback(async (email: string, password: string) => {
+    assertAuthEnvironmentSafe();
     const auth = getFirebaseAuth();
     if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
     await signInWithEmailAndPassword(auth, email, password);
   }, []);
 
-  const signUpWithEmail = useCallback(
-    async (email: string, password: string, displayName: string) => {
-      const auth = getFirebaseAuth();
-      if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
-      const credential = await createUserWithEmailAndPassword(auth, email, password);
-      if (displayName.trim()) {
-        await updateProfile(credential.user, { displayName: displayName.trim() });
-      }
+  const signUpWithEmail = useCallback(async (options: SignUpOptions) => {
+    assertAuthEnvironmentSafe();
+    if (!isEmailSignupEnabled()) {
+      throw new Error("회원가입이 아직 활성화되지 않았습니다.");
+    }
+    if (!options.consentAccepted) {
+      throw new Error("이용약관 및 개인정보처리방침에 동의해 주세요.");
+    }
+    const auth = getFirebaseAuth();
+    if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
+    const credential = await createUserWithEmailAndPassword(auth, options.email, options.password);
+    const consentAt = new Date().toISOString();
+    try {
       await sendEmailVerification(credential.user);
-      await ensureUserProfile(credential.user, displayName.trim());
-    },
-    [],
-  );
+      if (typeof window !== "undefined") {
+        window.sessionStorage.setItem(VERIFY_STORAGE_KEY, String(Date.now()));
+      }
+    } catch {
+      // Emulator / unset email templates — profile still provisions
+    }
+    await ensureUserProfile(credential.user, {
+      locale: options.locale ?? "ko",
+      consentAt,
+      policyVersion: AUTH_POLICY_VERSION,
+    });
+  }, []);
 
   const signInWithGoogle = useCallback(async () => {
+    assertAuthEnvironmentSafe();
+    if (!isGoogleAuthUiEnabled()) {
+      throw new Error("Google 로그인은 아직 활성화되지 않았습니다.");
+    }
     const auth = getFirebaseAuth();
     if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
     const provider = new GoogleAuthProvider();
@@ -116,30 +165,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const resetPassword = useCallback(async (email: string) => {
+    assertAuthEnvironmentSafe();
     const auth = getFirebaseAuth();
     if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
     await sendPasswordResetEmail(auth, email);
   }, []);
 
   const sendVerificationEmail = useCallback(async () => {
+    assertAuthEnvironmentSafe();
     const auth = getFirebaseAuth();
     if (!auth?.currentUser) throw new Error("로그인이 필요합니다.");
+    if (typeof window !== "undefined") {
+      const last = Number(window.sessionStorage.getItem(VERIFY_STORAGE_KEY) || "0");
+      if (Date.now() - last < VERIFY_COOLDOWN_MS) {
+        throw new Error("인증 메일은 1분에 한 번만 다시 보낼 수 있습니다.");
+      }
+    }
     await sendEmailVerification(auth.currentUser);
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem(VERIFY_STORAGE_KEY, String(Date.now()));
+    }
   }, []);
 
   const refreshProfile = useCallback(async () => {
     const auth = getFirebaseAuth();
     if (!auth?.currentUser) return;
+    await auth.currentUser.reload();
     await loadUserData(auth.currentUser);
   }, [loadUserData]);
+
+  const membershipGrade = resolveMembershipUxGrade(user, claims, profile);
+  const isAdmin = isAdminFromClaims(claims);
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       profile,
       entitlements,
+      claims,
       loading,
       configured,
+      usingEmulator,
+      membershipGrade,
+      isAdmin,
+      emailSignupEnabled,
+      googleAuthEnabled,
       signInWithEmail,
       signUpWithEmail,
       signInWithGoogle,
@@ -152,8 +222,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       profile,
       entitlements,
+      claims,
       loading,
       configured,
+      usingEmulator,
+      membershipGrade,
+      isAdmin,
+      emailSignupEnabled,
+      googleAuthEnabled,
       signInWithEmail,
       signUpWithEmail,
       signInWithGoogle,

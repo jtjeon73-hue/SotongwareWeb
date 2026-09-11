@@ -5,7 +5,7 @@ import { createPageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = {
   ...createPageMetadata({
     title: "회원가입",
-    description: "SotongWare 무료 회원 가입 — 사업 포털과 회원 전용 콘텐츠를 이용하세요.",
+    description: "SotongWare 무료 회원(Free) 가입 — 이메일을 최소 수집합니다.",
     path: "/signup",
   }),
   robots: { index: false, follow: false },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function SignupPage() {
   return (
-    <div className="section-padding bg-surface-50">
+    <div className="section-padding bg-gradient-to-b from-slate-100 via-slate-50 to-white">
       <SignupForm />
     </div>
   );

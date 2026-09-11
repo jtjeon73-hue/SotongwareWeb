@@ -7,9 +7,17 @@ import {
   serverTimestamp,
   type Timestamp,
 } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 import type { User } from "firebase/auth";
-import { getFirestoreDb } from "@/lib/firebase";
+import { getFirestoreDb, getFirebaseFunctions } from "@/lib/firebase";
+import { AUTH_POLICY_VERSION } from "@/lib/auth-safety";
 import type { Entitlement, UserProfile } from "@/types/membership";
+
+export interface EnsureProfileOptions {
+  locale?: "ko" | "en";
+  consentAt?: string;
+  policyVersion?: string;
+}
 
 function timestampToIso(value: Timestamp | string | undefined): string {
   if (!value) return new Date().toISOString();
@@ -17,65 +25,72 @@ function timestampToIso(value: Timestamp | string | undefined): string {
   return value.toDate().toISOString();
 }
 
-export async function ensureUserProfile(user: User, displayName?: string): Promise<UserProfile> {
+function mapProfile(uid: string, data: Record<string, unknown>, emailVerifiedFallback: boolean): UserProfile {
+  return {
+    uid,
+    email: typeof data.email === "string" ? data.email : "",
+    displayName: typeof data.displayName === "string" ? data.displayName : "",
+    role: data.role === "admin" ? "admin" : "member",
+    status: data.status === "suspended" ? "suspended" : "active",
+    membershipGrade: data.membershipGrade === "basic" ? "basic" : "free",
+    locale: data.locale === "en" ? "en" : "ko",
+    consentAt: typeof data.consentAt === "string" ? data.consentAt : null,
+    policyVersion: typeof data.policyVersion === "string" ? data.policyVersion : null,
+    createdAt: timestampToIso(data.createdAt as Timestamp | string | undefined),
+    lastLoginAt: timestampToIso(data.lastLoginAt as Timestamp | string | undefined),
+    emailVerified: typeof data.emailVerified === "boolean" ? data.emailVerified : emailVerifiedFallback,
+  };
+}
+
+/**
+ * Load or recover membership profile.
+ * Privilege fields are created only by server (Auth trigger / callable).
+ * Client never writes role / status / membershipGrade / entitlements.
+ */
+export async function ensureUserProfile(
+  user: User,
+  options: EnsureProfileOptions = {},
+): Promise<UserProfile> {
   const db = getFirestoreDb();
   if (!db) {
     throw new Error("Firebase가 설정되지 않았습니다.");
   }
 
   const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-  const now = new Date().toISOString();
+  let snap = await getDoc(ref);
 
-  if (snap.exists()) {
-    const data = snap.data();
+  if (!snap.exists()) {
+    const functions = getFirebaseFunctions();
+    if (!functions) {
+      throw new Error("회원 프로필 서버 함수를 사용할 수 없습니다.");
+    }
+    const ensure = httpsCallable(functions, "ensureMyMemberProfile");
+    await ensure({
+      locale: options.locale ?? "ko",
+      consentAt: options.consentAt ?? null,
+      policyVersion: options.policyVersion ?? AUTH_POLICY_VERSION,
+    });
+    snap = await getDoc(ref);
+    if (!snap.exists()) {
+      throw new Error("회원 프로필을 준비하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    }
+  } else {
+    // Safe client fields only — Rules must also enforce
     await setDoc(
       ref,
       {
         lastLoginAt: serverTimestamp(),
         emailVerified: user.emailVerified,
-        displayName: displayName ?? data.displayName ?? user.displayName ?? "",
+        ...(options.locale ? { locale: options.locale } : {}),
+        ...(options.consentAt ? { consentAt: options.consentAt } : {}),
+        ...(options.policyVersion ? { policyVersion: options.policyVersion } : {}),
       },
       { merge: true },
     );
-    return {
-      uid: user.uid,
-      email: user.email ?? data.email ?? "",
-      displayName: displayName ?? data.displayName ?? user.displayName ?? "",
-      role: data.role ?? "member",
-      status: data.status ?? "active",
-      createdAt: timestampToIso(data.createdAt),
-      lastLoginAt: now,
-      emailVerified: user.emailVerified,
-    };
+    snap = await getDoc(ref);
   }
 
-  const profile: Omit<UserProfile, "createdAt" | "lastLoginAt"> & {
-    createdAt: ReturnType<typeof serverTimestamp>;
-    lastLoginAt: ReturnType<typeof serverTimestamp>;
-  } = {
-    uid: user.uid,
-    email: user.email ?? "",
-    displayName: displayName ?? user.displayName ?? "",
-    role: "member",
-    status: "active",
-    emailVerified: user.emailVerified,
-    createdAt: serverTimestamp(),
-    lastLoginAt: serverTimestamp(),
-  };
-
-  await setDoc(ref, profile);
-
-  return {
-    uid: user.uid,
-    email: profile.email,
-    displayName: profile.displayName,
-    role: profile.role,
-    status: profile.status,
-    createdAt: now,
-    lastLoginAt: now,
-    emailVerified: user.emailVerified,
-  };
+  return mapProfile(user.uid, snap.data() as Record<string, unknown>, user.emailVerified);
 }
 
 export async function fetchUserProfile(uid: string): Promise<UserProfile | null> {
@@ -85,17 +100,7 @@ export async function fetchUserProfile(uid: string): Promise<UserProfile | null>
   const snap = await getDoc(doc(db, "users", uid));
   if (!snap.exists()) return null;
 
-  const data = snap.data();
-  return {
-    uid,
-    email: data.email ?? "",
-    displayName: data.displayName ?? "",
-    role: data.role ?? "member",
-    status: data.status ?? "active",
-    createdAt: timestampToIso(data.createdAt),
-    lastLoginAt: timestampToIso(data.lastLoginAt),
-    emailVerified: Boolean(data.emailVerified),
-  };
+  return mapProfile(uid, snap.data() as Record<string, unknown>, Boolean(snap.data().emailVerified));
 }
 
 export async function fetchUserEntitlements(uid: string): Promise<Entitlement[]> {

@@ -19,7 +19,7 @@ function LoginFormInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = sanitizeRedirectPath(searchParams.get("redirect"));
-  const { signInWithEmail, signInWithGoogle, user, configured } = useAuth();
+  const { signInWithEmail, signInWithGoogle, user, configured, googleAuthEnabled } = useAuth();
   const locale = useAuthLocale();
   const labels = authLabels[locale];
 
@@ -82,11 +82,11 @@ function LoginFormInner() {
       title={labels.loginTitle}
       description={labels.loginDescription}
       footer={
-        <p className="text-center text-sm text-surface-600">
+        <p className="text-center text-sm text-slate-600">
           {labels.noAccount}{" "}
           <Link
             href={`/signup?redirect=${encodeURIComponent(redirect)}`}
-            className="font-medium text-brand-600 hover:text-brand-700"
+            className="font-medium text-sky-700 hover:text-sky-800"
           >
             {labels.signUp}
           </Link>
@@ -101,7 +101,7 @@ function LoginFormInner() {
           type="email"
           value={email}
           onChange={setEmail}
-          autoComplete="email"
+          autoComplete="username"
           required
         />
         <FormField
@@ -114,7 +114,7 @@ function LoginFormInner() {
           required
         />
         <div className="flex justify-end">
-          <Link href="/forgot-password" className="text-sm font-medium text-brand-600 hover:text-brand-700">
+          <Link href="/forgot-password" className="text-sm font-medium text-sky-700 hover:text-sky-800">
             {labels.forgotPassword}
           </Link>
         </div>
@@ -122,15 +122,19 @@ function LoginFormInner() {
           {labels.submitLogin}
         </SubmitButton>
       </form>
-      <div className="relative my-6">
-        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t border-surface-200" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-surface-500">{labels.or}</span>
-        </div>
-      </div>
-      <GoogleSignInButton onClick={handleGoogle} loading={loading} label={labels.googleContinue} />
+      {googleAuthEnabled && (
+        <>
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center" aria-hidden="true">
+              <div className="w-full border-t border-slate-200" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-slate-500">{labels.or}</span>
+            </div>
+          </div>
+          <GoogleSignInButton onClick={handleGoogle} loading={loading} label={labels.googleContinue} />
+        </>
+      )}
     </AuthCard>
   );
 }

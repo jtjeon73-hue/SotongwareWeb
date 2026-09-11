@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="section-padding bg-surface-50">
+    <div className="section-padding bg-gradient-to-b from-slate-100 via-slate-50 to-white">
       <LoginForm />
     </div>
   );

@@ -11,6 +11,7 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
+    // Admin = verified custom claims only (never client-written fields / email string)
     function isAdmin() {
       return isSignedIn() && request.auth.token.role == 'admin';
     }
@@ -51,20 +52,43 @@ service cloud.firestore {
         );
     }
 
+    // Client-safe profile keys only (privilege fields are server-only)
+    function onlySafeUserProfileUpdates() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly([
+          'displayName',
+          'lastLoginAt',
+          'emailVerified',
+          'locale',
+          'consentAt',
+          'policyVersion',
+          'updatedAt',
+          'email'
+        ]);
+    }
+
     // 문의 — Functions Admin SDK만 접근
     match /contactInquiries/{id} {
       allow read, write: if false;
     }
 
     // 사용자 프로필
+    // create: Admin SDK / Cloud Functions only (client cannot invent role/plan)
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId)
-        && request.resource.data.uid == userId
-        && request.resource.data.role == 'member'
-        && request.resource.data.status == 'active';
-      allow update: if isOwner(userId)
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status', 'uid']);
+      allow create: if false;
+      allow update: if isOwner(userId) && onlySafeUserProfileUpdates()
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.status == resource.data.status
+        && (
+          !('membershipGrade' in resource.data)
+          || request.resource.data.membershipGrade == resource.data.membershipGrade
+        )
+        && (
+          !('provisionedBy' in resource.data)
+          || request.resource.data.provisionedBy == resource.data.provisionedBy
+        );
       allow delete: if false;
     }
 
