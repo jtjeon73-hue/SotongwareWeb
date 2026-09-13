@@ -2,8 +2,10 @@ import { FieldValue, type Firestore } from "firebase-admin/firestore";
 import {
   createSafeOrderId,
   hashIdempotency,
+  resolvePgMode,
   type TossPaymentsAdapter,
 } from "./adapter";
+import { createTossCustomerKey, assertValidCustomerKey } from "./mode";
 import { CommerceError, maskPaymentKey } from "./errors";
 import type {
   CommerceOrderDoc,
@@ -84,6 +86,8 @@ export interface CommerceStore {
     attemptId: string;
   }): Promise<{ order: CommerceOrderDoc; entitlement: ProductEntitlementDoc | null }>;
   ensureFixtureProduct?(product: CommerceProductDoc): Promise<void>;
+  getTossCustomerKey(uid: string): Promise<string | null>;
+  setTossCustomerKey(uid: string, customerKey: string): Promise<void>;
   saveWebhookEvent(input: {
     providerEventId: string;
     orderId: string | null;
@@ -290,6 +294,13 @@ export class MemoryCommerceStore implements CommerceStore {
   }
   async ensureFixtureProduct(product: CommerceProductDoc) {
     this.products.set(product.id, product);
+  }
+  customerKeys = new Map<string, string>();
+  async getTossCustomerKey(uid: string) {
+    return this.customerKeys.get(uid) ?? null;
+  }
+  async setTossCustomerKey(uid: string, customerKey: string) {
+    this.customerKeys.set(uid, customerKey);
   }
   async saveWebhookEvent(input: {
     providerEventId: string;
@@ -560,6 +571,18 @@ export class FirestoreCommerceStore implements CommerceStore {
     });
   }
 
+  async getTossCustomerKey(uid: string) {
+    const snap = await this.db.collection(this.cols.users).doc(uid).get();
+    if (!snap.exists) return null;
+    const v = snap.data()?.tossCustomerKey;
+    return typeof v === "string" ? v : null;
+  }
+  async setTossCustomerKey(uid: string, customerKey: string) {
+    await this.db.collection(this.cols.users).doc(uid).set(
+      { tossCustomerKey: customerKey },
+      { merge: true },
+    );
+  }
   async ensureFixtureProduct(product: CommerceProductDoc) {
     await this.db.collection(this.cols.products).doc(product.id).set(product, { merge: true });
   }
@@ -615,12 +638,18 @@ export class CommerceCheckoutService {
       throw new CommerceError("user/inactive", "회원 상태를 확인해 주세요.", "failed-precondition");
     }
 
+    const pgMode = resolvePgMode();
+    if (pgMode === "live") {
+      throw new CommerceError("mode/live-forbidden", "운영 결제는 아직 열리지 않았습니다.", "failed-precondition");
+    }
+    const customerKey = await this.ensureCustomerKey(uid);
+
     const existing = await this.store.findOrderByIdempotency(uid, input.idempotencyKey);
     if (existing) {
       if (existing.productSnapshot.productId !== input.productId) {
         throw new CommerceError("idempotency/conflict", "중복 요청이 충돌했습니다.", "aborted");
       }
-      return this.publicPrepareResult(existing);
+      return this.publicPrepareResult(existing, { customerKey, pgMode });
     }
 
     if ((process.env.FUNCTIONS_EMULATOR === "true" || process.env.COMMERCE_PG_MODE === "mock" || !process.env.TOSS_SECRET_KEY) && input.productId === FIXTURE_ONE_TIME_PRODUCT.id) {
@@ -644,7 +673,7 @@ export class CommerceCheckoutService {
 
     const orderId = createSafeOrderId();
     const attemptId = `pay_${orderId}`;
-    const provider = this.adapter.id === "mock" ? "mock" : "toss";
+    const provider = pgMode === "mock" ? "mock" : "toss";
     await this.store.createPendingCheckout({
       order: {
         id: orderId,
@@ -676,10 +705,13 @@ export class CommerceCheckoutService {
     });
     const order = await this.store.getOrder(orderId);
     if (!order) throw new CommerceError("store/missing", "주문 생성에 실패했습니다.", "internal");
-    return this.publicPrepareResult(order);
+    return this.publicPrepareResult(order, { customerKey, pgMode });
   }
 
-  private publicPrepareResult(order: CommerceOrderDoc) {
+  private publicPrepareResult(
+    order: CommerceOrderDoc,
+    extra: { customerKey: string; pgMode: "mock" | "test" },
+  ) {
     return {
       orderId: order.id,
       amount: order.amount,
@@ -688,7 +720,22 @@ export class CommerceCheckoutService {
       productId: order.productSnapshot.productId,
       status: order.status,
       provider: order.provider,
+      customerKey: extra.customerKey,
+      pgMode: extra.pgMode,
+      mockCheckout: extra.pgMode === "mock",
     };
+  }
+
+  private async ensureCustomerKey(uid: string): Promise<string> {
+    const existing = await this.store.getTossCustomerKey(uid);
+    if (existing) {
+      assertValidCustomerKey(existing);
+      return existing;
+    }
+    const key = createTossCustomerKey();
+    assertValidCustomerKey(key);
+    await this.store.setTossCustomerKey(uid, key);
+    return key;
   }
 
   async confirm(uid: string, input: ConfirmPaymentInput) {

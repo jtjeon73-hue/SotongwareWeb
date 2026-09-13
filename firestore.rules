@@ -117,7 +117,12 @@ service cloud.firestore {
         && (
           !('privacyAcceptedAt' in resource.data)
           || request.resource.data.privacyAcceptedAt == resource.data.privacyAcceptedAt
-        );
+        )
+        && (
+          !('tossCustomerKey' in resource.data)
+          || request.resource.data.tossCustomerKey == resource.data.tossCustomerKey
+        )
+        && !('tossCustomerKey' in request.resource.data.diff(resource.data).affectedKeys());
     }
 
     // 문의 — Functions Admin SDK만 접근

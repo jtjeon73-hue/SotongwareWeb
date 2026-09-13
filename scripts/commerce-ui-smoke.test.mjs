@@ -27,6 +27,7 @@ const checkout = mustExist("checkout.html");
 assert.match(checkout, /결제|checkout/i);
 
 mustExist("checkout/result.html");
+mustExist("checkout/fail.html");
 mustExist("account/purchases.html");
 mustExist("account/purchases/detail.html");
 

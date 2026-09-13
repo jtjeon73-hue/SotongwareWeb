@@ -1,20 +1,13 @@
 import { createHash, randomBytes } from "node:crypto";
-import { CommerceError, assertNoLiveSecretInTest, assertNoTestSecretInLive } from "./errors";
+import { CommerceError } from "./errors";
 import type { TossPaymentView } from "./types";
+import {
+  resolvePgMode,
+  assertSecretMatchesMode,
+  type PgMode,
+} from "./mode";
 
-export type PgMode = "mock" | "test" | "live";
-
-export function resolvePgMode(env: NodeJS.ProcessEnv = process.env): PgMode {
-  const explicit = (env.COMMERCE_PG_MODE || "").toLowerCase();
-  if (explicit === "mock" || explicit === "test" || explicit === "live") {
-    return explicit;
-  }
-  if (env.FUNCTIONS_EMULATOR === "true") return "mock";
-  if (env.TOSS_SECRET_KEY) {
-    return /^live_/i.test(env.TOSS_SECRET_KEY) ? "live" : "test";
-  }
-  return "mock";
-}
+export { resolvePgMode, type PgMode } from "./mode";
 
 export interface TossPaymentsAdapter {
   readonly id: "mock" | "toss";
@@ -118,8 +111,7 @@ export class HttpTossAdapter implements TossPaymentsAdapter {
     mode: PgMode,
     private readonly fetchImpl: typeof fetch = fetch,
   ) {
-    assertNoLiveSecretInTest(secretKey, mode);
-    assertNoTestSecretInLive(secretKey, mode);
+    assertSecretMatchesMode(secretKey, mode);
     this.authHeader = `Basic ${Buffer.from(`${secretKey}:`).toString("base64")}`;
   }
 
@@ -197,13 +189,7 @@ export function createAdapterFromEnv(env: NodeJS.ProcessEnv = process.env): Toss
   const mode = resolvePgMode(env);
   if (mode === "mock") return new MockTossAdapter();
   const secret = env.TOSS_SECRET_KEY || "";
-  if (!secret) {
-    throw new CommerceError(
-      "keys/missing-secret",
-      "결제 서비스 준비 중입니다.",
-      "failed-precondition",
-    );
-  }
+  assertSecretMatchesMode(secret, mode);
   return new HttpTossAdapter(secret, mode);
 }
 

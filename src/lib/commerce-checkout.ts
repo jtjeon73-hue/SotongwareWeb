@@ -12,10 +12,14 @@ import {
 } from "@/lib/auth-safety";
 
 export function isCommerceCheckoutAvailable(): boolean {
+  // Production Hosting must not expose mock/test checkout this phase
+  if (process.env.NODE_ENV === "production") return false;
   if (isAuthEmulatorEnabled()) return true;
   const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "";
   const mock = process.env.NEXT_PUBLIC_COMMERCE_MOCK_CHECKOUT === "true";
-  return Boolean(clientKey) || mock;
+  const mode = (process.env.NEXT_PUBLIC_COMMERCE_PG_MODE || "").toLowerCase();
+  if (mode === "live") return false;
+  return Boolean(clientKey) || mock || mode === "mock" || mode === "test";
 }
 
 export function isAuthReadyForCheckout(): boolean {
@@ -30,12 +34,9 @@ export function isAuthReadyForCheckout(): boolean {
 export function getTossClientKey(): string | null {
   const key = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "";
   if (!key) return null;
-  if (process.env.NODE_ENV === "production" && /^test_/i.test(key)) {
-    return null;
-  }
-  if (/^live_/i.test(key) && process.env.NEXT_PUBLIC_COMMERCE_PG_MODE !== "live") {
-    return null;
-  }
+  if (/^live_/i.test(key)) return null;
+  if (process.env.NODE_ENV === "production") return null;
+  if (!/^test_/i.test(key)) return null;
   return key;
 }
 
@@ -54,6 +55,8 @@ export type PrepareCheckoutResult = {
   productId: string;
   status: string;
   provider: string;
+  customerKey?: string;
+  pgMode?: "mock" | "test";
   mockCheckout?: boolean;
 };
 
