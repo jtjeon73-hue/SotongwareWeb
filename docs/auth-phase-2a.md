@@ -1,7 +1,7 @@
 # Auth Phase 2A — Secure Membership Foundation
 
-Status: deployment gate repair — membership Functions only for first cloud deploy; contact callable cloud-omitted.
-Out of scope until separate approval: Blaze upgrade, live Functions/Hosting/Rules deploy, Auth provider re-enable, Google/Basic/PG.
+Status: membership Functions on Node.js 22; contact callable cloud-omitted.
+Out of scope until separate approval: Hosting/Rules deploy, Auth provider re-enable, Google/Basic/PG.
 
 ## Field write authority
 
@@ -34,6 +34,8 @@ Callable binds all writes to `request.auth.uid`. Payload `uid` / `targetUid` mis
 |----------|--------|
 | `ensureMyMemberProfile` | gen2 callable, us-central1, 256MiB, timeout 30s, minInstances 0, maxInstances 5, auth required |
 | `provisionMemberProfile` | gen1 Auth onCreate, us-central1, 256MB, timeout 30s, minInstances 0, maxInstances 3, idempotent, no failurePolicy retry |
+
+**Runtime:** Node.js **22** (`functions/package.json` `engines.node`). Gen1 Auth `onCreate` remains; Node.js 20 deprecation is addressed by this runtime.
 
 **Exclude**
 

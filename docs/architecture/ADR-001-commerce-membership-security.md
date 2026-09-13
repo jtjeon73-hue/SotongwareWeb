@@ -497,3 +497,4 @@ READ-ONLY 감사 결과, Auth·회원 프로필·entitlement Rules 골격은 존
 - `submitContactInquiry` remains in source but cloud-`omit` until App Check + strong rate limits.
 - Budget alerts are soft notifications (₩1k/5k/9k/10k vs ₩10k monthly reference), not a hard cap.
 - Use `npm run deploy:functions:auth-membership:check` / explicit `--confirm-deploy` after approval; never `sotongware-control`.
+- Membership Functions runtime: Node.js 22 (`engines.node`); gen1 Auth onCreate structure unchanged. Node.js 20 deprecation addressed.
