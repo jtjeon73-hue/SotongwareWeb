@@ -9,8 +9,8 @@
     "lint": "eslint .",
     "build:hosting": "next build",
     "deploy:hosting": "npm run build:hosting && firebase deploy --only hosting --project sotongware",
-    "deploy:functions": "firebase deploy --only functions,firestore:rules,firestore:indexes --project sotongware",
-    "deploy:all": "npm run build:hosting && firebase deploy --only hosting,functions,firestore:rules,firestore:indexes --project sotongware",
+    "deploy:functions": "node scripts/refuse-unsafe-firebase-deploy.mjs",
+    "deploy:all": "node scripts/refuse-unsafe-firebase-deploy.mjs",
     "test:e2e:contact": "firebase emulators:exec --only functions,firestore --project sotongware \"node scripts/e2e-contact.mjs\"",
     "test:firestore:rules": "firebase emulators:exec --only firestore --project sotongware \"node scripts/firestore-rules.test.mjs\"",
     "test:i18n:parity": "node scripts/i18n-parity.test.mjs",
@@ -20,7 +20,11 @@
     "test:preview:commerce": "node scripts/preview-commerce-smoke.test.mjs",
     "test:preview:locale": "node scripts/preview-locale-matrix.test.mjs",
     "test:auth:phase2a": "firebase emulators:exec --only firestore --project sotongware \"node scripts/auth-phase-2a.test.mjs\"",
-    "test:auth:emulator": "npm --prefix functions run build && firebase emulators:exec --only auth,firestore,functions --project sotongware \"node scripts/auth-emulator-smoke.test.mjs\""
+    "test:auth:emulator": "npm --prefix functions run build && firebase emulators:exec --only auth,firestore,functions --project sotongware \"node scripts/auth-emulator-smoke.test.mjs\"",
+    "deploy:functions:auth-membership": "node scripts/deploy-auth-membership-functions.mjs",
+    "deploy:functions:auth-membership:check": "node scripts/deploy-auth-membership-functions.mjs --check-only",
+    "test:deploy:auth-membership-gate": "node scripts/deploy-auth-membership-gate.test.mjs",
+    "test:auth:functions-options": "node scripts/auth-functions-options.test.mjs"
   },
   "dependencies": {
     "firebase": "^11.10.0",

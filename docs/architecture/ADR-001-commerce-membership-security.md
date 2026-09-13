@@ -488,3 +488,12 @@ READ-ONLY 감사 결과, Auth·회원 프로필·entitlement Rules 골격은 존
 | Version | Date | Note |
 |---------|------|------|
 | 1.0 | 2026-09-11 | Initial Accepted ADR |
+
+
+<!-- auth-functions-deploy-gate -->
+### Auth Functions first deploy (Phase 2A gate)
+
+- First cloud deploy allowlist: `ensureMyMemberProfile`, `provisionMemberProfile` only.
+- `submitContactInquiry` remains in source but cloud-`omit` until App Check + strong rate limits.
+- Budget alerts are soft notifications (₩1k/5k/9k/10k vs ₩10k monthly reference), not a hard cap.
+- Use `npm run deploy:functions:auth-membership:check` / explicit `--confirm-deploy` after approval; never `sotongware-control`.

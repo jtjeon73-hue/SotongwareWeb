@@ -1,5 +1,5 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import { auth } from "firebase-functions/v1";
+import * as functionsV1 from "firebase-functions/v1";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { initializeApp, getApps } from "firebase-admin/app";
 
@@ -47,7 +47,6 @@ export function buildPendingMemberDoc(input: {
     termsAcceptedAt: null,
     privacyVersion: null,
     privacyAcceptedAt: null,
-    // Legacy compat — server-owned, null until consent
     consentAt: null,
     policyVersion: null,
     createdAt: FieldValue.serverTimestamp(),
@@ -120,107 +119,130 @@ function profileResponse(uid: string, d: ProfileData) {
 
 /**
  * Auth user created → pending profile only (idempotent).
- * Does not invent consent. Does not set Admin claims.
+ * Gen1 Auth trigger (no gen2 Auth onCreate). Node 20 compatible.
+ * failurePolicy NOT set — avoid automatic infinite retry storms.
  */
-export const provisionMemberProfile = auth.user().onCreate(async (user) => {
-  const db = getDb();
-  const ref = db.collection("users").doc(user.uid);
-  const snap = await ref.get();
-  if (snap.exists) {
-    return;
-  }
-  await ref.set(
-    buildPendingMemberDoc({
-      uid: user.uid,
-      email: user.email ?? "",
-      emailVerified: Boolean(user.emailVerified),
-    }),
-    { merge: false },
-  );
-});
+export const provisionMemberProfile = functionsV1
+  .runWith({
+    memory: "256MB",
+    timeoutSeconds: 30,
+    minInstances: 0,
+    maxInstances: 3,
+  })
+  .region("us-central1")
+  .auth.user()
+  .onCreate(async (user) => {
+    const db = getDb();
+    const ref = db.collection("users").doc(user.uid);
+    const snap = await ref.get();
+    if (snap.exists) {
+      return;
+    }
+    await ref.set(
+      buildPendingMemberDoc({
+        uid: user.uid,
+        email: user.email ?? "",
+        emailVerified: Boolean(user.emailVerified),
+      }),
+      { merge: false },
+    );
+  });
 
 /**
  * Authenticated provisioning + consent acceptance.
  * Writes only to users/{request.auth.uid}.
+ *
+ * App Check: NOT enforced yet (enforceAppCheck unset/false).
+ * Enable only after web App Check is configured — see docs/auth-phase-2a.md.
  */
-export const ensureMyMemberProfile = onCall({ cors: true, maxInstances: 20 }, async (request) => {
-  if (!request.auth?.uid) {
-    throw new HttpsError("unauthenticated", "로그인이 필요합니다.");
-  }
-
-  const uid = request.auth.uid;
-  const token = request.auth.token as Record<string, unknown>;
-
-  const data = (request.data ?? {}) as {
-    locale?: string;
-    termsVersion?: string;
-    privacyVersion?: string;
-    targetUid?: string;
-    uid?: string;
-  };
-
-  if (
-    (typeof data.targetUid === "string" && data.targetUid !== uid) ||
-    (typeof data.uid === "string" && data.uid !== uid)
-  ) {
-    throw new HttpsError("permission-denied", "다른 사용자의 프로필을 처리할 수 없습니다.");
-  }
-
-  const consent = validateConsentRequest(data);
-  const locale = parseLocale(data.locale);
-  const email = authEmail(token);
-  const emailVerified = authEmailVerified(token);
-
-  const db = getDb();
-  const ref = db.collection("users").doc(uid);
-  const snap = await ref.get();
-
-  if (!snap.exists) {
-    if (consent) {
-      await ref.set({
-        ...buildPendingMemberDoc({ uid, email, emailVerified, locale }),
-        status: "active",
-        termsVersion: consent.termsVersion,
-        termsAcceptedAt: FieldValue.serverTimestamp(),
-        privacyVersion: consent.privacyVersion,
-        privacyAcceptedAt: FieldValue.serverTimestamp(),
-        consentAt: FieldValue.serverTimestamp(),
-        policyVersion: consent.privacyVersion,
-      });
-    } else {
-      await ref.set(buildPendingMemberDoc({ uid, email, emailVerified, locale }));
+export const ensureMyMemberProfile = onCall(
+  {
+    region: "us-central1",
+    memory: "256MiB",
+    timeoutSeconds: 30,
+    minInstances: 0,
+    maxInstances: 5,
+    cors: true,
+  },
+  async (request) => {
+    if (!request.auth?.uid) {
+      throw new HttpsError("unauthenticated", "로그인이 필요합니다.");
     }
-  } else {
-    const existing = (snap.data() ?? {}) as ProfileData;
-    const patch: ProfileData = {
-      lastLoginAt: FieldValue.serverTimestamp(),
-      email,
-      emailVerified,
+
+    const uid = request.auth.uid;
+    const token = request.auth.token as Record<string, unknown>;
+
+    const data = (request.data ?? {}) as {
+      locale?: string;
+      termsVersion?: string;
+      privacyVersion?: string;
+      targetUid?: string;
+      uid?: string;
     };
-    if (data.locale === "en" || data.locale === "ko") {
-      patch.locale = locale;
+
+    if (
+      (typeof data.targetUid === "string" && data.targetUid !== uid) ||
+      (typeof data.uid === "string" && data.uid !== uid)
+    ) {
+      throw new HttpsError("permission-denied", "다른 사용자의 프로필을 처리할 수 없습니다.");
     }
 
-    if (consent) {
-      if (!(hasCurrentConsent(existing) && existing.status === "active")) {
-        patch.termsVersion = consent.termsVersion;
-        patch.termsAcceptedAt = FieldValue.serverTimestamp();
-        patch.privacyVersion = consent.privacyVersion;
-        patch.privacyAcceptedAt = FieldValue.serverTimestamp();
-        patch.consentAt = FieldValue.serverTimestamp();
-        patch.policyVersion = consent.privacyVersion;
-        if (existing.status === "pending" || existing.status === undefined) {
-          patch.status = "active";
-        }
-        if (existing.role !== "admin" && !existing.membershipGrade) {
-          patch.membershipGrade = "free";
+    const consent = validateConsentRequest(data);
+    const locale = parseLocale(data.locale);
+    const email = authEmail(token);
+    const emailVerified = authEmailVerified(token);
+
+    const db = getDb();
+    const ref = db.collection("users").doc(uid);
+    const snap = await ref.get();
+
+    if (!snap.exists) {
+      if (consent) {
+        await ref.set({
+          ...buildPendingMemberDoc({ uid, email, emailVerified, locale }),
+          status: "active",
+          termsVersion: consent.termsVersion,
+          termsAcceptedAt: FieldValue.serverTimestamp(),
+          privacyVersion: consent.privacyVersion,
+          privacyAcceptedAt: FieldValue.serverTimestamp(),
+          consentAt: FieldValue.serverTimestamp(),
+          policyVersion: consent.privacyVersion,
+        });
+      } else {
+        await ref.set(buildPendingMemberDoc({ uid, email, emailVerified, locale }));
+      }
+    } else {
+      const existing = (snap.data() ?? {}) as ProfileData;
+      const patch: ProfileData = {
+        lastLoginAt: FieldValue.serverTimestamp(),
+        email,
+        emailVerified,
+      };
+      if (data.locale === "en" || data.locale === "ko") {
+        patch.locale = locale;
+      }
+
+      if (consent) {
+        if (!(hasCurrentConsent(existing) && existing.status === "active")) {
+          patch.termsVersion = consent.termsVersion;
+          patch.termsAcceptedAt = FieldValue.serverTimestamp();
+          patch.privacyVersion = consent.privacyVersion;
+          patch.privacyAcceptedAt = FieldValue.serverTimestamp();
+          patch.consentAt = FieldValue.serverTimestamp();
+          patch.policyVersion = consent.privacyVersion;
+          if (existing.status === "pending" || existing.status === undefined) {
+            patch.status = "active";
+          }
+          if (existing.role !== "admin" && !existing.membershipGrade) {
+            patch.membershipGrade = "free";
+          }
         }
       }
+
+      await ref.set(patch, { merge: true });
     }
 
-    await ref.set(patch, { merge: true });
-  }
-
-  const fresh = await ref.get();
-  return profileResponse(uid, (fresh.data() ?? {}) as ProfileData);
-});
+    const fresh = await ref.get();
+    return profileResponse(uid, (fresh.data() ?? {}) as ProfileData);
+  },
+);

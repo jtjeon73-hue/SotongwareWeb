@@ -9,7 +9,7 @@
     "build": "tsc",
     "lint": "eslint src",
     "serve": "npm run build && firebase emulators:start --only functions",
-    "deploy": "firebase deploy --only functions --project sotongware"
+    "deploy": "node ../scripts/refuse-unsafe-firebase-deploy.mjs"
   },
   "dependencies": {
     "firebase-admin": "^13.4.0",

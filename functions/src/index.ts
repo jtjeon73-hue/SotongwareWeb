@@ -1,6 +1,7 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { initializeApp, getApps } from "firebase-admin/app";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
+import { ensureMyMemberProfile, provisionMemberProfile } from "./member-profile";
 
 function getDb() {
   if (!getApps().length) {
@@ -52,8 +53,29 @@ interface ContactPayload {
   website?: string;
 }
 
+/**
+ * Contact inquiry callable — SOURCE PRESERVED.
+ *
+ * FAIL-CLOSED for cloud deploy: omitted unless ALLOW_CONTACT_FUNCTION=true.
+ * Emulator keeps it available (FUNCTIONS_EMULATOR=true) for local e2e.
+ *
+ * Do NOT include in initial production deploy. Requires App Check + strong
+ * server rate limits first — see docs/auth-phase-2a.md / contact follow-up.
+ */
+const allowContactInCloud = process.env.ALLOW_CONTACT_FUNCTION === "true";
+const runningInEmulator = process.env.FUNCTIONS_EMULATOR === "true";
+
 export const submitContactInquiry = onCall(
-  { cors: true, maxInstances: 10 },
+  {
+    // Cloud: omitted by default. Emulator: included for local tests.
+    omit: !(runningInEmulator || allowContactInCloud),
+    cors: true,
+    region: "us-central1",
+    memory: "256MiB",
+    timeoutSeconds: 30,
+    minInstances: 0,
+    maxInstances: 3,
+  },
   async (request) => {
     const data = request.data as ContactPayload;
 
@@ -122,5 +144,5 @@ export const submitContactInquiry = onCall(
   },
 );
 
-export { provisionMemberProfile, ensureMyMemberProfile } from "./member-profile";
-
+// Initial production allowlist exports (also re-exported for clarity)
+export { ensureMyMemberProfile, provisionMemberProfile };
