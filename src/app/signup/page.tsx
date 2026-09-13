@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SignupForm } from "./SignupForm";
+import { AuthPageShell } from "@/components/auth/AuthFormParts";
 import { createPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = {
@@ -13,8 +14,8 @@ export const metadata: Metadata = {
 
 export default function SignupPage() {
   return (
-    <div className="section-padding bg-gradient-to-b from-slate-100 via-slate-50 to-white">
+    <AuthPageShell>
       <SignupForm />
-    </div>
+    </AuthPageShell>
   );
 }

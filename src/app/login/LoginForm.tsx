@@ -19,7 +19,15 @@ function LoginFormInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = sanitizeRedirectPath(searchParams.get("redirect"));
-  const { signInWithEmail, signInWithGoogle, user, configured, googleAuthEnabled } = useAuth();
+  const {
+    signInWithEmail,
+    signInWithGoogle,
+    user,
+    configured,
+    googleAuthEnabled,
+    emailSignupEnabled,
+    emailPasswordAuthEnabled,
+  } = useAuth();
   const locale = useAuthLocale();
   const labels = authLabels[locale];
 
@@ -45,6 +53,10 @@ function LoginFormInner() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (!emailPasswordAuthEnabled) {
+      setError(labels.authServicePreparingDetail);
+      return;
+    }
     setLoading(true);
     try {
       await signInWithEmail(email.trim(), password);
@@ -86,13 +98,18 @@ function LoginFormInner() {
           {labels.noAccount}{" "}
           <Link
             href={`/signup?redirect=${encodeURIComponent(redirect)}`}
-            className="font-medium text-sky-700 hover:text-sky-800"
+            className="font-medium text-sky-700 hover:text-sky-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-sm"
           >
-            {labels.signUp}
+            {emailSignupEnabled ? labels.signUp : labels.signUpPreparing}
           </Link>
         </p>
       }
     >
+      {!emailPasswordAuthEnabled && (
+        <div className="mb-4">
+          <FormAlert message={labels.authServicePreparingDetail} variant="info" />
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         {error && <FormAlert message={error} />}
         <FormField
@@ -103,6 +120,9 @@ function LoginFormInner() {
           onChange={setEmail}
           autoComplete="username"
           required
+          disabled={!emailPasswordAuthEnabled}
+          showPasswordLabel={labels.showPassword}
+          hidePasswordLabel={labels.hidePassword}
         />
         <FormField
           id="login-password"
@@ -112,13 +132,23 @@ function LoginFormInner() {
           onChange={setPassword}
           autoComplete="current-password"
           required
+          disabled={!emailPasswordAuthEnabled}
+          showPasswordLabel={labels.showPassword}
+          hidePasswordLabel={labels.hidePassword}
         />
         <div className="flex justify-end">
-          <Link href="/forgot-password" className="text-sm font-medium text-sky-700 hover:text-sky-800">
+          <Link
+            href="/forgot-password"
+            className="min-h-9 inline-flex items-center text-sm font-medium text-sky-700 hover:text-sky-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-sm"
+          >
             {labels.forgotPassword}
           </Link>
         </div>
-        <SubmitButton loading={loading} loadingLabel={labels.processing}>
+        <SubmitButton
+          loading={loading}
+          disabled={!emailPasswordAuthEnabled}
+          loadingLabel={labels.processing}
+        >
           {labels.submitLogin}
         </SubmitButton>
       </form>

@@ -3,31 +3,35 @@
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthProvider";
+import { useAuthLocale } from "@/hooks/useAuthLocale";
+import { authLabels } from "@/i18n/auth-labels";
 import { AuthLoadingScreen } from "./AuthFormParts";
 
 interface AuthGuardProps {
   children: React.ReactNode;
 }
 
-/** 클라이언트 UX 가드 — 실제 보안은 Firestore Rules */
+/** Client UX guard — real security is Firestore Rules */
 export function AuthGuard({ children }: AuthGuardProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const locale = useAuthLocale();
+  const labels = authLabels[locale];
 
   useEffect(() => {
     if (!loading && !user) {
-      const redirect = encodeURIComponent(pathname || "/dashboard");
+      const redirect = encodeURIComponent(pathname || "/account");
       router.replace(`/login?redirect=${redirect}`);
     }
   }, [loading, user, router, pathname]);
 
   if (loading) {
-    return <AuthLoadingScreen />;
+    return <AuthLoadingScreen message={labels.authLoading} />;
   }
 
   if (!user) {
-    return <AuthLoadingScreen message="로그인 페이지로 이동하는 중…" />;
+    return <AuthLoadingScreen message={labels.redirectingToLogin} />;
   }
 
   return <>{children}</>;

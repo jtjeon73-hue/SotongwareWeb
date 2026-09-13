@@ -115,10 +115,13 @@ function SignupFormInner() {
 
   if (!emailSignupEnabled) {
     return (
-      <AuthCard title={labels.signupTitle} description={labels.signupDisabled}>
+      <AuthCard title={labels.signupDisabled} description={labels.signupDisabledDetail}>
         <FormAlert message={labels.signupDisabledDetail} variant="info" />
         <p className="mt-4 text-center text-sm">
-          <Link href="/login" className="font-medium text-sky-700 hover:text-sky-800">
+          <Link
+            href="/login"
+            className="font-medium text-sky-700 hover:text-sky-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-sm"
+          >
             {labels.backToLogin}
           </Link>
         </p>

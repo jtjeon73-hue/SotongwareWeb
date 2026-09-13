@@ -21,15 +21,15 @@ export function HubHeroSection({ dict }: HubHeroSectionProps) {
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,_transparent_60%,_var(--color-surface-950)_100%)]" />
 
       <div className="container-main relative section-padding !pb-12 sm:!pb-14 lg:!pb-16">
-        <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-12 xl:gap-16">
-          <div className="max-w-xl lg:max-w-none">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-12 xl:gap-16">
+          <div className="min-w-0 max-w-xl lg:max-w-none">
             <p className="text-sm font-medium tracking-wide text-brand-300">{siteConfig.name}</p>
             <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-surface-400">
               {hero.eyebrow}
             </p>
             <h1
               id="hero-heading"
-              className="mt-4 text-[1.75rem] font-bold leading-[1.18] tracking-tight sm:text-4xl lg:text-[2.35rem] lg:leading-[1.12]"
+              className="mt-4 max-w-full text-[1.55rem] font-bold leading-[1.22] tracking-tight text-balance break-keep hyphens-none sm:text-3xl md:text-4xl lg:text-[2.15rem] lg:leading-[1.15]"
             >
               {hero.headline}
             </h1>

@@ -27,8 +27,10 @@ import {
   CURRENT_PRIVACY_VERSION,
   CURRENT_TERMS_VERSION,
   isAuthEmulatorEnabled,
+  isEmailPasswordAuthEnabled,
   isEmailSignupEnabled,
   isGoogleAuthUiEnabled,
+  makeAuthCodedError,
 } from "@/lib/auth-safety";
 import { isAdminFromClaims, resolveMembershipUxGrade } from "@/lib/membership-grade";
 import type { Entitlement, MembershipUxGrade, UserProfile } from "@/types/membership";
@@ -54,6 +56,7 @@ interface AuthContextValue {
   membershipGrade: MembershipUxGrade;
   isAdmin: boolean;
   emailSignupEnabled: boolean;
+  emailPasswordAuthEnabled: boolean;
   googleAuthEnabled: boolean;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signUpWithEmail: (options: SignUpOptions) => Promise<void>;
@@ -76,6 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const configured = isFirebaseConfigured();
   const usingEmulator = isAuthEmulatorEnabled();
   const emailSignupEnabled = isEmailSignupEnabled();
+  const emailPasswordAuthEnabled = isEmailPasswordAuthEnabled();
   const googleAuthEnabled = isGoogleAuthUiEnabled();
 
   const loadUserData = useCallback(async (authUser: User) => {
@@ -117,21 +121,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithEmail = useCallback(async (email: string, password: string) => {
     assertAuthEnvironmentSafe();
+    if (!isEmailPasswordAuthEnabled()) {
+      throw makeAuthCodedError("sw/email-auth-disabled");
+    }
     const auth = getFirebaseAuth();
-    if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
+    if (!auth) throw makeAuthCodedError("sw/not-configured");
     await signInWithEmailAndPassword(auth, email, password);
   }, []);
 
   const signUpWithEmail = useCallback(async (options: SignUpOptions) => {
     assertAuthEnvironmentSafe();
     if (!isEmailSignupEnabled()) {
-      throw new Error("회원가입이 아직 활성화되지 않았습니다.");
+      throw makeAuthCodedError("sw/signup-disabled");
     }
     if (!options.consentAccepted) {
-      throw new Error("이용약관 및 개인정보처리방침에 동의해 주세요.");
+      throw makeAuthCodedError("sw/consent-required");
     }
     const auth = getFirebaseAuth();
-    if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
+    if (!auth) throw makeAuthCodedError("sw/not-configured");
     const credential = await createUserWithEmailAndPassword(auth, options.email, options.password);
     try {
       await sendEmailVerification(credential.user);
@@ -141,7 +148,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Emulator / unset email templates — profile still provisions
     }
-    // Server validates versions and records server Timestamps — never send client clocks
     await ensureUserProfile(credential.user, {
       locale: options.locale ?? "ko",
       termsVersion: CURRENT_TERMS_VERSION,
@@ -152,10 +158,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithGoogle = useCallback(async () => {
     assertAuthEnvironmentSafe();
     if (!isGoogleAuthUiEnabled()) {
-      throw new Error("Google 로그인은 아직 활성화되지 않았습니다.");
+      throw makeAuthCodedError("sw/google-disabled");
     }
     const auth = getFirebaseAuth();
-    if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
+    if (!auth) throw makeAuthCodedError("sw/not-configured");
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
   }, []);
@@ -168,19 +174,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = useCallback(async (email: string) => {
     assertAuthEnvironmentSafe();
+    if (!isEmailPasswordAuthEnabled()) {
+      throw makeAuthCodedError("sw/reset-disabled");
+    }
     const auth = getFirebaseAuth();
-    if (!auth) throw new Error("Firebase가 설정되지 않았습니다.");
+    if (!auth) throw makeAuthCodedError("sw/not-configured");
     await sendPasswordResetEmail(auth, email);
   }, []);
 
   const sendVerificationEmail = useCallback(async () => {
     assertAuthEnvironmentSafe();
     const auth = getFirebaseAuth();
-    if (!auth?.currentUser) throw new Error("로그인이 필요합니다.");
+    if (!auth?.currentUser) throw makeAuthCodedError("sw/login-required");
     if (typeof window !== "undefined") {
       const last = Number(window.sessionStorage.getItem(VERIFY_STORAGE_KEY) || "0");
       if (Date.now() - last < VERIFY_COOLDOWN_MS) {
-        throw new Error("인증 메일은 1분에 한 번만 다시 보낼 수 있습니다.");
+        throw makeAuthCodedError("sw/verify-cooldown");
       }
     }
     await sendEmailVerification(auth.currentUser);
@@ -199,7 +208,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const acceptPolicies = useCallback(async () => {
     assertAuthEnvironmentSafe();
     const auth = getFirebaseAuth();
-    if (!auth?.currentUser) throw new Error("로그인이 필요합니다.");
+    if (!auth?.currentUser) throw makeAuthCodedError("sw/login-required");
     const userProfile = await ensureUserProfile(auth.currentUser, {
       locale: "ko",
       termsVersion: CURRENT_TERMS_VERSION,
@@ -223,6 +232,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       membershipGrade,
       isAdmin,
       emailSignupEnabled,
+      emailPasswordAuthEnabled,
       googleAuthEnabled,
       signInWithEmail,
       signUpWithEmail,
@@ -244,6 +254,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       membershipGrade,
       isAdmin,
       emailSignupEnabled,
+      emailPasswordAuthEnabled,
       googleAuthEnabled,
       signInWithEmail,
       signUpWithEmail,
@@ -262,7 +273,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth(): AuthContextValue {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth는 AuthProvider 내부에서 사용해야 합니다.");
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
 }

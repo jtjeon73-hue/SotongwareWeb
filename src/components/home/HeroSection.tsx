@@ -12,8 +12,8 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,_transparent_50%,_var(--color-surface-900)_100%)]" />
 
       <div className="container-main relative section-padding !pb-12 sm:!pb-14 lg:!pb-16">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-          <div className="max-w-xl lg:max-w-none">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-12 xl:gap-16">
+          <div className="min-w-0 max-w-xl lg:max-w-none">
             <p className="text-sm font-medium tracking-wide text-brand-300">
               {siteConfig.name}
             </p>
@@ -22,7 +22,7 @@ export function HeroSection() {
             </p>
             <h1
               id="hero-heading"
-              className="mt-4 text-[1.75rem] font-bold leading-[1.2] tracking-tight sm:text-4xl lg:text-[2.5rem] lg:leading-[1.15]"
+              className="mt-4 max-w-full text-[1.55rem] font-bold leading-[1.22] tracking-tight text-balance break-keep hyphens-none sm:text-3xl md:text-4xl lg:text-[2.15rem] lg:leading-[1.15]"
             >
               {heroContent.headline.split(",").map((part, i, arr) => (
                 <span key={part.trim()}>

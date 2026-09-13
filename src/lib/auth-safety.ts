@@ -24,6 +24,18 @@ export function isEmailSignupEnabled(): boolean {
 }
 
 /**
+ * Live Email/Password login & reset — off by default until providers are intentionally enabled.
+ * Emulator always allows. Signup enable also opens email/password for the same soft-launch gate.
+ */
+export function isEmailPasswordAuthEnabled(): boolean {
+  if (isAuthEmulatorEnabled()) return true;
+  return (
+    process.env.NEXT_PUBLIC_AUTH_EMAIL_ENABLED === "true" ||
+    process.env.NEXT_PUBLIC_AUTH_SIGNUP_ENABLED === "true"
+  );
+}
+
+/**
  * Prevent accidental local auth against production.
  * Development builds require emulator unless NEXT_PUBLIC_AUTH_ALLOW_PROD=true.
  */
@@ -31,13 +43,19 @@ export function assertAuthEnvironmentSafe(): void {
   if (typeof window === "undefined") return;
   const allowProd = process.env.NEXT_PUBLIC_AUTH_ALLOW_PROD === "true";
   if (process.env.NODE_ENV === "development" && !isAuthEmulatorEnabled() && !allowProd) {
-    throw new Error(
-      "개발 모드에서는 Firebase Auth Emulator가 필요합니다. .env.local에 NEXT_PUBLIC_FIREBASE_USE_EMULATOR=true 를 설정하세요.",
-    );
+    const err = new Error("Auth environment not ready");
+    (err as Error & { code: string }).code = "sw/auth-env-unsafe";
+    throw err;
   }
 }
 
 export function getAuthTargetLabel(): string {
   if (isAuthEmulatorEnabled()) return "Firebase Emulator (로컬 테스트)";
   return "Firebase 운영 Auth";
+}
+
+export function makeAuthCodedError(code: string, message = "auth"): Error {
+  const err = new Error(message);
+  (err as Error & { code: string }).code = code;
+  return err;
 }
