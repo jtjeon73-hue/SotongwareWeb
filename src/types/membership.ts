@@ -9,8 +9,10 @@ export type PublicationStatus = "draft" | "published" | "comingSoon";
 /** Server-stored role — never written by client */
 export type UserRole = "member" | "admin";
 
-/** pending = awaiting server-validated consent (fail-closed) */
-export type UserStatus = "pending" | "active" | "suspended";
+/** pending = awaiting server-validated consent (fail-closed)
+ * withdrawal_requested = reserved next-step contract (server-only; not wired yet)
+ */
+export type UserStatus = "pending" | "active" | "suspended" | "withdrawal_requested";
 
 /** Server-owned membership grade; Basic reserved, not activated in Phase 2A */
 export type MembershipGradeField = "free" | "basic";

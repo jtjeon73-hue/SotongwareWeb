@@ -56,7 +56,14 @@ service cloud.firestore {
     // Client may only change explicit UI prefs — never identity/consent/privilege fields
     function onlySafeUserProfileUpdates() {
       return request.resource.data.diff(resource.data).affectedKeys()
-        .hasOnly(['locale']);
+        .hasOnly(['locale', 'displayName'])
+        && (
+          !('displayName' in request.resource.data)
+          || (
+            request.resource.data.displayName is string
+            && request.resource.data.displayName.size() <= 80
+          )
+        );
     }
 
     function privilegeFieldsUnchanged() {
@@ -78,6 +85,14 @@ service cloud.firestore {
         && (
           !('emailVerified' in resource.data)
           || request.resource.data.emailVerified == resource.data.emailVerified
+        )
+        && (
+          !('plan' in resource.data)
+          || request.resource.data.plan == resource.data.plan
+        )
+        && (
+          !('paymentStatus' in resource.data)
+          || request.resource.data.paymentStatus == resource.data.paymentStatus
         )
         && (
           !('consentAt' in resource.data)
@@ -120,17 +135,55 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // 이용 권한 — 관리자/서버만 부여, businessId는 문서 ID와 일치해야 함
+    // 사업부 멤버십 entitlement (기존) — 관리자/서버만 부여
     match /users/{userId}/entitlements/{businessId} {
       allow read: if isOwner(userId) || isAdmin();
       allow write: if isAdmin()
         && request.resource.data.businessId == businessId;
     }
 
+    // 상품 구매 entitlement — 클라이언트 write 금지 (서버 Admin SDK만)
+    match /users/{userId}/productEntitlements/{entitlementId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if false;
+    }
+
     // 회원 콘텐츠 — 원문은 Rules로 보호
     match /memberContents/{contentId} {
       allow read: if canReadMemberContent(resource.data);
       allow write: if isAdmin();
+    }
+
+    // Commerce public catalog — published only; never store secrets here
+    match /commerceProducts/{productId} {
+      allow read: if resource.data.status == 'published'
+        || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Internal product docs — admin claim only (never customer-readable)
+    match /commerceProductInternal/{productId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Orders — owner/admin read; all client writes denied (server Admin SDK)
+    match /commerceOrders/{orderId} {
+      allow read: if isSignedIn()
+        && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if false;
+    }
+
+    // Payment attempts — owner/admin read; client write denied
+    match /commercePaymentAttempts/{attemptId} {
+      allow read: if isSignedIn()
+        && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if false;
+    }
+
+    // Webhook audit — admin read only; client write denied
+    match /commercePaymentWebhookEvents/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
     }
 
     match /{document=**} {

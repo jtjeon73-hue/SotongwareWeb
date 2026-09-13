@@ -64,6 +64,22 @@ run("builds functions-only flag", () => {
   assert.ok(!flag.toLowerCase().includes("submitcontactinquiry"));
 });
 
+
+run("rejects commerce function names", () => {
+  for (const name of [
+    "createCommerceCheckout",
+    "confirmCommercePayment",
+    "handleCommerceWebhook",
+    "grantProductEntitlement",
+  ]) {
+    assert.ok(FORBIDDEN_FUNCTION_NAMES.includes(name), name);
+    assert.throws(
+      () => assertNoForbiddenTargets(`functions:${name}`),
+      new RegExp(name),
+    );
+  }
+});
+
 run("rejects contact in allowlist builder", () => {
   assert.throws(
     () => buildFunctionsOnlyFlag(["submitContactInquiry"]),

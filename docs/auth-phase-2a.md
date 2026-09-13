@@ -131,3 +131,9 @@ See `docs/auth-withdrawal-draft.md`. Execution deferred.
 ## Admin claims
 
 Custom claim `{ role: "admin" }` only. Never email string compare. Never commit service account keys.
+
+
+## Related
+
+- Membership/commerce ops contract: `docs/membership-commerce-ops-contract.md`
+- Commerce ADR: `docs/architecture/ADR-002-commerce-core.md`

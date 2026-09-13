@@ -24,7 +24,10 @@
     "deploy:functions:auth-membership": "node scripts/deploy-auth-membership-functions.mjs",
     "deploy:functions:auth-membership:check": "node scripts/deploy-auth-membership-functions.mjs --check-only",
     "test:deploy:auth-membership-gate": "node scripts/deploy-auth-membership-gate.test.mjs",
-    "test:auth:functions-options": "node scripts/auth-functions-options.test.mjs"
+    "test:auth:functions-options": "node scripts/auth-functions-options.test.mjs",
+    "test:membership:security": "firebase emulators:exec --only firestore --project sotongware \"node scripts/membership-security.test.mjs\"",
+    "test:commerce:rules": "firebase emulators:exec --only firestore --project sotongware \"node scripts/commerce-rules.test.mjs\"",
+    "test:commerce:domain": "node scripts/commerce-domain.test.mjs"
   },
   "dependencies": {
     "firebase": "^11.10.0",
