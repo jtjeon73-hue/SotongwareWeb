@@ -10,3 +10,8 @@ Six business units share one commerce domain (Product / Order / PaymentAttempt /
 - Client writes to orders/payments/webhooks/productEntitlements are denied; Admin SDK / future commerce Functions own mutations.
 - Membership Functions allowlist stays two names only until a separate commerce deploy gate is approved.
 - Real PG API calls, fake card UI, and live payment claims are forbidden until PG selection + Secret Manager + webhook verification ship.
+
+
+## Related
+
+- Toss checkout: `docs/architecture/ADR-003-toss-sandbox-checkout.md`

@@ -134,18 +134,23 @@ export const provisionMemberProfile = functionsV1
   .onCreate(async (user) => {
     const db = getDb();
     const ref = db.collection("users").doc(user.uid);
-    const snap = await ref.get();
-    if (snap.exists) {
-      return;
+    // create() avoids TOCTOU overwrite when ensureMyMemberProfile wins the race
+    try {
+      await ref.create(
+        buildPendingMemberDoc({
+          uid: user.uid,
+          email: user.email ?? "",
+          emailVerified: Boolean(user.emailVerified),
+        }),
+      );
+    } catch (err: unknown) {
+      const code =
+        typeof err === "object" && err && "code" in err ? String((err as { code: unknown }).code) : "";
+      if (code === "6" || code === "already-exists" || /ALREADY_EXISTS/i.test(String(err))) {
+        return;
+      }
+      throw err;
     }
-    await ref.set(
-      buildPendingMemberDoc({
-        uid: user.uid,
-        email: user.email ?? "",
-        emailVerified: Boolean(user.emailVerified),
-      }),
-      { merge: false },
-    );
   });
 
 /**

@@ -27,7 +27,13 @@
     "test:auth:functions-options": "node scripts/auth-functions-options.test.mjs",
     "test:membership:security": "firebase emulators:exec --only firestore --project sotongware \"node scripts/membership-security.test.mjs\"",
     "test:commerce:rules": "firebase emulators:exec --only firestore --project sotongware \"node scripts/commerce-rules.test.mjs\"",
-    "test:commerce:domain": "node scripts/commerce-domain.test.mjs"
+    "test:commerce:domain": "node scripts/commerce-domain.test.mjs",
+    "test:commerce:checkout": "npm --prefix functions run build && node scripts/commerce-checkout.test.mjs",
+    "test:commerce:functions-options": "node scripts/commerce-functions-options.test.mjs",
+    "test:deploy:commerce-gate": "node scripts/deploy-commerce-gate.test.mjs",
+    "test:commerce:ui": "node scripts/commerce-ui-smoke.test.mjs",
+    "deploy:functions:commerce:check": "node scripts/deploy-commerce-functions.mjs --check-only",
+    "deploy:functions:commerce": "node scripts/deploy-commerce-functions.mjs"
   },
   "dependencies": {
     "firebase": "^11.10.0",

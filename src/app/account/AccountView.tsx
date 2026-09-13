@@ -199,6 +199,9 @@ function AccountContent() {
           <section className="rounded-2xl border border-slate-200/80 bg-white/90 p-5 shadow-sm">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500">계정 관리</h2>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+              <Button href="/account/purchases" variant="secondary" className="min-h-11">
+                구매내역
+              </Button>
               <Button href="/dashboard" variant="outline" className="min-h-11">
                 대시보드로
               </Button>

@@ -67,10 +67,10 @@ run("builds functions-only flag", () => {
 
 run("rejects commerce function names", () => {
   for (const name of [
-    "createCommerceCheckout",
+    "prepareCommerceCheckout",
     "confirmCommercePayment",
-    "handleCommerceWebhook",
-    "grantProductEntitlement",
+    "handleTossPaymentWebhook",
+    "refundCommercePayment",
   ]) {
     assert.ok(FORBIDDEN_FUNCTION_NAMES.includes(name), name);
     assert.throws(

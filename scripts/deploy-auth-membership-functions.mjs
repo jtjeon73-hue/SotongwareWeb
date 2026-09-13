@@ -24,8 +24,11 @@ export const ALLOWED_FUNCTIONS = Object.freeze([
 export const FORBIDDEN_FUNCTION_NAMES = Object.freeze([
   "submitContactInquiry",
   // Commerce Functions require a separate approved allowlist — never via membership deploy
-  "createCommerceCheckout",
+  "prepareCommerceCheckout",
   "confirmCommercePayment",
+  "handleTossPaymentWebhook",
+  "refundCommercePayment",
+  "createCommerceCheckout",
   "handleCommerceWebhook",
   "grantProductEntitlement",
 ]);
