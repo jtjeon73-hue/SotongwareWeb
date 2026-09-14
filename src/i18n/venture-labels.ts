@@ -44,7 +44,7 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
       eyebrow: "Marketing Services",
       title: "홍보·마케팅",
       description:
-        "홈페이지 홍보, SEO, 콘텐츠 마케팅, Shorts·영상 제작 — 마케팅 서비스를 상품화합니다. 가격은 상담 후 결정합니다.",
+        "SNS·카드뉴스·블로그·상세/랜딩·Shorts·캠페인까지 — 패키지를 고르고 홍보 결과물을 주문하는 디지털 제작 서비스입니다.",
       ctas: [{ label: "마케팅 상담 요청", href: "/contact?topic=marketing", variant: "primary" }],
       sections: {
         services: "서비스 목록",
@@ -137,7 +137,7 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
       eyebrow: "Marketing Services",
       title: "Promo & marketing",
       description:
-        "Corporate sites, SEO, content marketing, and short-form video—packaged as services with scope confirmed in consultation.",
+        "Order SNS, card news, blogs, detail/landing pages, Shorts, and campaigns as structured digital production packages.",
       ctas: [{ label: "Request marketing consultation", href: "/contact?topic=marketing", variant: "primary" }],
       sections: {
         services: "Service lineup",

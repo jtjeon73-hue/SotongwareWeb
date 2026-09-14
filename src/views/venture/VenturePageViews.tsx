@@ -1,7 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import {
   automationCapabilityLabels,
-  marketingServiceLabels,
   ventureLabels,
   type VenturePageId,
 } from "@/i18n/venture-labels";
@@ -11,16 +10,15 @@ import { BusinessSiteBanner } from "@/components/business/BusinessSiteBanner";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { ProductEmptyState } from "@/components/product/ProductEmptyState";
 import { LocalizedButton } from "@/components/locale/LocalizedButton";
-import { PricingTiers } from "@/components/pricing/PricingTiers";
 import { StructuredData } from "@/components/common/StructuredData";
 import { serviceJsonLd } from "@/lib/structured-data";
 import { getProductsByType } from "@/data/products";
 import { automationPortfolio } from "@/data/automation";
-import { marketingTiers } from "@/data/marketing";
 import { isContactSubmissionAvailable } from "@/config/platform-status";
 import { EbookLibraryView } from "@/components/ebook/EbookLibraryView";
 import { KnowledgeHubView } from "@/components/knowledge/KnowledgeHubView";
 import { ContentLibraryView } from "@/components/content/ContentLibraryView";
+import { MarketingServiceView } from "@/components/marketing/MarketingServiceView";
 
 function VentureCtas({ locale, ventureId }: { locale: Locale; ventureId: VenturePageId }) {
   const labels = ventureLabels[locale][ventureId];
@@ -44,7 +42,7 @@ export function AppsPageView({ locale }: { locale: Locale }) {
   const published = getProductsByType("app");
 
   return (
-    <div className="section-padding bg-white">
+    <div className="section-padding bg-[linear-gradient(180deg,#f0f9ff_0%,#ffffff_40%)]">
       <div className="container-main">
         <SectionHeader eyebrow={labels.eyebrow} title={labels.title} description={labels.description} />
         <BusinessSiteBanner businessId="app" />
@@ -77,37 +75,12 @@ export function EbooksPageView({ locale }: { locale: Locale }) {
 
 export function MarketingPageView({ locale }: { locale: Locale }) {
   const labels = ventureLabels[locale].marketing;
-  const services = marketingServiceLabels[locale];
   const pageDesc = labels.description;
 
   return (
     <>
       <StructuredData data={serviceJsonLd(labels.title, pageDesc, localizePath("/marketing", locale))} />
-      <div className="section-padding bg-white">
-        <div className="container-main">
-          <SectionHeader eyebrow={labels.eyebrow} title={labels.title} description={labels.description} />
-          <BusinessSiteBanner businessId="marketing" />
-          <section className="mb-12">
-            <h2 className="text-lg font-bold text-surface-900">{labels.sections?.services}</h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((svc) => (
-                <article key={svc.id} className="rounded-xl border border-surface-200 p-5">
-                  <h3 className="font-semibold text-surface-900">{svc.title}</h3>
-                  <p className="mt-2 text-sm text-surface-600">{svc.description}</p>
-                </article>
-              ))}
-            </div>
-          </section>
-          <section>
-            <h2 className="text-lg font-bold text-surface-900">{labels.sections?.pricing}</h2>
-            <p className="mt-2 text-sm text-surface-600">{labels.sections?.pricingNote}</p>
-            <div className="mt-6">
-              <PricingTiers tiers={marketingTiers} />
-            </div>
-          </section>
-          <VentureCtas locale={locale} ventureId="marketing" />
-        </div>
-      </div>
+      <MarketingServiceView locale={locale} />
     </>
   );
 }
@@ -139,7 +112,7 @@ export function AutomationPageView({ locale }: { locale: Locale }) {
       <StructuredData
         data={serviceJsonLd(labels.title, pageDesc, localizePath("/automation", locale))}
       />
-      <div className="section-padding bg-white">
+      <div className="section-padding bg-[linear-gradient(180deg,#f0fdfa_0%,#ffffff_42%)]">
         <div className="container-main">
           <SectionHeader eyebrow={labels.eyebrow} title={labels.title} description={labels.description} />
           <BusinessSiteBanner businessId="automation" />

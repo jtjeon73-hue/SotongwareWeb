@@ -1,13 +1,14 @@
+/**
+ * Site chrome version label — version only (no stale hardcoded update dates).
+ * Keep in sync with package.json version when releasing.
+ */
 export const releaseInfo = {
   version: "0.1.1",
-  updatedAt: "2026-08-31",
 } as const;
-
-export const releaseLabel = `v${releaseInfo.version} · 최종 업데이트 ${releaseInfo.updatedAt}`;
 
 export function getReleaseLabel(locale: "ko" | "en"): string {
   if (locale === "en") {
-    return `v${releaseInfo.version} · Last updated ${releaseInfo.updatedAt}`;
+    return `SotongWare Web v${releaseInfo.version}`;
   }
-  return releaseLabel;
+  return `SotongWare Web v${releaseInfo.version}`;
 }

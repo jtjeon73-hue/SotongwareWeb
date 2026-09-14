@@ -24,7 +24,7 @@ export const enHome: HomeDictionary = {
     eyebrow: "DIGITAL PRODUCTS × FIELD SOFTWARE",
     headline: "We turn ideas into real digital products and services",
     subheadline:
-      "Apps · e-books · promo & marketing · content · knowledge · automation. SotongWare designs technology and digital products together—then validates what ships.",
+      "Technology and digital products under one brand—designed, validated, and connected into real services.",
     ctas: [
       { label: "Explore digital ventures", href: "#ventures-heading", variant: "primary" },
       { label: "Browse outcomes", href: "#results-heading", variant: "secondary" },

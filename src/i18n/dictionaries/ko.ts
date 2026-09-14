@@ -24,7 +24,7 @@ export const koHome: HomeDictionary = {
     eyebrow: "DIGITAL PRODUCTS × FIELD SOFTWARE",
     headline: "아이디어를 실제 디지털 상품과 서비스로 만듭니다",
     subheadline:
-      "앱 · 전자책 · 홍보·마케팅 · 콘텐츠 · 지식·교육 · 자동화 솔루션. SotongWare는 기술과 디지털 상품을 함께 설계하고 검증합니다.",
+      "기술과 디지털 상품을 하나의 브랜드에서 — 설계하고, 검증하고, 실제 서비스로 연결합니다.",
     ctas: [
       { label: "디지털 사업 둘러보기", href: "#ventures-heading", variant: "primary" },
       { label: "결과물 보기", href: "#results-heading", variant: "secondary" },
