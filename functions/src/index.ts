@@ -8,6 +8,7 @@ export {
   refundCommercePayment,
   handleTossPaymentWebhook,
 } from "./commerce";
+import { isFunctionsEmulatorRuntime } from "./commerce/emulator-runtime";
 
 function getDb() {
   if (!getApps().length) {
@@ -69,7 +70,7 @@ interface ContactPayload {
  * server rate limits first — see docs/auth-phase-2a.md / contact follow-up.
  */
 const allowContactInCloud = process.env.ALLOW_CONTACT_FUNCTION === "true";
-const runningInEmulator = process.env.FUNCTIONS_EMULATOR === "true";
+const runningInEmulator = isFunctionsEmulatorRuntime();
 
 export const submitContactInquiry = onCall(
   {

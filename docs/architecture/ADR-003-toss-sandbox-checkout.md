@@ -66,3 +66,18 @@ Do **not** invent HMAC headers. For `PAYMENT_STATUS_CHANGED`, verify by server-s
 - Commerce deploy uses `scripts/deploy-commerce-functions.mjs` with separate allowlist + `COMMERCE_SECRETS_READY` gate.
 - Query-string success URLs never mark paid; UI calls confirm then reads Firestore.
 - Production Hosting build blocks mock/test checkout surfaces.
+
+
+## Local emulator CORS false-positive
+
+If the browser reports CORS on `localhost:3000` → `127.0.0.1:5001` callables and the Functions emulator shows **no** execution logs, check whether discovery failed:
+
+`Failed to load function definition from source ... Timeout after 10000`
+
+Empty function export makes OPTIONS return 404 without ACAO headers (Chrome labels this CORS).
+
+Mitigations in-repo:
+
+- `functions` pins `node@22` for local emulator runtime matching `engines.node`
+- `npm run emulators:local-commerce` sets `FUNCTIONS_DISCOVERY_TIMEOUT=60`
+- `npm run test:commerce:emulator-cors` asserts OPTIONS CORS for membership/commerce callables

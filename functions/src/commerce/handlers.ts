@@ -4,8 +4,9 @@ import { getFirestore } from "firebase-admin/firestore";
 import { createAdapterFromEnv, resolvePgMode } from "./adapter";
 import { CommerceError } from "./errors";
 import { CommerceCheckoutService, FirestoreCommerceStore } from "./service";
+import { isFunctionsEmulatorRuntime } from "./emulator-runtime";
 
-const runningInEmulator = process.env.FUNCTIONS_EMULATOR === "true";
+const runningInEmulator = isFunctionsEmulatorRuntime();
 const allowCommerceInCloud = process.env.ALLOW_COMMERCE_FUNCTIONS === "true";
 export const commerceFunctionsOmitted = !(runningInEmulator || allowCommerceInCloud);
 

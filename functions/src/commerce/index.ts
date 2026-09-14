@@ -20,3 +20,5 @@ export {
   assertSecretMatchesMode,
   isAllowedRedirectOrigin,
 } from "./mode";
+
+export { isFunctionsEmulatorRuntime } from "./emulator-runtime";
