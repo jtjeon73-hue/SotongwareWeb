@@ -36,7 +36,8 @@
     "deploy:functions:commerce": "node scripts/deploy-commerce-functions.mjs",
     "test:commerce:toss-window": "npm --prefix functions run build && node scripts/commerce-toss-window.test.mjs",
     "emulators:local-commerce": "node scripts/start-local-commerce-emulators.mjs",
-    "test:commerce:emulator-cors": "firebase emulators:exec --only functions --project sotongware \"node scripts/commerce-emulator-cors.test.mjs\""
+    "test:commerce:emulator-cors": "firebase emulators:exec --only functions --project sotongware \"node scripts/commerce-emulator-cors.test.mjs\"",
+    "check:recovery": "node scripts/check-recovery-readiness.mjs"
   },
   "dependencies": {
     "@tosspayments/tosspayments-sdk": "^2.8.1",
