@@ -8,6 +8,7 @@ import {
   previewPlans,
 } from "@/data/preview-commerce";
 import { PreviewCta, PreviewShell } from "@/components/preview/commerce/PreviewChrome";
+import { PreviewPaymentBlockedButton } from "@/components/preview/commerce/PreviewPaymentBlockedButton";
 import { IconJourneyPay } from "@/components/preview/commerce/PreviewIcons";
 
 function CheckoutInner() {
@@ -30,7 +31,7 @@ function CheckoutInner() {
   return (
     <PreviewShell
       title={isInquiry ? "문의 확인" : "결제 확인"}
-      subtitle="시제품 화면입니다. 실제 결제는 청구되지 않습니다."
+      subtitle="미리보기 화면입니다. 실제 결제는 청구되지 않습니다."
       backHref={product ? `${PREVIEW_BASE}/product/${product.slug}` : `${PREVIEW_BASE}/pricing`}
     >
       <div className="mx-auto max-w-lg rounded-3xl border border-surface-200 bg-white p-6 shadow-sm sm:p-8">
@@ -56,12 +57,12 @@ function CheckoutInner() {
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-surface-500">결제 수단</dt>
-            <dd className="font-medium text-surface-800">중앙 결제(시제품)</dd>
+            <dd className="font-medium text-surface-800">토스페이먼츠 · 준비중</dd>
           </div>
         </dl>
 
         <p className="mt-6 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-950">
-          아래 버튼은 성공·실패·취소 예시 화면으로만 이동합니다.
+          정식 오픈 전까지 실제 결제는 실행되지 않습니다.
         </p>
 
         <div className="mt-6 flex flex-col gap-3">
@@ -69,27 +70,27 @@ function CheckoutInner() {
             <PreviewCta
               href={`${PREVIEW_BASE}/payment-result?status=success&kind=inquiry&sku=${sku}`}
             >
-              문의 접수 완료 예시
+              문의 접수 화면 예시
             </PreviewCta>
           ) : (
-            <PreviewCta
-              href={`${PREVIEW_BASE}/payment-result?status=success&kind=${mode}&sku=${sku}`}
-            >
-              결제 성공 예시
-            </PreviewCta>
+            <PreviewPaymentBlockedButton />
           )}
-          <PreviewCta
-            href={`${PREVIEW_BASE}/payment-result?status=fail&sku=${sku}`}
-            variant="secondary"
-          >
-            결제 실패 예시
-          </PreviewCta>
-          <PreviewCta
-            href={`${PREVIEW_BASE}/payment-result?status=cancel&sku=${sku}`}
-            variant="quiet"
-          >
-            결제 취소 예시
-          </PreviewCta>
+          {!isInquiry ? (
+            <>
+              <PreviewCta
+                href={`${PREVIEW_BASE}/payment-result?status=success&kind=${mode}&sku=${sku}`}
+                variant="secondary"
+              >
+                결제 완료 화면 예시
+              </PreviewCta>
+              <PreviewCta
+                href={`${PREVIEW_BASE}/payment-result?status=fail&sku=${sku}`}
+                variant="quiet"
+              >
+                결제 실패 화면 예시
+              </PreviewCta>
+            </>
+          ) : null}
         </div>
       </div>
     </PreviewShell>

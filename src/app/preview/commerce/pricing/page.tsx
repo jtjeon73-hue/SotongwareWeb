@@ -12,7 +12,7 @@ export default function PreviewPricingPage() {
   return (
     <PreviewShell
       title="Free와 Basic 비교"
-      subtitle="월 2,000원 · 연 20,000원 (시제품 가격)"
+      subtitle="월 2,000원 · 연 20,000원 (준비 중 가격)"
       backHref={PREVIEW_BASE}
     >
       <div className="grid gap-4 lg:grid-cols-3">
@@ -73,7 +73,7 @@ export default function PreviewPricingPage() {
         </div>
         <p className="mt-2 text-sm leading-relaxed text-surface-600">
           Basic에 이미 포함된 자료는 단건으로 다시 사지 않습니다. 할인이 적용되는 단건은
-          구매 후에도 해지와 관계없이 내 자료실에 남습니다. (시제품 안내)
+          구매 후에도 해지와 관계없이 내 자료실에 남습니다. (준비 중 안내)
         </p>
         <Link
           href={`${PREVIEW_BASE}/product/factory-start-ebook`}

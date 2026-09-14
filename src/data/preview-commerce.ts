@@ -4,7 +4,7 @@
  */
 
 export const PREVIEW_BANNER =
-  "검토용 시제품 — 실제 가입·결제·구매는 진행되지 않습니다.";
+  "회원·결제 서비스 준비 중 — 정식 오픈 전까지 실제 가입·결제·구매는 진행되지 않습니다.";
 
 export const PREVIEW_BASE = "/preview/commerce";
 
@@ -223,14 +223,14 @@ export const previewPlans = [
     priceLabel: "0원",
     period: "항상",
     summary: "가입 후 무료 자료와 미리보기를 이용",
-    perks: ["무료 자료 열람", "상품 미리보기", "구매 내역 확인(시제품)"],
+    perks: ["무료 자료 열람", "상품 미리보기", "구매 내역 확인"],
   },
   {
     id: "basic-month",
     name: "Basic 월간",
     priceLabel: "2,000원",
     period: "매월",
-    summary: "일부 자료 포함 + 단건 할인 혜택(시제품)",
+    summary: "일부 자료 포함 + 단건 할인 혜택",
     perks: ["Basic 포함 자료", "단건 할인 표시", "내 자료실 이용"],
     highlighted: true,
   },
@@ -240,7 +240,7 @@ export const previewPlans = [
     priceLabel: "20,000원",
     period: "매년",
     summary: "월 환산 약 1,667원 · 같은 Basic 혜택",
-    perks: ["Basic 포함 자료", "단건 할인 표시", "연간 한 번 결제(시제품)"],
+    perks: ["Basic 포함 자료", "단건 할인 표시", "연간 한 번 결제"],
   },
 ] as const;
 
@@ -283,14 +283,14 @@ export const mockOrders = [
     id: "ord-demo-1001",
     title: "Basic 월간",
     amount: "2,000원",
-    status: "결제 완료(시제품)",
+    status: "결제 완료(예시)",
     date: "2026-09-01",
   },
   {
     id: "ord-demo-1002",
     title: "현장 자동화 첫걸음",
     amount: "12,000원",
-    status: "결제 완료(시제품)",
+    status: "결제 완료(예시)",
     date: "2026-09-05",
   },
   {

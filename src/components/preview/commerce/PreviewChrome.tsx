@@ -44,7 +44,7 @@ export function PreviewShell({
             ) : null}
             <div className="min-w-0">
               <p className="text-xs font-medium tracking-wide text-brand-700">
-                SotongWare · 시제품 V2
+                SotongWare · 서비스 미리보기
               </p>
               <h1 className="truncate text-lg font-semibold text-surface-900 sm:text-xl">
                 {title}
@@ -54,7 +54,13 @@ export function PreviewShell({
               ) : null}
             </div>
           </div>
-          <nav className="flex flex-wrap gap-2" aria-label="시제품 바로가기">
+          <nav className="flex flex-wrap gap-2" aria-label="미리보기 바로가기">
+            <Link
+              href={`${PREVIEW_BASE}/service`}
+              className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-brand-700 hover:bg-brand-50"
+            >
+              준비 현황
+            </Link>
             <Link
               href={PREVIEW_BASE}
               className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm text-surface-700 hover:bg-surface-100"

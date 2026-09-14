@@ -32,7 +32,7 @@ export default function PreviewCommerceHubPage() {
   return (
     <PreviewShell
       title="SotongWare 한곳에서 살펴보기"
-      subtitle="6개 사업부 · 상품 · 요금 · 결제 · 내 자료실 시제품"
+      subtitle="6개 사업부 · 상품 · 요금 · 결제 · 내 자료실 미리보기"
     >
       <section className="relative overflow-hidden rounded-3xl bg-surface-950 px-6 py-12 text-white sm:px-10 sm:py-16">
         <div
@@ -40,7 +40,7 @@ export default function PreviewCommerceHubPage() {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(12,140,233,0.35),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(34,197,94,0.18),transparent_50%)]"
         />
         <div className="relative max-w-2xl">
-          <p className="text-sm font-medium text-brand-200">공식 홈페이지 시제품 V2</p>
+          <p className="text-sm font-medium text-brand-200">회원·결제 서비스 준비 중</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
             발견하고, 미리 보고, 고르고, 내 자료실로
           </h2>
@@ -48,6 +48,7 @@ export default function PreviewCommerceHubPage() {
             실제 가입과 결제는 없습니다. 사업부 아이콘만 보고도 성격을 느껴 보세요.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
+            <PreviewCta href={`${PREVIEW_BASE}/service`}>준비 현황 보기</PreviewCta>
             <PreviewCta href={`${PREVIEW_BASE}/pricing`}>요금 비교하기</PreviewCta>
             <PreviewCta
               href={`${PREVIEW_BASE}/product/${previewProducts[2].slug}`}

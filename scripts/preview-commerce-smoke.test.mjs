@@ -12,6 +12,7 @@ const routes = [
   "preview/commerce.html",
   "preview/commerce/showcase.html",
   "preview/commerce/showcase-v4.html",
+  "preview/commerce/service.html",
   "preview/commerce/pricing.html",
   "preview/commerce/checkout.html",
   "preview/commerce/payment-result.html",
@@ -26,7 +27,7 @@ const routes = [
   "preview/commerce/product/weekly-quiz-pack.html",
 ];
 
-const banner = "검토용 시제품";
+const banner = "회원·결제 서비스 준비 중";
 let failed = 0;
 
 if (!fs.existsSync(out)) {
@@ -102,6 +103,22 @@ if (!fs.existsSync(ko)) {
   console.log("OK ko.html (regression)");
 }
 
+const leakTargets = [
+  "preview/commerce/service.html",
+  "preview/commerce/checkout.html",
+  "preview/commerce.html",
+];
+for (const rel of leakTargets) {
+  const file = path.join(out, rel);
+  if (!fs.existsSync(file)) continue;
+  const html = fs.readFileSync(file, "utf8");
+  if (/tosspayments|requestPayment|prepareCommerceCheckout|TOSS_SECRET|live_sk_/i.test(html)) {
+    console.error("PAYMENT_LEAK", rel);
+    failed += 1;
+  } else {
+    console.log("OK no payment leak", rel);
+  }
+}
 if (failed > 0) {
   console.error(`FAIL: ${failed} checks`);
   process.exit(1);

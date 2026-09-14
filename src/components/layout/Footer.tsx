@@ -59,6 +59,10 @@ export function Footer() {
   const companyLinks = [
     { label: nav.about, href: "/about" },
     { label: nav.contact, href: "/contact" },
+    {
+      label: locale === "en" ? "Membership & payments preview" : "회원·결제 준비 현황",
+      href: "/preview/commerce/service",
+    },
   ];
 
   const legalLinks = footerNavigation.legal.map((l) => ({
