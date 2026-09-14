@@ -30,7 +30,7 @@ export function EcosystemSection() {
         </div>
 
         <p className="mt-8 text-center text-sm text-surface-600">
-          Apps ↔ E-books ↔ Websites ↔ Content ↔ Automation
+          Apps ↔ E-books ↔ Marketing ↔ Content ↔ Automation
         </p>
       </div>
     </section>

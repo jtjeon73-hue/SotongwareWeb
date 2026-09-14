@@ -21,9 +21,9 @@ export function LocalizedHomePage({ locale }: LocalizedHomePageProps) {
   return (
     <>
       <StructuredData data={organizationJsonLd()} />
-      <HubHeroSection dict={dict} />
-      <CapabilitiesSection dict={dict} />
+      <HubHeroSection dict={dict} locale={locale} />
       <DigitalVenturesSection dict={dict} />
+      <CapabilitiesSection dict={dict} />
       <WorkflowSection dict={dict} />
       <ResultsSection dict={dict} locale={locale} />
       <ConversionHubSection dict={dict} />

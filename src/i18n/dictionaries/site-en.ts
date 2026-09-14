@@ -28,7 +28,7 @@ export const enSite: SiteDictionary = {
     externalSite: "Dedicated site ↗",
     brandSubtitle: "Digital business platform",
     digitalVenturesBadge: "Core",
-    digitalVenturesBlurb: "SotongWare's core growth businesses — apps, e-books, sites, content, education, and automation",
+    digitalVenturesBlurb: "SotongWare's core growth businesses — apps, e-books, promo & marketing, content, education, and automation",
     digitalVenturesHubCta: "Product portfolio",
     technologyItems: [
       { label: "Industrial automation", slug: "industrial-automation" },
@@ -39,7 +39,7 @@ export const enSite: SiteDictionary = {
     ventureItems: [
       { label: "Apps", href: "/apps" },
       { label: "E-books", href: "/ebooks" },
-      { label: "Websites", href: "/marketing" },
+      { label: "Promo & marketing", href: "/marketing" },
       { label: "Content", href: "/contents" },
       { label: "Knowledge & education", href: "/knowledge" },
       { label: "Automation solutions", href: "/automation" },

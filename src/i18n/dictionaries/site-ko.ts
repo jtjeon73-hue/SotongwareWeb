@@ -28,7 +28,7 @@ export const koSite: SiteDictionary = {
     externalSite: "전문 사이트 ↗",
     brandSubtitle: "소통웨어",
     digitalVenturesBadge: "Core",
-    digitalVenturesBlurb: "SotongWare의 핵심 성장 사업 — 앱·전자책·사이트·콘텐츠·교육·자동화",
+    digitalVenturesBlurb: "SotongWare의 핵심 성장 사업 — 앱·전자책·홍보·마케팅·콘텐츠·교육·자동화",
     digitalVenturesHubCta: "디지털 사업 포트폴리오",
     technologyItems: [
       { label: "산업자동화", slug: "industrial-automation" },
@@ -39,7 +39,7 @@ export const koSite: SiteDictionary = {
     ventureItems: [
       { label: "앱", href: "/apps" },
       { label: "전자책", href: "/ebooks" },
-      { label: "사이트", href: "/marketing" },
+      { label: "홍보·마케팅", href: "/marketing" },
       { label: "콘텐츠", href: "/contents" },
       { label: "지식·교육", href: "/knowledge" },
       { label: "자동화 솔루션", href: "/automation" },

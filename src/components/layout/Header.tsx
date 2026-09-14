@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AuthNav } from "@/components/auth/AuthNav";
+import { HeaderAccountBar } from "@/components/layout/HeaderAccountBar";
 import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import {
   TechnologyNavMenu,
@@ -80,9 +80,9 @@ export function Header() {
         </nav>
 
         <div className="hidden shrink-0 items-center gap-1.5 lg:flex lg:gap-2" data-testid="header-actions">
+          <HeaderAccountBar locale={locale} />
           <LocaleSwitcher compact />
-          <div className="hidden items-center gap-1.5 2xl:flex 2xl:gap-2">
-            <AuthNav locale={locale} />
+          <div className="hidden items-center gap-1.5 2xl:flex">
             <Button
               href={localizePath("/contact", locale)}
               variant="primary"
@@ -172,9 +172,7 @@ export function Header() {
             </LocalizedLink>
           ))}
           <div className="mt-2 space-y-2 border-t border-surface-100 px-3 pt-4">
-            <div className="pb-2">
-              <AuthNav locale={locale} />
-            </div>
+            <HeaderAccountBar locale={locale} compact onNavigate={() => setMobileOpen(false)} />
             <Button
               href={localizePath("/contact", locale)}
               variant="primary"

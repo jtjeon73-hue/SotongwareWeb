@@ -18,9 +18,10 @@ const STATUS_STYLES: Record<string, string> = {
 const UNIT_THEMES: Record<string, { border: string; bg: string; accent: string }> = {
   ebook: { border: "border-amber-200/80", bg: "bg-gradient-to-br from-amber-50/80 to-white", accent: "text-amber-800" },
   app: { border: "border-brand-200/80", bg: "bg-gradient-to-br from-brand-50/60 to-white", accent: "text-brand-800" },
-  site: { border: "border-surface-300/80", bg: "bg-gradient-to-br from-surface-100/80 to-white", accent: "text-surface-800" },
+  site: { border: "border-violet-200/80", bg: "bg-gradient-to-br from-violet-50/70 to-white", accent: "text-violet-800" },
   content: { border: "border-rose-200/80", bg: "bg-gradient-to-br from-rose-50/50 to-white", accent: "text-rose-800" },
   knowledge: { border: "border-emerald-200/80", bg: "bg-gradient-to-br from-emerald-50/60 to-white", accent: "text-emerald-800" },
+  automation: { border: "border-slate-300/80", bg: "bg-gradient-to-br from-slate-100/80 to-white", accent: "text-slate-800" },
 };
 
 export function DigitalVenturesSection({ dict }: DigitalVenturesSectionProps) {

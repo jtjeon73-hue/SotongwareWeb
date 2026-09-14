@@ -2,9 +2,9 @@ import type { HomeDictionary } from "../types";
 
 export const koHome: HomeDictionary = {
   meta: {
-    title: "산업 현장에서 디지털 상품까지",
+    title: "아이디어를 디지털 상품과 서비스로",
     description:
-      "산업자동화·스마트팜·AI 소프트웨어를 현장에서 설계하고, 앱·전자책·사이트·콘텐츠까지 실제 결과물로 완성하는 SotongWare 공식 사업 허브",
+      "앱·전자책·홍보·마케팅·콘텐츠·지식교육·자동화 솔루션까지, 실제 디지털 상품과 서비스를 설계·제작하는 SotongWare 공식 홈페이지",
   },
   nav: {
     services: "서비스",
@@ -21,19 +21,19 @@ export const koHome: HomeDictionary = {
     learnMore: "자세히 보기",
   },
   hero: {
-    eyebrow: "FIELD SOFTWARE × DIGITAL COMMERCE",
-    headline: "현장의 경험을 지능형 소프트웨어와 시장성 있는 디지털 제품으로 연결합니다",
+    eyebrow: "DIGITAL PRODUCTS × FIELD SOFTWARE",
+    headline: "아이디어를 실제 디지털 상품과 서비스로 만듭니다",
     subheadline:
-      "산업자동화·스마트팜·원격관제부터 AI 활용 개발, 앱·전자책·사이트·콘텐츠·지식교육까지. SotongWare는 현장 경험을 바탕으로 실제 제품을 설계·검증·배포합니다.",
+      "앱 · 전자책 · 홍보·마케팅 · 콘텐츠 · 지식·교육 · 자동화 솔루션. SotongWare는 기술과 디지털 상품을 함께 설계하고 검증합니다.",
     ctas: [
-      { label: "기술 역량 보기", href: "#capabilities-heading", variant: "primary" },
-      { label: "결과물 둘러보기", href: "#results-heading", variant: "secondary" },
+      { label: "디지털 사업 둘러보기", href: "#ventures-heading", variant: "primary" },
+      { label: "결과물 보기", href: "#results-heading", variant: "secondary" },
       { label: "상담·문의", href: "/contact", variant: "secondary" },
     ],
     highlights: [
-      { label: "산업·스마트팜 현장", desc: "PLC · MES · 환경·관수·에너지 데이터" },
-      { label: "AI 실용 개발", desc: "자동제작 → 검증 → 배포 흐름" },
-      { label: "디지털 사업 확장", desc: "앱 · 전자책 · 사이트 · 콘텐츠 · 교육" },
+      { label: "디지털 상품", desc: "앱 · 전자책 · 홍보·마케팅" },
+      { label: "콘텐츠·교육", desc: "미디어 · 지식 · 학습 경로" },
+      { label: "현장 소프트웨어", desc: "자동화 · 원격관제 · AI 실용 개발" },
     ],
   },
   capabilities: {
@@ -95,9 +95,9 @@ export const koHome: HomeDictionary = {
   },
   ventures: {
     eyebrow: "Digital Ventures",
-    title: "디지털 사업 포트폴리오",
+    title: "디지털 사업 6개 영역",
     description:
-      "전자책·앱·사이트·콘텐츠·지식교육 — 각 사업 부문의 특성에 맞는 전용 레이아웃과 출시 상태를 제공합니다.",
+      "앱·전자책·홍보·마케팅·콘텐츠·지식교육·자동화 — 각 사업 부문의 특성에 맞는 전용 레이아웃과 출시 상태를 제공합니다.",
     exploreCta: "디지털 사업 둘러보기",
     exploreHref: "/products",
     units: [
@@ -131,15 +131,15 @@ export const koHome: HomeDictionary = {
       },
       {
         id: "site",
-        title: "사이트",
-        subtitle: "검색·마케팅·지식정보 허브",
-        description: "데스크톱·모바일 반응형으로 홈페이지·마케팅·산업·스마트팜 분류 역량을 보여줍니다.",
+        title: "홍보·마케팅",
+        subtitle: "랜딩·캠페인·검색 유입 허브",
+        description: "데스크톱·모바일 반응형으로 홍보·마케팅·기업·산업 사이트 제작 역량을 보여줍니다.",
         status: "운영 중",
         statusType: "live",
-        audience: "기업 · 마케팅 · 지식 사업",
-        formats: ["반응형 웹", "SEO", "결제 확장"],
-        features: ["브라우저·모바일 미리보기", "SEO·관리 역량", "제작 상담 연결"],
-        cta: "사이트 사례 보기",
+        audience: "기업 · 마케팅 · 브랜드 사업",
+        formats: ["반응형 웹", "SEO", "캠페인"],
+        features: ["랜딩·캠페인 미리보기", "SEO·관리 역량", "제작 상담 연결"],
+        cta: "홍보·마케팅 보기",
         ctaHref: "/marketing",
         visual: "site",
       },
@@ -170,6 +170,20 @@ export const koHome: HomeDictionary = {
         cta: "지식·교육 시작하기",
         ctaHref: "/knowledge",
         visual: "knowledge",
+      },
+      {
+        id: "automation",
+        title: "자동화 솔루션",
+        subtitle: "현장 관제와 산업 소프트웨어",
+        description: "PLC·원격관제·대시보드 등 산업·스마트팜 자동화 소프트웨어를 설계·검증합니다.",
+        status: "역량 공개",
+        statusType: "live",
+        audience: "제조 · 설비 · 스마트팜",
+        formats: ["HMI", "관제", "데이터"],
+        features: ["현장 맞춤 설계", "원격관제 UX", "검증·운영 연결"],
+        cta: "자동화 솔루션 보기",
+        ctaHref: "/automation",
+        visual: "automation",
       },
     ],
   },
@@ -206,7 +220,7 @@ export const koHome: HomeDictionary = {
       {
         id: "preview",
         title: "결과물 미리보기",
-        description: "앱·전자책·사이트·콘텐츠를 각 전문 채널에서 미리 확인하세요.",
+        description: "앱·전자책·홍보·마케팅·콘텐츠를 각 전문 채널에서 미리 확인하세요.",
         cta: "결과물 둘러보기",
         ctaHref: "#results-heading",
       },

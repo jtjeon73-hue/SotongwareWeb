@@ -1,5 +1,5 @@
 interface VenturePortfolioVisualProps {
-  type: "ebook" | "app" | "site" | "content" | "knowledge";
+  type: "ebook" | "app" | "site" | "content" | "knowledge" | "automation";
   title: string;
 }
 
@@ -132,6 +132,30 @@ export function VenturePortfolioVisual({ type, title }: VenturePortfolioVisualPr
           </div>
           <span className="ml-2 text-[9px] text-white/60">Playlist</span>
         </div>
+      </div>
+    );
+  }
+
+  if (type === "automation") {
+    return (
+      <div className="relative min-h-[240px] overflow-hidden rounded-xl border border-slate-700 bg-slate-900 p-4 shadow-inner sm:min-h-[280px]" aria-label={title}>
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-cyan-300">Plant Floor</span>
+          <span className="flex items-center gap-1 text-[10px] text-emerald-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Live
+          </span>
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {[72, 88, 61].map((v, i) => (
+            <div key={i} className="rounded-lg bg-white/5 p-2 ring-1 ring-white/10">
+              <div className="h-1 w-full overflow-hidden rounded bg-white/10">
+                <div className="h-full rounded bg-cyan-400" style={{ width: `${v}%` }} />
+              </div>
+              <p className="mt-2 text-[9px] text-slate-400">Line {i + 1}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 h-16 rounded-lg bg-gradient-to-r from-cyan-500/20 via-slate-800 to-emerald-500/10 ring-1 ring-white/10" />
       </div>
     );
   }

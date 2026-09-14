@@ -2,9 +2,9 @@ import type { HomeDictionary } from "../types";
 
 export const enHome: HomeDictionary = {
   meta: {
-    title: "From the factory floor to digital products",
+    title: "Ideas into digital products and services",
     description:
-      "SotongWare designs industrial automation, smart-farm, and AI software in the field—then ships apps, e-books, websites, content, and learning products you can actually use and sell.",
+      "Apps, e-books, promo & marketing, content, knowledge, and automation solutions—SotongWare designs and ships real digital products and services.",
   },
   nav: {
     services: "Services",
@@ -21,19 +21,19 @@ export const enHome: HomeDictionary = {
     learnMore: "Learn more",
   },
   hero: {
-    eyebrow: "FIELD SOFTWARE × DIGITAL COMMERCE",
-    headline: "We turn real-world expertise into intelligent software and market-ready digital products",
+    eyebrow: "DIGITAL PRODUCTS × FIELD SOFTWARE",
+    headline: "We turn ideas into real digital products and services",
     subheadline:
-      "From industrial automation, smart farming, and remote operations to practical AI development—apps, e-books, websites, content, and education. SotongWare designs, validates, and deploys real products grounded in field experience.",
+      "Apps · e-books · promo & marketing · content · knowledge · automation. SotongWare designs technology and digital products together—then validates what ships.",
     ctas: [
-      { label: "View capabilities", href: "#capabilities-heading", variant: "primary" },
+      { label: "Explore digital ventures", href: "#ventures-heading", variant: "primary" },
       { label: "Browse outcomes", href: "#results-heading", variant: "secondary" },
       { label: "Contact us", href: "/contact", variant: "secondary" },
     ],
     highlights: [
-      { label: "Industrial & smart farm", desc: "PLC · MES · climate, irrigation & energy data" },
-      { label: "Practical AI", desc: "Build → validate → deploy workflow" },
-      { label: "Digital business", desc: "Apps · e-books · sites · content · education" },
+      { label: "Digital products", desc: "Apps · e-books · promo & marketing" },
+      { label: "Content & learning", desc: "Media · knowledge · learning paths" },
+      { label: "Field software", desc: "Automation · remote ops · practical AI" },
     ],
   },
   capabilities: {
@@ -83,9 +83,9 @@ export const enHome: HomeDictionary = {
   },
   ventures: {
     eyebrow: "Digital Ventures",
-    title: "Product portfolio",
+    title: "Six digital venture areas",
     description:
-      "E-books, apps, websites, content, and education—each with a dedicated layout and honest release status.",
+      "Apps, e-books, promo & marketing, content, knowledge, and automation—each with a dedicated layout and honest release status.",
     exploreCta: "Explore digital ventures",
     exploreHref: "/products",
     units: [
@@ -119,15 +119,15 @@ export const enHome: HomeDictionary = {
       },
       {
         id: "site",
-        title: "Websites",
-        subtitle: "Search, marketing & knowledge hubs",
-        description: "Desktop and mobile responsive previews for corporate, marketing, industrial, and smart-farm sites.",
+        title: "Promo & marketing",
+        subtitle: "Landing pages, campaigns & discovery",
+        description: "Desktop and mobile responsive previews for promo, marketing, corporate, and industrial sites.",
         status: "Live",
         statusType: "live",
-        audience: "Business · marketing · knowledge ventures",
-        formats: ["Responsive web", "SEO", "Payments ready"],
-        features: ["Browser & mobile preview", "SEO & management", "Build consultation"],
-        cta: "View site work",
+        audience: "Business · marketing · brand ventures",
+        formats: ["Responsive web", "SEO", "Campaigns"],
+        features: ["Landing & campaign preview", "SEO & management", "Build consultation"],
+        cta: "View marketing work",
         ctaHref: "/marketing",
         visual: "site",
       },
@@ -158,6 +158,20 @@ export const enHome: HomeDictionary = {
         cta: "Start learning",
         ctaHref: "/knowledge",
         visual: "knowledge",
+      },
+      {
+        id: "automation",
+        title: "Automation solutions",
+        subtitle: "Plant monitoring & industrial software",
+        description: "PLC, remote operations, and dashboards for industrial and smart-farm automation software.",
+        status: "Capabilities live",
+        statusType: "live",
+        audience: "Manufacturing · facilities · smart farm",
+        formats: ["HMI", "Monitoring", "Data"],
+        features: ["Field-fit design", "Remote ops UX", "Validation & ops hooks"],
+        cta: "View automation",
+        ctaHref: "/automation",
+        visual: "automation",
       },
     ],
   },

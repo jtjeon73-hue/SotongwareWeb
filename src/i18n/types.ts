@@ -76,7 +76,7 @@ export interface HomeDictionary {
       features: string[];
       cta: string;
       ctaHref: string;
-      visual: "ebook" | "app" | "site" | "content" | "knowledge";
+      visual: "ebook" | "app" | "site" | "content" | "knowledge" | "automation";
     }[];
   };
   results: {

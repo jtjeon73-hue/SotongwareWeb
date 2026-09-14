@@ -80,8 +80,8 @@ export const guideLabels: Record<
       },
       {
         id: "site",
-        title: "사이트",
-        steps: ["SotongWare", "사이트 전문 영역", "서비스 확인", "상담·제작", "배포·운영"],
+        title: "홍보·마케팅",
+        steps: ["SotongWare", "홍보·마케팅 전문 영역", "서비스 확인", "상담·제작", "배포·운영"],
       },
       {
         id: "content",
@@ -157,8 +157,8 @@ export const guideLabels: Record<
       },
       {
         id: "site",
-        title: "Websites",
-        steps: ["SotongWare", "Site services", "Review offerings", "Consult & build", "Launch & operate"],
+        title: "Promo & marketing",
+        steps: ["SotongWare", "Marketing services", "Review offerings", "Consult & build", "Launch & operate"],
       },
       {
         id: "content",
