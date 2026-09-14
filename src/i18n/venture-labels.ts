@@ -30,9 +30,9 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
     },
     ebooks: {
       eyebrow: "E-books",
-      title: "전자책",
+      title: "전자책 서재",
       description:
-        "SotongWare에서 제작한 전자책을 상품으로 판매합니다. 외부 플랫폼 링크는 실제 등록 후에만 표시됩니다.",
+        "SotongWare 자체 서재에서 표지·요약·공개등급을 탐색하고 Web Reader Preview로 열람합니다. 원본 파일 URL은 노출하지 않습니다.",
       emptyTitle: "첫 전자책이 준비되고 있습니다",
       emptyDescription: "기획·집필·편집·검수가 완료되는 순서대로 등록됩니다.",
       ctas: [
@@ -54,9 +54,9 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
     },
     contents: {
       eyebrow: "Content",
-      title: "콘텐츠",
+      title: "콘텐츠 라이브러리",
       description:
-        "AI 음악, YouTube Shorts, 영상, 만화 — 콘텐츠 자체 수익과 제작 대행 두 가지 사업 흐름을 지원합니다.",
+        "쇼츠·만화·만화영상·노래·영상·이미지 등 제작 결과물과 연동 채널을 형식·테마로 탐색합니다. 가짜 조회수는 표시하지 않습니다.",
       emptyTitle: "콘텐츠가 준비되고 있습니다",
       emptyDescription:
         "음악, Shorts, 영상 등 제작·검수 완료 후 등록됩니다. YouTube 링크는 실제 업로드 후에만 표시됩니다.",
@@ -69,10 +69,10 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
       eyebrow: "Knowledge & Education",
       title: "지식·교육",
       description:
-        "무료 정보부터 회원·유료·구독 콘텐츠까지 — 반복수익형 지식 사업 구조입니다. 회원·프리미엄 콘텐츠는 SotongWare 포털에서 이용합니다.",
+        "테마별 연동 사이트와 대표 콘텐츠를 비회원도 먼저 탐색할 수 있습니다. 회원 포털은 내 강의·자료·서재·이용권 관리 허브입니다.",
       emptyTitle: "교육 콘텐츠가 준비되고 있습니다",
       emptyDescription:
-        "무료·회원·유료·구독 콘텐츠가 검수 후 순차 공개됩니다. 회원 포털에서 먼저 확인해 보세요.",
+        "무료·회원·유료·구독 콘텐츠가 검수 후 순차 공개됩니다.",
       ctas: [],
       sections: {
         portalTitle: "지식·교육 회원 포털",
@@ -123,9 +123,9 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
     },
     ebooks: {
       eyebrow: "E-books",
-      title: "E-books",
+      title: "E-book library",
       description:
-        "Titles produced by SotongWare. External retailer links appear only after official publication.",
+        "Browse covers, summaries, and access tiers in the SotongWare library, then open the web reader preview. Original file URLs are never exposed.",
       emptyTitle: "Our first e-books are in preparation",
       emptyDescription: "Titles are registered as planning, writing, editing, and review complete.",
       ctas: [
@@ -147,9 +147,9 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
     },
     contents: {
       eyebrow: "Content",
-      title: "Media & content",
+      title: "Content library",
       description:
-        "Music, shorts, video, and illustrated series—both owned channels and production-for-hire workflows.",
+        "Explore shorts, comics, comic video, music, video, and graphics by format and theme. No fake view counts.",
       emptyTitle: "Content is being prepared",
       emptyDescription:
         "Works are listed after production and review. YouTube links appear only after real uploads.",
@@ -162,10 +162,10 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
       eyebrow: "Knowledge & Education",
       title: "Knowledge & education",
       description:
-        "From free introductions to member, paid, and subscription learning—a structured knowledge business. Premium content lives in the SotongWare member portal.",
+        "Guests can explore theme sites and featured content first. The member portal manages courses, materials, library, and passes.",
       emptyTitle: "Learning content is being prepared",
       emptyDescription:
-        "Free, member, paid, and subscription materials publish after review. Check the member portal for early access.",
+        "Free, member, paid, and subscription materials publish after review.",
       ctas: [],
       sections: {
         portalTitle: "Member learning portal",
