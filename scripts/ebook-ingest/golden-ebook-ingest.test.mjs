@@ -186,15 +186,92 @@ const genProv = join(repoRoot, "src", "data", "service-catalog", "generated", "a
 if (existsSync(genTs) && existsSync(genProv)) {
   const ts = readFileSync(genTs, "utf8");
   const prov = JSON.parse(readFileSync(genProv, "utf8"));
-  check("generated slug", ts.includes('slug": "ai-first-ebook-for-50s"') || ts.includes("ai-first-ebook-for-50s"));
-  check("generated status preparing", ts.includes('"preparing"') || ts.includes("preparing"));
+  const itemMatch = ts.match(
+    /export const generatedEbookCatalogItem = (\{[\s\S]*\n\}) as EbookCatalogItem;/,
+  );
+  check("generated catalog JSON extractable", Boolean(itemMatch));
+  const golden = itemMatch ? JSON.parse(itemMatch[1]) : null;
+
+  check("generated slug", golden?.slug === "ai-first-ebook-for-50s");
+  check("generated accessTier premium", golden?.accessTier === "premium");
+  check("generated status preparing", golden?.status === "preparing");
+  check(
+    "generated priceNote paid unset",
+    Boolean(golden && /유료/.test(golden.priceNote.ko) && /가격 확정 전/.test(golden.priceNote.ko)),
+  );
+
+  const freeIds = (golden?.chapters || []).filter((c) => c.accessTier === "free").map((c) => c.id);
+  const premiumIds = (golden?.chapters || []).filter((c) => c.accessTier === "premium").map((c) => c.id);
+  const memberIds = (golden?.chapters || []).filter((c) => c.accessTier === "member").map((c) => c.id);
+  check(
+    "free preview only fm-01/fm-02/ch-01",
+    freeIds.sort().join(",") === ["ch-01", "fm-01", "fm-02"].sort().join(","),
+    freeIds.join(","),
+  );
+  check("no member-gated full body chapters", memberIds.length === 0, memberIds.join(","));
+  check(
+    "remaining chapters premium",
+    Boolean(golden) && premiumIds.length === golden.chapters.length - 3,
+    String(premiumIds.length),
+  );
+
+  const ACCESS_TIER_RANK = { free: 0, member: 1, premium: 2 };
+  const PREVIEW_PERSONA_TIER = { guest: "free", member: "member", premium: "premium" };
+  const tierMeetsRequirement = (userTier, required) =>
+    ACCESS_TIER_RANK[userTier] >= ACCESS_TIER_RANK[required];
+  const personaToTier = (persona) => PREVIEW_PERSONA_TIER[persona];
+
+  function canReadAll(persona) {
+    const userTier = personaToTier(persona);
+    return golden.chapters.every((ch) => tierMeetsRequirement(userTier, ch.accessTier));
+  }
+  function canReadAnyPremium(persona) {
+    const userTier = personaToTier(persona);
+    return golden.chapters
+      .filter((ch) => ch.accessTier === "premium")
+      .some((ch) => tierMeetsRequirement(userTier, ch.accessTier));
+  }
+  function canReadFreePreview(persona) {
+    const userTier = personaToTier(persona);
+    return golden.chapters
+      .filter((ch) => ch.accessTier === "free")
+      .every((ch) => tierMeetsRequirement(userTier, ch.accessTier));
+  }
+
+  check("guest can read free preview", canReadFreePreview("guest"));
+  check("guest cannot read all chapters", !canReadAll("guest"));
+  check("guest cannot unlock premium body", !canReadAnyPremium("guest"));
+  check("member can read free preview", canReadFreePreview("member"));
+  check("member cannot unlock premium body", !canReadAnyPremium("member"));
+  check("member cannot read all chapters", !canReadAll("member"));
+  check("premium persona can read all", canReadAll("premium"));
+
   check("generated no absolute Documents path", !ts.includes("C:\\\\Users") && !ts.includes("C:/Users"));
   check(
     "provenance SHA match Golden",
     prov.sourcePdfSha256 === "ca2ecebe8667ccb67f5b6cd5515358781406b0ce65d157a01e3abc9adda28336" &&
       prov.sourceEpubSha256 === "147d9ccc15bea8c5917296498a5dc8cbc30f85c9df9210f3730abe09c5fde3e6",
   );
-  check("provenance not in reader component source", !readFileSync(join(repoRoot, "src", "components", "ebook", "EbookReaderClient.tsx"), "utf8").includes("sourcePdfSha256"));
+  check(
+    "provenance not in reader component source",
+    !readFileSync(join(repoRoot, "src", "components", "ebook", "EbookReaderClient.tsx"), "utf8").includes(
+      "sourcePdfSha256",
+    ),
+  );
+  let noPublicAsset = false;
+  try {
+    assertNoPublicAssetUrls(golden);
+    noPublicAsset = true;
+  } catch {
+    noPublicAsset = false;
+  }
+  check(
+    "generated no PDF/EPUB public asset URL",
+    noPublicAsset &&
+      !Object.prototype.hasOwnProperty.call(golden, "pdfUrl") &&
+      !Object.prototype.hasOwnProperty.call(golden, "epubUrl") &&
+      !Object.prototype.hasOwnProperty.call(golden, "downloadUrl"),
+  );
 } else {
   check("generated artifacts present", false, "run ingest first");
 }

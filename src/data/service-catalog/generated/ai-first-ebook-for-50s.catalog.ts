@@ -9,7 +9,7 @@ export const generatedProvenance = {
   "finalRevision": 2,
   "sourcePdfSha256": "ca2ecebe8667ccb67f5b6cd5515358781406b0ce65d157a01e3abc9adda28336",
   "sourceEpubSha256": "147d9ccc15bea8c5917296498a5dc8cbc30f85c9df9210f3730abe09c5fde3e6",
-  "generatedAt": "2026-09-28T16:25:23.469Z",
+  "generatedAt": "2026-09-28T23:20:46.125Z",
   "slug": "ai-first-ebook-for-50s"
 } as const;
 
@@ -30,7 +30,7 @@ export const generatedEbookCatalogItem = {
     "ko": "AI·전자책",
     "en": "AI & ebooks"
   },
-  "accessTier": "free",
+  "accessTier": "premium",
   "status": "preparing",
   "author": {
     "ko": "SotongWare",
@@ -38,8 +38,8 @@ export const generatedEbookCatalogItem = {
   },
   "coverTone": "amber",
   "priceNote": {
-    "ko": "공개 전 · 가격·이용권 미확정 (운영자 확정 대기)",
-    "en": "Pre-launch · price/access not finalized (awaiting operator decision)"
+    "ko": "유료 · 가격 확정 전",
+    "en": "Paid · price not finalized"
   },
   "toc": [
     {
@@ -72,7 +72,7 @@ export const generatedEbookCatalogItem = {
         "ko": "2장. 독자 문제와 학습 목표 정의하기",
         "en": "2장. 독자 문제와 학습 목표 정의하기"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-03",
@@ -80,7 +80,7 @@ export const generatedEbookCatalogItem = {
         "ko": "3장. 주제 고르기와 목차 3단 구조",
         "en": "3장. 주제 고르기와 목차 3단 구조"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-04",
@@ -88,7 +88,7 @@ export const generatedEbookCatalogItem = {
         "ko": "4장. AI에게 물어볼 질문 설계",
         "en": "4장. AI에게 물어볼 질문 설계"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-05",
@@ -96,7 +96,7 @@ export const generatedEbookCatalogItem = {
         "ko": "5장. 초고 쓰기 — AI는 보조, 원문은 나",
         "en": "5장. 초고 쓰기 — AI는 보조, 원문은 나"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-06",
@@ -104,7 +104,7 @@ export const generatedEbookCatalogItem = {
         "ko": "6장. 문체·순서 지키기와 검수 루틴",
         "en": "6장. 문체·순서 지키기와 검수 루틴"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-07",
@@ -112,7 +112,7 @@ export const generatedEbookCatalogItem = {
         "ko": "7장. 표지·편집·기초 도구 순서",
         "en": "7장. 표지·편집·기초 도구 순서"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-08",
@@ -120,7 +120,7 @@ export const generatedEbookCatalogItem = {
         "ko": "8장. PDF·EPUB으로 내보내기",
         "en": "8장. PDF·EPUB으로 내보내기"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-09",
@@ -128,7 +128,7 @@ export const generatedEbookCatalogItem = {
         "ko": "9장. 사실·출처·완성도 체크리스트",
         "en": "9장. 사실·출처·완성도 체크리스트"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-10",
@@ -136,7 +136,7 @@ export const generatedEbookCatalogItem = {
         "ko": "10장. 저작권·이용허락·AI 산출물 주의",
         "en": "10장. 저작권·이용허락·AI 산출물 주의"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-11",
@@ -144,7 +144,7 @@ export const generatedEbookCatalogItem = {
         "ko": "11장. 배포·판매 전 점검과 ISBN·납본 안내",
         "en": "11장. 배포·판매 전 점검과 ISBN·납본 안내"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ch-12",
@@ -152,7 +152,7 @@ export const generatedEbookCatalogItem = {
         "ko": "12장. 독자 행동계획 — 첫 전자책 완주 플랜",
         "en": "12장. 독자 행동계획 — 첫 전자책 완주 플랜"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ap-a",
@@ -160,7 +160,7 @@ export const generatedEbookCatalogItem = {
         "ko": "부록 A. 용어 짧게 보기",
         "en": "부록 A. 용어 짧게 보기"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ap-b",
@@ -168,7 +168,7 @@ export const generatedEbookCatalogItem = {
         "ko": "부록 B. 체크리스트·템플릿 모음",
         "en": "부록 B. 체크리스트·템플릿 모음"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ap-c",
@@ -176,7 +176,7 @@ export const generatedEbookCatalogItem = {
         "ko": "부록 C. 참고 출처",
         "en": "부록 C. 참고 출처"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     },
     {
       "id": "ap-d",
@@ -184,7 +184,7 @@ export const generatedEbookCatalogItem = {
         "ko": "부록 D. 저작권·면책·개인정보 고지",
         "en": "부록 D. 저작권·면책·개인정보 고지"
       },
-      "accessTier": "member"
+      "accessTier": "premium"
     }
   ],
   "chapters": [
@@ -540,7 +540,7 @@ export const generatedEbookCatalogItem = {
         "ko": "2장. 독자 문제와 학습 목표 정의하기",
         "en": "2장. 독자 문제와 학습 목표 정의하기"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -710,7 +710,7 @@ export const generatedEbookCatalogItem = {
         "ko": "3장. 주제 고르기와 목차 3단 구조",
         "en": "3장. 주제 고르기와 목차 3단 구조"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -888,7 +888,7 @@ export const generatedEbookCatalogItem = {
         "ko": "4장. AI에게 물어볼 질문 설계",
         "en": "4장. AI에게 물어볼 질문 설계"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -1038,7 +1038,7 @@ export const generatedEbookCatalogItem = {
         "ko": "5장. 초고 쓰기 — AI는 보조, 원문은 나",
         "en": "5장. 초고 쓰기 — AI는 보조, 원문은 나"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -1208,7 +1208,7 @@ export const generatedEbookCatalogItem = {
         "ko": "6장. 문체·순서 지키기와 검수 루틴",
         "en": "6장. 문체·순서 지키기와 검수 루틴"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -1378,7 +1378,7 @@ export const generatedEbookCatalogItem = {
         "ko": "7장. 표지·편집·기초 도구 순서",
         "en": "7장. 표지·편집·기초 도구 순서"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -1540,7 +1540,7 @@ export const generatedEbookCatalogItem = {
         "ko": "8장. PDF·EPUB으로 내보내기",
         "en": "8장. PDF·EPUB으로 내보내기"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -1674,7 +1674,7 @@ export const generatedEbookCatalogItem = {
         "ko": "9장. 사실·출처·완성도 체크리스트",
         "en": "9장. 사실·출처·완성도 체크리스트"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -1804,7 +1804,7 @@ export const generatedEbookCatalogItem = {
         "ko": "10장. 저작권·이용허락·AI 산출물 주의",
         "en": "10장. 저작권·이용허락·AI 산출물 주의"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -1954,7 +1954,7 @@ export const generatedEbookCatalogItem = {
         "ko": "11장. 배포·판매 전 점검과 ISBN·납본 안내",
         "en": "11장. 배포·판매 전 점검과 ISBN·납본 안내"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -2120,7 +2120,7 @@ export const generatedEbookCatalogItem = {
         "ko": "12장. 독자 행동계획 — 첫 전자책 완주 플랜",
         "en": "12장. 독자 행동계획 — 첫 전자책 완주 플랜"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -2246,7 +2246,7 @@ export const generatedEbookCatalogItem = {
         "ko": "부록 A. 용어 짧게 보기",
         "en": "부록 A. 용어 짧게 보기"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -2348,7 +2348,7 @@ export const generatedEbookCatalogItem = {
         "ko": "부록 B. 체크리스트·템플릿 모음",
         "en": "부록 B. 체크리스트·템플릿 모음"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -2506,7 +2506,7 @@ export const generatedEbookCatalogItem = {
         "ko": "부록 C. 참고 출처",
         "en": "부록 C. 참고 출처"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [
@@ -2592,7 +2592,7 @@ export const generatedEbookCatalogItem = {
         "ko": "부록 D. 저작권·면책·개인정보 고지",
         "en": "부록 D. 저작권·면책·개인정보 고지"
       },
-      "accessTier": "member",
+      "accessTier": "premium",
       "pages": [
         {
           "paragraphs": [

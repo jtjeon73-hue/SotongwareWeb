@@ -20,17 +20,17 @@
     "ko": "SotongWare",
     "en": "SotongWare"
   },
-  "accessTier": "free",
+  "accessTier": "premium",
   "status": "preparing",
   "coverTone": "amber",
   "priceNote": {
-    "ko": "공개 전 · 가격·이용권 미확정 (운영자 확정 대기)",
-    "en": "Pre-launch · price/access not finalized (awaiting operator decision)"
+    "ko": "유료 · 가격 확정 전",
+    "en": "Paid · price not finalized"
   },
   "featured": true,
   "sortOrder": 5,
   "chapterAccess": {
-    "default": "member",
+    "default": "premium",
     "byId": {
       "fm-01": "free",
       "fm-02": "free",
@@ -38,7 +38,9 @@
     }
   },
   "notes": [
-    "accessTier/status/priceNote are operator-owned and safe defaults only.",
-    "Do not treat live/premium as decided by this file alone."
+    "Paid product: book.accessTier=premium. Do not set free to grant owner reading.",
+    "Owner/admin full unlock must use entitlement/claims bypass — never by making the SKU free.",
+    "status=preparing until payment/entitlement and operator go-live decision.",
+    "Preview-only free chapters: fm-01, fm-02, ch-01. All other chapters require premium."
   ]
 }
