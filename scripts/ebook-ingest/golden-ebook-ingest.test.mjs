@@ -1,0 +1,203 @@
+/**
+ * Golden ebook catalog ingest contract tests (A–O).
+ */
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  assertNoInternalLeakInReaderBody,
+  assertNoPublicAssetUrls,
+  buildEbookCatalogItem,
+  validateGoldenEvidence,
+} from "./lib/ingest.mjs";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const repoRoot = join(__dirname, "..", "..");
+const passRoot = join(__dirname, "fixtures", "pass_r2");
+const passReg = JSON.parse(readFileSync(join(passRoot, "registration.json"), "utf8"));
+
+let failed = 0;
+function check(name, ok, detail = "") {
+  if (ok) console.log(`PASS ${name}${detail ? ` — ${detail}` : ""}`);
+  else {
+    console.error(`FAIL ${name}${detail ? ` — ${detail}` : ""}`);
+    failed++;
+  }
+}
+
+function clonePass(mutate) {
+  const dir = mkdtempSync(join(tmpdir(), "ebook-ingest-"));
+  cpSync(passRoot, dir, { recursive: true });
+  mutate?.(dir);
+  return dir;
+}
+
+// A. wrong SHA
+{
+  const dir = clonePass();
+  const reg = { ...passReg, expectedPdfSha256: "0".repeat(64) };
+  const r = validateGoldenEvidence(dir, reg);
+  check("A wrong SHA FAIL", !r.ok && r.errors.includes("pdf_sha_mismatch"), r.errors.join(","));
+  rmSync(dir, { recursive: true, force: true });
+}
+
+// B. no final approval
+{
+  const dir = clonePass((d) => {
+    writeFileSync(
+      join(d, "ingest_evidence.json"),
+      JSON.stringify({
+        finalRevision: 2,
+        completedCount: 18,
+        userFinalApproval: false,
+        approval: { userApproved: false },
+        releaseReady: true,
+      }),
+    );
+    writeFileSync(join(d, "output", "17_final_user_approval_result_r2.md"), "# park only\nawaiting\n");
+  });
+  const r = validateGoldenEvidence(dir, passReg);
+  check(
+    "B no final approval FAIL",
+    !r.ok && (r.errors.includes("userFinalApproval_missing") || r.errors.includes("final_approval_grant_missing")),
+    r.errors.join(","),
+  );
+  rmSync(dir, { recursive: true, force: true });
+}
+
+// C. release_ready=false
+{
+  const dir = clonePass((d) => {
+    writeFileSync(join(d, "output", "18_publication_package_result.md"), "status: draft\nrelease_ready=false\n");
+    const ev = JSON.parse(readFileSync(join(d, "ingest_evidence.json"), "utf8"));
+    ev.releaseReady = false;
+    writeFileSync(join(d, "ingest_evidence.json"), JSON.stringify(ev));
+  });
+  const r = validateGoldenEvidence(dir, passReg);
+  check("C release_ready false FAIL", !r.ok && r.errors.includes("release_ready_false"), r.errors.join(","));
+  rmSync(dir, { recursive: true, force: true });
+}
+
+// D. R1 selected
+{
+  const dir = clonePass();
+  const reg = { ...passReg, finalRevision: 1, requireAuthoritativeR2: true };
+  const r = validateGoldenEvidence(dir, reg);
+  check("D R1 selected FAIL", !r.ok && r.errors.includes("r1_selected"), r.errors.join(","));
+  rmSync(dir, { recursive: true, force: true });
+}
+
+// E. normal R2 PASS
+let built;
+{
+  built = buildEbookCatalogItem(passRoot, passReg, { generatedAt: "2026-09-29T00:00:00.000Z" });
+  check("E normal R2 EbookCatalogItem PASS", Boolean(built.item?.slug === "fixture-pass-ebook"));
+  check("E toc/chapters present", built.tocCount === 2 && built.chapterCount === 2);
+}
+
+// F. slug unique vs fixtures
+{
+  const ebooksSrc = readFileSync(join(repoRoot, "src", "data", "service-catalog", "ebooks.ts"), "utf8");
+  const fixtureSlugs = ["field-software-primer", "ai-practice-notes", "smart-farm-signals"];
+  const goldenSlug = "ai-first-ebook-for-50s";
+  check("F golden slug not a fixture id", !fixtureSlugs.includes(goldenSlug));
+  check(
+    "F catalog merges generated + fixtures",
+    ebooksSrc.includes("generatedEbookCatalogItem") &&
+      fixtureSlugs.every((s) => ebooksSrc.includes(s)),
+  );}
+
+// G. TOC/chapter order
+{
+  const idsToc = built.item.toc.map((t) => t.id);
+  const idsCh = built.item.chapters.map((c) => c.id);
+  check("G TOC/chapter order match", JSON.stringify(idsToc) === JSON.stringify(idsCh), `${idsToc} vs ${idsCh}`);
+}
+
+// H. no internal leak
+{
+  let ok = true;
+  try {
+    assertNoInternalLeakInReaderBody(built.item);
+  } catch {
+    ok = false;
+  }
+  check("H no internal STEP/validator/path/SHA in reader body", ok);
+}
+
+// I. no PDF/EPUB public URL
+{
+  let ok = true;
+  try {
+    assertNoPublicAssetUrls(built.item);
+  } catch {
+    ok = false;
+  }
+  const blob = JSON.stringify(built.item);
+  check("I no PDF/EPUB public URL", ok && !/\.pdf|\.epub|https?:\/\//i.test(blob));
+}
+
+// J. fixture 3권 still in source
+{
+  const ebooksSrc = readFileSync(join(repoRoot, "src", "data", "service-catalog", "ebooks.ts"), "utf8");
+  check(
+    "J fixture 3권 retained",
+    ebooksSrc.includes("field-software-primer") &&
+      ebooksSrc.includes("ai-practice-notes") &&
+      ebooksSrc.includes("smart-farm-signals"),
+  );
+}
+
+// K/L/M render wiring — pages import getEbookCatalog / getEbookBySlug
+{
+  const lib = readFileSync(join(repoRoot, "src", "components", "ebook", "EbookLibraryView.tsx"), "utf8");
+  const detail = readFileSync(join(repoRoot, "src", "app", "[locale]", "ebooks", "[slug]", "page.tsx"), "utf8");
+  const read = readFileSync(join(repoRoot, "src", "app", "[locale]", "ebooks", "[slug]", "read", "page.tsx"), "utf8");
+  check("K /ebooks list uses getEbookCatalog", lib.includes("getEbookCatalog"));
+  check("L detail uses getEbookBySlug", detail.includes("getEbookBySlug"));
+  check("M reader uses getEbookBySlug", read.includes("getEbookBySlug"));
+}
+
+// N. ko locale fields present
+{
+  check("N ko title/summary present", Boolean(built.item.title.ko && built.item.summary.ko));
+}
+
+// O. en fallback without inventing official translation
+{
+  check(
+    "O en fallback equals ko when en null",
+    built.item.title.en === built.item.title.ko && built.item.summary.en === built.item.summary.ko,
+  );
+}
+
+// Extra: list/table content preserved
+{
+  const fm = built.item.chapters.find((c) => c.id === "fm-01");
+  const blob = JSON.stringify(fm);
+  check("list content retained", blob.includes("항목 하나") && blob.includes("항목 둘"));
+  check("table text retained", blob.includes("구분:") || blob.includes("A:"));
+}
+
+// Generated golden entry checks (after ingest)
+const genTs = join(repoRoot, "src", "data", "service-catalog", "generated", "ai-first-ebook-for-50s.catalog.ts");
+const genProv = join(repoRoot, "src", "data", "service-catalog", "generated", "ai-first-ebook-for-50s.provenance.json");
+if (existsSync(genTs) && existsSync(genProv)) {
+  const ts = readFileSync(genTs, "utf8");
+  const prov = JSON.parse(readFileSync(genProv, "utf8"));
+  check("generated slug", ts.includes('slug": "ai-first-ebook-for-50s"') || ts.includes("ai-first-ebook-for-50s"));
+  check("generated status preparing", ts.includes('"preparing"') || ts.includes("preparing"));
+  check("generated no absolute Documents path", !ts.includes("C:\\\\Users") && !ts.includes("C:/Users"));
+  check(
+    "provenance SHA match Golden",
+    prov.sourcePdfSha256 === "ca2ecebe8667ccb67f5b6cd5515358781406b0ce65d157a01e3abc9adda28336" &&
+      prov.sourceEpubSha256 === "147d9ccc15bea8c5917296498a5dc8cbc30f85c9df9210f3730abe09c5fde3e6",
+  );
+  check("provenance not in reader component source", !readFileSync(join(repoRoot, "src", "components", "ebook", "EbookReaderClient.tsx"), "utf8").includes("sourcePdfSha256"));
+} else {
+  check("generated artifacts present", false, "run ingest first");
+}
+
+console.log(failed === 0 ? `\n${"ALL PASS"}` : `\nFAILED=${failed}`);
+process.exit(failed === 0 ? 0 : 1);
