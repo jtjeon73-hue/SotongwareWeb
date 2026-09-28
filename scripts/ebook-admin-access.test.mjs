@@ -78,7 +78,11 @@ const freeChapter = "free";
   check("A isAdminFromClaims in membership-grade", gradeSrc.includes("claims.role === \"admin\""));
   check("B hasPremiumEntitlement uses isAdminFromClaims", entSrc.includes("isAdminFromClaims(claims)"));
   check("B resolveEffectiveAccessTier exported", entSrc.includes("export function resolveEffectiveAccessTier"));
-  check("C Reader uses resolveEffectiveAccessTier", readerSrc.includes("resolveEffectiveAccessTier"));
+  check(
+    "C Reader uses server chapter fetch (not client tier SSOT for premium body)",
+    readerSrc.includes("fetchEbookChapterBody"),
+  );
+  check("C entitlements still expose resolveEffectiveAccessTier", entSrc.includes("resolveEffectiveAccessTier"));
   check("C Reader does not scatter isAdminFromClaims", !readerSrc.includes("isAdminFromClaims"));
   check("C Reader does not hard-code isAdmin branch", !/if\s*\(\s*isAdmin/.test(readerSrc));
   check("C Dashboard passes claims to canAccessLevel", /canAccessLevel\([^)]*claims/.test(dashSrc));

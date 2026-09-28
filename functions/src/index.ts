@@ -8,6 +8,7 @@ export {
   refundCommercePayment,
   handleTossPaymentWebhook,
 } from "./commerce";
+export { getEbookChapterBody } from "./ebook";
 import { isFunctionsEmulatorRuntime } from "./commerce/emulator-runtime";
 
 function getDb() {

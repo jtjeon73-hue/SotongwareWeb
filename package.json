@@ -41,6 +41,7 @@
     "test:ebook:ingest": "node scripts/ebook-ingest/golden-ebook-ingest.test.mjs",
     "test:ebook:admin-access": "node scripts/ebook-admin-access.test.mjs",
     "test:ebook:leakage": "node scripts/ebook-private-leakage-scan.mjs",
+    "test:ebook:chapter-api": "node scripts/ebook-chapter-api.test.mjs",
     "ebook:ingest": "node scripts/ebook-ingest/run-ingest.mjs"
   },
   "dependencies": {

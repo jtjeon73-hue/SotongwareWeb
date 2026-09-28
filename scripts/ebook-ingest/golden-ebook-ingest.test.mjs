@@ -342,9 +342,9 @@ if (existsSync(genTs) && existsSync(genProv)) {
     ),
   );
   check(
-    "Reader has private-pending Callable hook comment",
+    "Reader wires fetchEbookChapterBody for premium",
     readFileSync(join(repoRoot, "src", "components", "ebook", "EbookReaderClient.tsx"), "utf8").includes(
-      "getEbookChapterBody",
+      "fetchEbookChapterBody",
     ),
   );
   let noPublicAsset = false;
