@@ -41,3 +41,6 @@ next-env.d.ts
 firebase-debug.log
 firebase-debug.*.log
 firestore-debug.log
+
+# Premium ebook private bodies — never ship in Next public/static bundle
+/artifacts/ebook-private/

@@ -7,8 +7,11 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   assertNoInternalLeakInReaderBody,
+  assertNoPremiumBodyInPublicCatalog,
   assertNoPublicAssetUrls,
+  assertPrivateArtifactLocation,
   buildEbookCatalogItem,
+  privateArtifactPath,
   validateGoldenEvidence,
 } from "./lib/ingest.mjs";
 
@@ -88,12 +91,63 @@ function clonePass(mutate) {
   rmSync(dir, { recursive: true, force: true });
 }
 
-// E. normal R2 PASS
+// E. normal R2 PASS (all-free fixture → public bodies, empty private)
 let built;
 {
   built = buildEbookCatalogItem(passRoot, passReg, { generatedAt: "2026-09-29T00:00:00.000Z" });
   check("E normal R2 EbookCatalogItem PASS", Boolean(built.item?.slug === "fixture-pass-ebook"));
   check("E toc/chapters present", built.tocCount === 2 && built.chapterCount === 2);
+  check("E all-free private package empty", built.privatePackage.chapters.length === 0);
+  let noPrem = true;
+  try {
+    assertNoPremiumBodyInPublicCatalog(built.item);
+  } catch {
+    noPrem = false;
+  }
+  check("E no premium body in public fixture", noPrem);
+}
+
+// E2. public/private split (fm-01 free, ch-01 premium)
+{
+  const splitReg = {
+    ...passReg,
+    accessTier: "premium",
+    chapterAccess: { default: "premium", byId: { "fm-01": "free" } },
+  };
+  const split = buildEbookCatalogItem(passRoot, splitReg, { generatedAt: "2026-09-29T00:00:00.000Z" });
+  const pubFree = split.item.chapters.find((c) => c.id === "fm-01");
+  const pubPrem = split.item.chapters.find((c) => c.id === "ch-01");
+  check("E2 free preview has pages", (pubFree?.pages?.length || 0) > 0);
+  check("E2 premium public pages empty", (pubPrem?.pages?.length || 0) === 0);
+  check("E2 private has ch-01 only", split.privatePackage.chapters.map((c) => c.id).join(",") === "ch-01");
+  check(
+    "E2 private ch-01 has body",
+    (split.privatePackage.chapters[0]?.pages?.length || 0) > 0,
+  );
+  check(
+    "E2 private location allowed",
+    (() => {
+      try {
+        const p = privateArtifactPath(repoRoot, splitReg.slug, splitReg.finalRevision);
+        assertPrivateArtifactLocation(repoRoot, p);
+        return true;
+      } catch {
+        return false;
+      }
+    })(),
+  );
+  // fail-closed: member tier chapter rejected
+  let memberRejected = false;
+  try {
+    buildEbookCatalogItem(
+      passRoot,
+      { ...passReg, chapterAccess: { default: "member", byId: {} } },
+      { generatedAt: "2026-09-29T00:00:00.000Z" },
+    );
+  } catch (e) {
+    memberRejected = String(e.message).includes("unsupported_chapter_access");
+  }
+  check("E2 member chapterAccess fail-closed", memberRejected);
 }
 
 // F. slug unique vs fixtures
@@ -215,40 +269,69 @@ if (existsSync(genTs) && existsSync(genProv)) {
     String(premiumIds.length),
   );
 
-  const ACCESS_TIER_RANK = { free: 0, member: 1, premium: 2 };
-  const PREVIEW_PERSONA_TIER = { guest: "free", member: "member", premium: "premium" };
-  const tierMeetsRequirement = (userTier, required) =>
-    ACCESS_TIER_RANK[userTier] >= ACCESS_TIER_RANK[required];
-  const personaToTier = (persona) => PREVIEW_PERSONA_TIER[persona];
+  const premiumPublicParas = (golden?.chapters || [])
+    .filter((c) => c.accessTier === "premium")
+    .reduce((n, c) => n + (c.pages || []).reduce((m, p) => m + (p.paragraphs || []).length, 0), 0);
+  check("A premium public body count 0", premiumPublicParas === 0, String(premiumPublicParas));
 
-  function canReadAll(persona) {
-    const userTier = personaToTier(persona);
-    return golden.chapters.every((ch) => tierMeetsRequirement(userTier, ch.accessTier));
-  }
-  function canReadAnyPremium(persona) {
-    const userTier = personaToTier(persona);
-    return golden.chapters
-      .filter((ch) => ch.accessTier === "premium")
-      .some((ch) => tierMeetsRequirement(userTier, ch.accessTier));
-  }
-  function canReadFreePreview(persona) {
-    const userTier = personaToTier(persona);
-    return golden.chapters
-      .filter((ch) => ch.accessTier === "free")
-      .every((ch) => tierMeetsRequirement(userTier, ch.accessTier));
+  for (const id of ["fm-01", "fm-02", "ch-01"]) {
+    const ch = golden?.chapters?.find((c) => c.id === id);
+    const paras = (ch?.pages || []).reduce((n, p) => n + (p.paragraphs || []).length, 0);
+    check(`B free preview body present ${id}`, paras > 0, String(paras));
   }
 
-  check("guest can read free preview", canReadFreePreview("guest"));
-  check("guest cannot read all chapters", !canReadAll("guest"));
-  check("guest cannot unlock premium body", !canReadAnyPremium("guest"));
-  check("member can read free preview", canReadFreePreview("member"));
-  check("member cannot unlock premium body", !canReadAnyPremium("member"));
-  check("member cannot read all chapters", !canReadAll("member"));
-  check("premium persona can read all", canReadAll("premium"));
+  const privPath = privateArtifactPath(repoRoot, "ai-first-ebook-for-50s", 2);
+  if (existsSync(privPath)) {
+    const priv = JSON.parse(readFileSync(privPath, "utf8"));
+    check("C private premium chapters 15", priv.chapters.length === 15, String(priv.chapters.length));
+    check(
+      "D private no free preview duplicate",
+      priv.chapters.every((c) => c.accessTier === "premium" && !["fm-01", "fm-02", "ch-01"].includes(c.id)),
+    );
+    const privParas = priv.chapters.reduce(
+      (n, c) => n + c.pages.reduce((m, p) => m + p.paragraphs.length, 0),
+      0,
+    );
+    check("F private body paragraphs > 0", privParas > 0, String(privParas));
+    check(
+      "E private not under src/public/out",
+      (() => {
+        try {
+          assertPrivateArtifactLocation(repoRoot, privPath);
+          return true;
+        } catch {
+          return false;
+        }
+      })(),
+    );
+
+    // J: guest/member cannot obtain premium body from public catalog
+    const ACCESS_TIER_RANK = { free: 0, member: 1, premium: 2 };
+    const publicPremiumBodyFor = (personaTier) => {
+      if (ACCESS_TIER_RANK[personaTier] < ACCESS_TIER_RANK.premium) {
+        return golden.chapters
+          .filter((c) => c.accessTier === "premium")
+          .every((c) => (c.pages || []).length === 0);
+      }
+      // Even premium persona cannot read body from public catalog in Phase 1
+      return golden.chapters
+        .filter((c) => c.accessTier === "premium")
+        .every((c) => (c.pages || []).length === 0);
+    };
+    check("J guest cannot get premium body from public", publicPremiumBodyFor("free"));
+    check("J member cannot get premium body from public", publicPremiumBodyFor("member"));
+    check("J premium persona still no public premium body", publicPremiumBodyFor("premium"));
+  } else {
+    check("C private artifact present", false, "run ingest first");
+  }
 
   check("generated no absolute Documents path", !ts.includes("C:\\\\Users") && !ts.includes("C:/Users"));
   check(
-    "provenance SHA match Golden",
+    "I provenance SHA not embedded in public catalog TS",
+    !/sourcePdfSha256|sourceEpubSha256|generatedProvenance/.test(ts),
+  );
+  check(
+    "provenance SHA match Golden (sidecar)",
     prov.sourcePdfSha256 === "ca2ecebe8667ccb67f5b6cd5515358781406b0ce65d157a01e3abc9adda28336" &&
       prov.sourceEpubSha256 === "147d9ccc15bea8c5917296498a5dc8cbc30f85c9df9210f3730abe09c5fde3e6",
   );
@@ -258,9 +341,16 @@ if (existsSync(genTs) && existsSync(genProv)) {
       "sourcePdfSha256",
     ),
   );
+  check(
+    "Reader has private-pending Callable hook comment",
+    readFileSync(join(repoRoot, "src", "components", "ebook", "EbookReaderClient.tsx"), "utf8").includes(
+      "getEbookChapterBody",
+    ),
+  );
   let noPublicAsset = false;
   try {
     assertNoPublicAssetUrls(golden);
+    assertNoPremiumBodyInPublicCatalog(golden);
     noPublicAsset = true;
   } catch {
     noPublicAsset = false;

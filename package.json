@@ -40,6 +40,7 @@
     "check:recovery": "node scripts/check-recovery-readiness.mjs",
     "test:ebook:ingest": "node scripts/ebook-ingest/golden-ebook-ingest.test.mjs",
     "test:ebook:admin-access": "node scripts/ebook-admin-access.test.mjs",
+    "test:ebook:leakage": "node scripts/ebook-private-leakage-scan.mjs",
     "ebook:ingest": "node scripts/ebook-ingest/run-ingest.mjs"
   },
   "dependencies": {

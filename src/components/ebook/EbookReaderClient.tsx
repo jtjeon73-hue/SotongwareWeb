@@ -5,7 +5,12 @@ import type { Locale } from "@/i18n/config";
 import type { EbookCatalogItem } from "@/data/service-catalog";
 import { useAuth } from "@/contexts/AuthProvider";
 import { resolveEffectiveAccessTier } from "@/lib/entitlements";
-import { higherAccessTier, personaToTier, tierMeetsRequirement } from "@/types/access-tier";
+import {
+  higherAccessTier,
+  personaToTier,
+  tierMeetsRequirement,
+  type AccessTier,
+} from "@/types/access-tier";
 import { AccessBadge } from "@/components/access/AccessBadge";
 import { MembershipGate } from "@/components/access/MembershipGate";
 import { PreviewPersonaBar, usePreviewPersona } from "@/components/access/PreviewPersonaBar";
@@ -13,6 +18,50 @@ import { LocalizedLink } from "@/components/locale/LocalizedLink";
 
 function progressKey(slug: string) {
   return `sw-ebook-progress:${slug}`;
+}
+
+type ReaderSlot = {
+  chapterId: string;
+  chapterTitle: string;
+  accessTier: AccessTier;
+  paragraphs: string[];
+  /** inline = public preview body; private-pending = premium stub (Callable not wired in Phase 1) */
+  bodySource: "inline" | "private-pending";
+};
+
+function PremiumPrivateStub({ locale, entitled }: { locale: Locale; entitled: boolean }) {
+  // FUTURE: replace with authenticated Callable getEbookChapterBody({ slug, chapterId }).
+  if (entitled) {
+    return (
+      <div
+        className="rounded-2xl border border-sky-200 bg-sky-50/80 p-5"
+        role="status"
+        data-ebook-body="private-pending"
+      >
+        <p className="text-sm font-semibold text-sky-950">
+          {locale === "en" ? "Premium chapter ready to load" : "프리미엄 본문 로드 준비됨"}
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-sky-900/80">
+          {locale === "en"
+            ? "This chapter is not embedded in the public catalog. Server entitlement fetch will attach here (Phase 2+)."
+            : "이 장은 public catalog에 포함되지 않습니다. 서버 entitlement 검증 후 본문을 불러오는 연결 지점입니다 (Phase 2+)."}
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div data-ebook-body="premium-locked">
+      <MembershipGate
+        locale={locale}
+        title={locale === "en" ? "Premium chapter" : "프리미엄 챕터"}
+        description={
+          locale === "en"
+            ? "Full chapter text is not available in the public bundle. A purchase or admin entitlement is required."
+            : "전체 본문은 public bundle에 없습니다. 구매 entitlement 또는 admin 권한이 필요합니다."
+        }
+      />
+    </div>
+  );
 }
 
 export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; locale: Locale }) {
@@ -29,23 +78,30 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
   const userTier = higherAccessTier(authTier, personaToTier(persona));
 
   const flatPages = useMemo(() => {
-    const pages: {
-      chapterId: string;
-      chapterTitle: string;
-      accessTier: (typeof book.chapters)[0]["accessTier"];
-      paragraphs: string[];
-    }[] = [];
+    const slots: ReaderSlot[] = [];
     for (const ch of book.chapters) {
+      if (ch.pages.length === 0) {
+        // Premium (or empty) chapter: one navigable stub — never crash when public body is absent.
+        slots.push({
+          chapterId: ch.id,
+          chapterTitle: ch.title[locale],
+          accessTier: ch.accessTier,
+          paragraphs: [],
+          bodySource: "private-pending",
+        });
+        continue;
+      }
       for (const page of ch.pages) {
-        pages.push({
+        slots.push({
           chapterId: ch.id,
           chapterTitle: ch.title[locale],
           accessTier: ch.accessTier,
           paragraphs: page.paragraphs.map((p) => p[locale]),
+          bodySource: "inline",
         });
       }
     }
-    return pages;
+    return slots;
   }, [book, locale]);
 
   const [index, setIndex] = useState(0);
@@ -135,7 +191,9 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
                       }`}
                     >
                       <span>{item.title[locale]}</span>
-                      {locked ? <AccessBadge tier={item.accessTier} locale={locale} /> : null}
+                      {locked || item.accessTier === "premium" ? (
+                        <AccessBadge tier={item.accessTier} locale={locale} />
+                      ) : null}
                     </button>
                   </li>
                 );
@@ -157,11 +215,15 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
                 <AccessBadge tier={page.accessTier} locale={locale} />
               </div>
               <div
-                className={`mt-6 space-y-4 leading-relaxed text-surface-800 ${unlocked ? "select-none" : ""}`}
+                className={`mt-6 space-y-4 leading-relaxed text-surface-800 ${
+                  page.bodySource === "inline" && unlocked ? "select-none" : ""
+                }`}
                 style={{ fontSize: `${fontScale}rem` }}
                 onContextMenu={(e) => e.preventDefault()}
               >
-                {unlocked ? (
+                {page.bodySource === "private-pending" ? (
+                  <PremiumPrivateStub locale={locale} entitled={unlocked} />
+                ) : unlocked ? (
                   page.paragraphs.map((para, i) => <p key={i}>{para}</p>)
                 ) : (
                   <MembershipGate locale={locale} />

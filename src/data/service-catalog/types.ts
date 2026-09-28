@@ -25,6 +25,10 @@ export interface EbookChapter {
   id: string;
   title: LocalizedText;
   accessTier: AccessTier;
+  /**
+   * free: inline preview pages.
+   * premium: always [] in the public catalog — body lives in private artifacts / future Callable.
+   */
   pages: EbookPage[];
 }
 

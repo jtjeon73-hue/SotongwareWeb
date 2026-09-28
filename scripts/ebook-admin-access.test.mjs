@@ -212,6 +212,10 @@ const freeChapter = "free";
     "8 no member-gated body chapters",
     (golden?.chapters || []).every((c) => c.accessTier === "free" || c.accessTier === "premium"),
   );
+  const premiumPublicParas = (golden?.chapters || [])
+    .filter((c) => c.accessTier === "premium")
+    .reduce((n, c) => n + (c.pages || []).reduce((m, p) => m + (p.paragraphs || []).length, 0), 0);
+  check("8b premium public body count 0", premiumPublicParas === 0, String(premiumPublicParas));
   let noPublicAsset = true;
   try {
     const blob = JSON.stringify(golden);

@@ -279,6 +279,154 @@ export function validateGoldenEvidence(workspaceRoot, reg) {
   return { ok: errors.length === 0, errors, pdfSha, epubSha };
 }
 
+const ALLOWED_CHAPTER_TIERS = new Set(["free", "premium"]);
+
+function countParagraphs(chapters) {
+  return chapters.reduce(
+    (n, ch) => n + (ch.pages || []).reduce((m, p) => m + (p.paragraphs || []).length, 0),
+    0,
+  );
+}
+
+function countPages(chapters) {
+  return chapters.reduce((n, ch) => n + (ch.pages || []).length, 0);
+}
+
+/**
+ * Fail-closed public/private split.
+ * Public may embed free preview pages only; premium chapters keep metadata, pages=[].
+ */
+export function splitPublicPrivateCatalog(fullChapters, reg, provenance) {
+  if (!reg.chapterAccess || !reg.chapterAccess.default) {
+    throw new Error("chapterAccess_missing");
+  }
+
+  const publicChapters = [];
+  const privateChapters = [];
+  const errors = [];
+
+  for (const ch of fullChapters) {
+    if (!ALLOWED_CHAPTER_TIERS.has(ch.accessTier)) {
+      errors.push(`unsupported_chapter_access:${ch.id}:${ch.accessTier}`);
+      continue;
+    }
+    if (!Array.isArray(ch.pages) || ch.pages.length === 0) {
+      errors.push(`chapter_body_empty:${ch.id}`);
+      continue;
+    }
+
+    if (ch.accessTier === "free") {
+      publicChapters.push({
+        id: ch.id,
+        title: ch.title,
+        accessTier: "free",
+        pages: ch.pages,
+      });
+    } else {
+      publicChapters.push({
+        id: ch.id,
+        title: ch.title,
+        accessTier: "premium",
+        pages: [],
+      });
+      privateChapters.push({
+        id: ch.id,
+        title: ch.title,
+        accessTier: "premium",
+        pages: ch.pages,
+      });
+    }
+  }
+
+  if (errors.length) {
+    const err = new Error(`split_fail:${errors.join(",")}`);
+    err.errors = errors;
+    throw err;
+  }
+
+  if (publicChapters.length !== fullChapters.length) {
+    throw new Error("split_fail:public_chapter_count_mismatch");
+  }
+
+  const publicPremiumWithBody = publicChapters.filter(
+    (ch) => ch.accessTier === "premium" && countParagraphs([ch]) > 0,
+  );
+  if (publicPremiumWithBody.length) {
+    throw new Error(
+      `split_fail:premium_body_in_public:${publicPremiumWithBody.map((c) => c.id).join(",")}`,
+    );
+  }
+
+  const freePublic = publicChapters.filter((ch) => ch.accessTier === "free");
+  if (freePublic.some((ch) => countParagraphs([ch]) === 0)) {
+    throw new Error("split_fail:free_preview_body_missing");
+  }
+
+  const freeInPrivate = privateChapters.filter((ch) => ch.accessTier === "free");
+  if (freeInPrivate.length) {
+    throw new Error(`split_fail:free_in_private:${freeInPrivate.map((c) => c.id).join(",")}`);
+  }
+
+  const expectedPremium = fullChapters.filter((ch) => ch.accessTier === "premium").length;
+  if (privateChapters.length !== expectedPremium) {
+    throw new Error(
+      `split_fail:private_premium_count:${privateChapters.length}!=${expectedPremium}`,
+    );
+  }
+
+  if (expectedPremium > 0 && countParagraphs(privateChapters) === 0) {
+    throw new Error("split_fail:private_body_empty");
+  }
+
+  const privatePackage = {
+    schemaVersion: 1,
+    productId: reg.slug,
+    slug: reg.slug,
+    finalRevision: Number(reg.finalRevision),
+    accessTier: reg.accessTier,
+    chapters: privateChapters,
+    provenance: {
+      instructionId: provenance.instructionId,
+      finalRevision: provenance.finalRevision,
+      sourcePdfSha256: provenance.sourcePdfSha256,
+      sourceEpubSha256: provenance.sourceEpubSha256,
+      generatedAt: provenance.generatedAt,
+    },
+    stats: {
+      chapterCount: privateChapters.length,
+      pageCount: countPages(privateChapters),
+      paragraphCount: countParagraphs(privateChapters),
+    },
+  };
+
+  return { publicChapters, privatePackage };
+}
+
+/** Non-public build artifact root — must never be under src/public/out. */
+export function privateArtifactDir(repoRoot, slug, finalRevision) {
+  return join(repoRoot, "artifacts", "ebook-private", slug, `r${Number(finalRevision)}`);
+}
+
+export function privateArtifactPath(repoRoot, slug, finalRevision) {
+  return join(privateArtifactDir(repoRoot, slug, finalRevision), "private-content.json");
+}
+
+export function assertPrivateArtifactLocation(repoRoot, absolutePath) {
+  const norm = absolutePath.replace(/\\/g, "/").toLowerCase();
+  const root = repoRoot.replace(/\\/g, "/").toLowerCase();
+  if (!norm.startsWith(root + "/artifacts/ebook-private/")) {
+    throw new Error("private_artifact_outside_allowed_root");
+  }
+  if (
+    norm.includes("/src/") ||
+    norm.includes("/public/") ||
+    norm.includes("/out/") ||
+    norm.includes("/.next/")
+  ) {
+    throw new Error("private_artifact_in_public_tree");
+  }
+}
+
 export function buildEbookCatalogItem(workspaceRoot, reg, { generatedAt } = {}) {
   const evidence = validateGoldenEvidence(workspaceRoot, reg);
   if (!evidence.ok) {
@@ -301,21 +449,39 @@ export function buildEbookCatalogItem(workspaceRoot, reg, { generatedAt } = {}) 
   const priceNote = localizeWithKoFallback(reg.priceNote, "priceNote");
 
   const toc = [];
-  const chapters = [];
+  const fullChapters = [];
   for (const row of tocRows) {
     const accessTier = resolveChapterAccess(reg, row.id);
+    if (!ALLOWED_CHAPTER_TIERS.has(accessTier)) {
+      throw new Error(`unsupported_chapter_access:${row.id}:${accessTier}`);
+    }
     const titleLoc = { ko: row.titleKo, en: row.titleKo };
     toc.push({ id: row.id, title: titleLoc, accessTier });
     const file = findManuscriptFile(manuscriptDir, row.id);
     const md = readFileSync(file, "utf8");
     const pages = markdownToPages(md);
-    chapters.push({
+    fullChapters.push({
       id: row.id,
       title: titleLoc,
       accessTier,
       pages,
     });
   }
+
+  const provenance = {
+    instructionId: reg.instructionId,
+    finalRevision: rev,
+    sourcePdfSha256: evidence.pdfSha,
+    sourceEpubSha256: evidence.epubSha,
+    generatedAt: generatedAt || new Date().toISOString(),
+    slug: reg.slug,
+  };
+
+  const { publicChapters, privatePackage } = splitPublicPrivateCatalog(
+    fullChapters,
+    reg,
+    provenance,
+  );
 
   const item = {
     slug: reg.slug,
@@ -331,19 +497,20 @@ export function buildEbookCatalogItem(workspaceRoot, reg, { generatedAt } = {}) 
     coverTone: reg.coverTone || "amber",
     priceNote,
     toc,
-    chapters,
+    chapters: publicChapters,
   };
 
-  const provenance = {
-    instructionId: reg.instructionId,
-    finalRevision: rev,
-    sourcePdfSha256: evidence.pdfSha,
-    sourceEpubSha256: evidence.epubSha,
-    generatedAt: generatedAt || new Date().toISOString(),
-    slug: reg.slug,
+  return {
+    item,
+    privatePackage,
+    provenance,
+    tocCount: toc.length,
+    chapterCount: publicChapters.length,
+    publicPageCount: countPages(publicChapters),
+    publicParagraphCount: countParagraphs(publicChapters),
+    privateChapterCount: privatePackage.chapters.length,
+    privateParagraphCount: privatePackage.stats.paragraphCount,
   };
-
-  return { item, provenance, tocCount: toc.length, chapterCount: chapters.length };
 }
 
 export function assertNoPublicAssetUrls(item) {
@@ -353,10 +520,18 @@ export function assertNoPublicAssetUrls(item) {
   }
 }
 
+export function assertNoPremiumBodyInPublicCatalog(item) {
+  for (const ch of item.chapters || []) {
+    if (ch.accessTier === "premium" && countParagraphs([ch]) > 0) {
+      throw new Error(`premium_body_in_public:${ch.id}`);
+    }
+  }
+}
+
 export function assertNoInternalLeakInReaderBody(item) {
   for (const ch of item.chapters) {
-    for (const page of ch.pages) {
-      for (const p of page.paragraphs) {
+    for (const page of ch.pages || []) {
+      for (const p of page.paragraphs || []) {
         const t = `${p.ko}\n${p.en}`;
         if (INTERNAL_LINE.test(t)) throw new Error(`internal_leak:${ch.id}`);
         if (/wi_plan_\d+/i.test(t)) throw new Error(`instruction_leak:${ch.id}`);
@@ -365,17 +540,31 @@ export function assertNoInternalLeakInReaderBody(item) {
   }
 }
 
-export function catalogItemToTsModule(item, provenance) {
+/** Public catalog TS module — no provenance/SHA embedded (keeps secrets out of Next bundle). */
+export function catalogItemToTsModule(item) {
   const json = JSON.stringify(item, null, 2);
-  const prov = JSON.stringify(provenance, null, 2);
   return `/**
  * GENERATED by scripts/ebook-ingest — do not hand-edit.
- * Reader-facing catalog entry only. Provenance is NOT rendered in UI.
+ * PUBLIC catalog only: free preview bodies + premium metadata (pages=[]).
+ * Premium paragraphs live in artifacts/ebook-private (not imported by Next).
  */
 import type { EbookCatalogItem } from "../types";
 
-export const generatedProvenance = ${prov} as const;
-
 export const generatedEbookCatalogItem = ${json} as EbookCatalogItem;
 `;
+}
+
+/** Distinctive premium markers for build leakage scans (ko text, length >= 24). */
+export function extractPremiumLeakMarkers(privatePackage, { limit = 40 } = {}) {
+  const markers = [];
+  for (const ch of privatePackage.chapters || []) {
+    for (const page of ch.pages || []) {
+      for (const p of page.paragraphs || []) {
+        const ko = (p.ko || "").trim();
+        if (ko.length >= 24) markers.push(ko);
+        if (markers.length >= limit) return markers;
+      }
+    }
+  }
+  return markers;
 }
