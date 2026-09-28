@@ -1,5 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { getFirestoreDb } from "@/lib/firebase";
+import { isAdminFromClaims } from "@/lib/membership-grade";
+import type { AccessTier } from "@/types/access-tier";
 import type { AccessLevel, Entitlement, MemberContentDocument } from "@/types/membership";
 import type { ProductType } from "@/types/product";
 
@@ -9,10 +11,17 @@ export function isEntitlementActive(entitlement: Entitlement): boolean {
   return new Date(entitlement.expiresAt) > new Date();
 }
 
+/**
+ * Premium access SSOT.
+ * Admin custom claims (`role === "admin"`) satisfy premium without a paid entitlement row.
+ * Do not pass PreviewPersona / UI flags here — claims come from Auth token only.
+ */
 export function hasPremiumEntitlement(
   businessId: ProductType,
   entitlements: Entitlement[],
+  claims?: Record<string, unknown> | null,
 ): boolean {
+  if (isAdminFromClaims(claims)) return true;
   return entitlements.some(
     (e) => e.businessId === businessId && e.plan === "premium" && isEntitlementActive(e),
   );
@@ -23,14 +32,32 @@ export function canAccessLevel(
   businessId: ProductType,
   isAuthenticated: boolean,
   entitlements: Entitlement[],
+  claims?: Record<string, unknown> | null,
 ): boolean {
   if (accessLevel === "public") return true;
   if (!isAuthenticated) return false;
   if (accessLevel === "member") return true;
   if (accessLevel === "premium") {
-    return hasPremiumEntitlement(businessId, entitlements);
+    return hasPremiumEntitlement(businessId, entitlements, claims);
   }
   return false;
+}
+
+/**
+ * Effective catalog/reader AccessTier from Auth + entitlements.
+ * PreviewPersona is intentionally not an input — mock preview merges elsewhere.
+ */
+export function resolveEffectiveAccessTier(input: {
+  isAuthenticated: boolean;
+  claims?: Record<string, unknown> | null;
+  entitlements: Entitlement[];
+  businessId: ProductType;
+}): AccessTier {
+  if (hasPremiumEntitlement(input.businessId, input.entitlements, input.claims ?? null)) {
+    return "premium";
+  }
+  if (input.isAuthenticated) return "member";
+  return "free";
 }
 
 export async function fetchMemberContentBody(

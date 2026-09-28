@@ -22,6 +22,10 @@ export function tierMeetsRequirement(userTier: AccessTier, required: AccessTier)
   return ACCESS_TIER_RANK[userTier] >= ACCESS_TIER_RANK[required];
 }
 
+export function higherAccessTier(a: AccessTier, b: AccessTier): AccessTier {
+  return ACCESS_TIER_RANK[a] >= ACCESS_TIER_RANK[b] ? a : b;
+}
+
 export function personaToTier(persona: PreviewPersona): AccessTier {
   return PREVIEW_PERSONA_TIER[persona];
 }

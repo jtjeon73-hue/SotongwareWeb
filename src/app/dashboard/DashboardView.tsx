@@ -115,7 +115,7 @@ function MemberContentCard({
 }
 
 function DashboardContent() {
-  const { user, profile, entitlements } = useAuth();
+  const { user, profile, entitlements, claims } = useAuth();
   const displayName = profile?.displayName || user?.email?.split("@")[0] || "회원";
 
   const memberContents = memberContentCatalog.filter((c) => c.accessLevel === "member");
@@ -156,6 +156,7 @@ function DashboardContent() {
                 area.id,
                 true,
                 entitlements,
+                claims,
               );
               const isLocked = !hasAccess;
 
@@ -229,7 +230,7 @@ function DashboardContent() {
                 teaser={item.teaser}
                 accessLevel="member"
                 publicationStatus={item.publicationStatus}
-                canAccess={canAccessLevel(item.accessLevel, item.businessId, true, entitlements)}
+                canAccess={canAccessLevel(item.accessLevel, item.businessId, true, entitlements, claims)}
               />
             ))}
           </div>
@@ -251,7 +252,7 @@ function DashboardContent() {
                 teaser={item.teaser}
                 accessLevel="premium"
                 publicationStatus={item.publicationStatus}
-                canAccess={canAccessLevel(item.accessLevel, item.businessId, true, entitlements)}
+                canAccess={canAccessLevel(item.accessLevel, item.businessId, true, entitlements, claims)}
               />
             ))}
           </div>

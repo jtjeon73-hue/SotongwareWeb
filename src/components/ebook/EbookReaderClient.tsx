@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import type { EbookCatalogItem } from "@/data/service-catalog";
-import { personaToTier, tierMeetsRequirement } from "@/types/access-tier";
+import { useAuth } from "@/contexts/AuthProvider";
+import { resolveEffectiveAccessTier } from "@/lib/entitlements";
+import { higherAccessTier, personaToTier, tierMeetsRequirement } from "@/types/access-tier";
 import { AccessBadge } from "@/components/access/AccessBadge";
 import { MembershipGate } from "@/components/access/MembershipGate";
 import { PreviewPersonaBar, usePreviewPersona } from "@/components/access/PreviewPersonaBar";
@@ -14,8 +16,17 @@ function progressKey(slug: string) {
 }
 
 export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; locale: Locale }) {
+  const { user, claims, entitlements } = useAuth();
   const persona = usePreviewPersona();
-  const userTier = personaToTier(persona);
+  // Auth/claims/entitlements are the real unlock path (admin → premium via entitlement SSOT).
+  // PreviewPersona only merges for local UX simulation — never admin, never a security boundary.
+  const authTier = resolveEffectiveAccessTier({
+    isAuthenticated: Boolean(user),
+    claims,
+    entitlements,
+    businessId: "ebook",
+  });
+  const userTier = higherAccessTier(authTier, personaToTier(persona));
 
   const flatPages = useMemo(() => {
     const pages: {
