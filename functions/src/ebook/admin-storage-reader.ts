@@ -1,4 +1,5 @@
 import { getStorage } from "firebase-admin/storage";
+import { ensureFirebaseAdminApp } from "../firebase-admin-app";
 import type { StorageObjectReader } from "./storage-provider";
 
 /**
@@ -9,6 +10,7 @@ export class AdminSdkStorageObjectReader implements StorageObjectReader {
   constructor(private readonly bucketName?: string) {}
 
   async download(objectPath: string): Promise<Buffer | null> {
+    ensureFirebaseAdminApp();
     const bucket = this.bucketName
       ? getStorage().bucket(this.bucketName)
       : getStorage().bucket();

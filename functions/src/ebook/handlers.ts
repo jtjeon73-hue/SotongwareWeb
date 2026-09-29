@@ -1,6 +1,6 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import { initializeApp, getApps } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import { ensureFirebaseAdminApp } from "../firebase-admin-app";
 import { FirestoreProductEntitlementLookup } from "./firestore-entitlements";
 import { EbookChapterAccessError, handleGetEbookChapterBody } from "./get-chapter-body";
 import {
@@ -50,7 +50,7 @@ function assertEbookDownloadCallableEnabled(): void {
 const allowSignedUrl = process.env.ALLOW_FIREBASE_STORAGE_SIGNED_URL === "true";
 
 function getDb() {
-  if (!getApps().length) initializeApp();
+  ensureFirebaseAdminApp();
   return getFirestore();
 }
 
@@ -99,6 +99,8 @@ export const getEbookChapterBody = onCall(
   },
   async (request) => {
     assertEbookChapterCallableEnabled();
+    // Before any Admin SDK service (Firestore/Storage) — discovery-safe (not at module load).
+    ensureFirebaseAdminApp();
     let stage = "entry";
     let providerMode = "unknown";
     try {
@@ -143,6 +145,7 @@ export const getEbookDownloadUrl = onCall(
   },
   async (request) => {
     assertEbookDownloadCallableEnabled();
+    ensureFirebaseAdminApp();
     let stage = "entry";
     let providerMode = "unknown";
     try {

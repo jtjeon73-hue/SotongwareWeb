@@ -4,6 +4,7 @@
  */
 import { createHash, randomBytes } from "crypto";
 import { getStorage } from "firebase-admin/storage";
+import { ensureFirebaseAdminApp } from "../firebase-admin-app";
 import { authorizeEbookDownloadAccess } from "./authorize";
 import {
   canonicalEbookBinaryObjectPath,
@@ -154,6 +155,7 @@ export function createAdminSdkStorageFileAccessor(
   bucketName?: string,
 ): (storagePath: string) => GcsSignedFile {
   return (storagePath: string) => {
+    ensureFirebaseAdminApp();
     const safePath = assertCanonicalPrivateBinaryPath(storagePath);
     const bucket = bucketName ? getStorage().bucket(bucketName) : getStorage().bucket();
     return bucket.file(safePath);
