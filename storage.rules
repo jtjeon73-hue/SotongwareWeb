@@ -1,0 +1,16 @@
+rules_version = '2';
+
+// Private ebook bodies — client SDK must never read or write.
+// Access path: Cloud Functions Admin SDK only via getEbookChapterBody.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /private/ebooks/{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // Fail-closed default for other objects until explicitly opened.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

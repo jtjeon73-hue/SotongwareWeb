@@ -10,3 +10,14 @@ export {
   FirestoreProductEntitlementLookup,
   MemoryProductEntitlementLookup,
 } from "./firestore-entitlements";
+export {
+  canonicalEbookChapterObjectPath,
+  canonicalEbookBinaryObjectPath,
+  EbookStoragePathError,
+  PRIVATE_EBOOK_STORAGE_LAYOUT,
+} from "./storage-path";
+export {
+  FirebaseStorageEbookContentProvider,
+  MemoryStorageObjectReader,
+} from "./storage-provider";
+export { createEbookContentProvider, resolveEbookContentProviderMode } from "./provider-factory";

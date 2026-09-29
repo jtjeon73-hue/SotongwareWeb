@@ -284,7 +284,7 @@ await expectDeny(
   check("export getEbookChapterBody", indexSrc.includes("getEbookChapterBody"));
   check(
     "future storage layout documented",
-    Boolean(FUTURE_PRIVATE_STORAGE_LAYOUT?.objectPath),
+    Boolean(ebook.PRIVATE_EBOOK_STORAGE_LAYOUT?.chapterObject || ebook.FUTURE_PRIVATE_STORAGE_LAYOUT?.chapterObject),
   );
 }
 

@@ -44,3 +44,5 @@ firestore-debug.log
 
 # Premium ebook private bodies — never ship in Next public/static bundle
 /artifacts/ebook-private/
+/artifacts/ebook-private-staging/
+/artifacts/ebook-content-assets/

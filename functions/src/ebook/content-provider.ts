@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { EbookChapterBody, EbookContentProvider } from "./types";
+import { PRIVATE_EBOOK_STORAGE_LAYOUT } from "./storage-path";
 
 type PrivatePackage = {
   productId?: string;
@@ -15,7 +16,7 @@ type PrivatePackage = {
 
 /**
  * Local/dev content provider — reads gitignored private ingest artifact.
- * Never expose this path to clients. Production should swap for Storage-backed provider.
+ * Never expose this path to clients. Production must use Firebase Storage provider.
  *
  * Path convention (Phase 1 ingest):
  *   {root}/{productId}/r{revision}/private-content.json
@@ -71,14 +72,5 @@ export class MemoryEbookContentProvider implements EbookContentProvider {
   }
 }
 
-/**
- * Future Storage naming (Phase 3 — not implemented here):
- *   gs://{bucket}/private/ebooks/{productId}/r{revision}/chapters/{chapterId}.json
- * contentAssets/{assetId}: { productId, chapterId, storagePath, checksum, visibility: "private" }
- * storage.rules: deny all client reads; Admin SDK / signed URL via Functions only.
- */
-export const FUTURE_PRIVATE_STORAGE_LAYOUT = {
-  objectPath: "private/ebooks/{productId}/r{revision}/chapters/{chapterId}.json",
-  clientRead: "deny",
-  accessVia: "Functions Admin SDK or short-TTL signed URL + downloadGrants",
-} as const;
+/** @deprecated Use PRIVATE_EBOOK_STORAGE_LAYOUT from storage-path.ts */
+export const FUTURE_PRIVATE_STORAGE_LAYOUT = PRIVATE_EBOOK_STORAGE_LAYOUT;
