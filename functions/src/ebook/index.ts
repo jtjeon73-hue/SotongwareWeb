@@ -1,4 +1,9 @@
-export { getEbookChapterBody, getEbookDownloadUrl } from "./handlers";
+export {
+  getEbookChapterBody,
+  getEbookDownloadUrl,
+  isEbookChapterCallableEnabled,
+  isEbookDownloadCallableEnabled,
+} from "./handlers";
 export {
   authorizeEbookChapterAccess,
   authorizeEbookDownloadAccess,

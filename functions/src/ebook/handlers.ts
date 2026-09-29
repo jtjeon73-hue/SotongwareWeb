@@ -19,9 +19,34 @@ import {
   createProductionFirebaseSignedUrlProvider,
 } from "./download-delivery";
 
-const runningInEmulator = isFunctionsEmulatorRuntime();
-const allowInCloud = process.env.ALLOW_EBOOK_CHAPTER_FUNCTION === "true";
-const allowDownloadInCloud = process.env.ALLOW_EBOOK_DOWNLOAD_FUNCTION === "true";
+/**
+ * Runtime enablement only — never use these for Firebase deploy `omit`.
+ * CLI discovery subprocess does not receive ALLOW_* / functions/.env.
+ */
+export function isEbookChapterCallableEnabled(
+  env: NodeJS.ProcessEnv = process.env,
+): boolean {
+  return isFunctionsEmulatorRuntime(env) || env.ALLOW_EBOOK_CHAPTER_FUNCTION === "true";
+}
+
+export function isEbookDownloadCallableEnabled(
+  env: NodeJS.ProcessEnv = process.env,
+): boolean {
+  return isFunctionsEmulatorRuntime(env) || env.ALLOW_EBOOK_DOWNLOAD_FUNCTION === "true";
+}
+
+function assertEbookChapterCallableEnabled(): void {
+  if (!isEbookChapterCallableEnabled()) {
+    throw new HttpsError("failed-precondition", EBOOK_CLIENT_INTERNAL_MESSAGE);
+  }
+}
+
+function assertEbookDownloadCallableEnabled(): void {
+  if (!isEbookDownloadCallableEnabled()) {
+    throw new HttpsError("failed-precondition", EBOOK_CLIENT_INTERNAL_MESSAGE);
+  }
+}
+
 const allowSignedUrl = process.env.ALLOW_FIREBASE_STORAGE_SIGNED_URL === "true";
 
 function getDb() {
@@ -42,7 +67,7 @@ function mapError(e: unknown, ctx: EbookCallableFailureContext = {}): never {
 }
 
 function createSignedUrlProvider() {
-  if (runningInEmulator || process.env.EBOOK_DOWNLOAD_FAKE_SIGNED_URL === "true") {
+  if (isFunctionsEmulatorRuntime() || process.env.EBOOK_DOWNLOAD_FAKE_SIGNED_URL === "true") {
     return new MemorySignedUrlProvider();
   }
   // Production: Admin SDK / GCS V4 signed URL (gated by ALLOW_FIREBASE_STORAGE_SIGNED_URL).
@@ -60,12 +85,11 @@ function createSignedUrlProvider() {
 
 /**
  * getEbookChapterBody — premium chapter body after server authz.
- * Content source: Storage in production cloud; local artifact in emulator/dev only.
- * Omitted from cloud deploy unless ALLOW_EBOOK_CHAPTER_FUNCTION=true.
+ * Always discovered for deploy (omit never tied to ALLOW_*).
+ * Cloud requests fail-closed unless ALLOW_EBOOK_CHAPTER_FUNCTION=true (or emulator).
  */
 export const getEbookChapterBody = onCall(
   {
-    omit: !(runningInEmulator || allowInCloud),
     cors: true,
     region: "us-central1",
     memory: "256MiB",
@@ -74,6 +98,7 @@ export const getEbookChapterBody = onCall(
     maxInstances: 5,
   },
   async (request) => {
+    assertEbookChapterCallableEnabled();
     let stage = "entry";
     let providerMode = "unknown";
     try {
@@ -103,12 +128,12 @@ export const getEbookChapterBody = onCall(
 /**
  * getEbookDownloadUrl — short-lived authenticated PDF/EPUB delivery.
  * Owned entitlement or admin only. Membership alone DENY.
- * Omitted unless emulator or ALLOW_EBOOK_DOWNLOAD_FUNCTION=true.
+ * Always discovered for deploy (omit never tied to ALLOW_*).
+ * Cloud requests fail-closed unless ALLOW_EBOOK_DOWNLOAD_FUNCTION=true (or emulator).
  * Production signed URL mint also requires ALLOW_FIREBASE_STORAGE_SIGNED_URL.
  */
 export const getEbookDownloadUrl = onCall(
   {
-    omit: !(runningInEmulator || allowDownloadInCloud),
     cors: true,
     region: "us-central1",
     memory: "256MiB",
@@ -117,6 +142,7 @@ export const getEbookDownloadUrl = onCall(
     maxInstances: 5,
   },
   async (request) => {
+    assertEbookDownloadCallableEnabled();
     let stage = "entry";
     let providerMode = "unknown";
     try {

@@ -366,5 +366,76 @@ await expectDeny(
   );
 }
 
+
+// Discovery omit + runtime ALLOW fail-closed (deploy discovery must not use omit+ALLOW)
+{
+  const handlers = require(join(repoRoot, "functions", "lib", "ebook", "handlers.js"));
+  const chapterEp = handlers.getEbookChapterBody && handlers.getEbookChapterBody.__endpoint;
+  const downloadEp = handlers.getEbookDownloadUrl && handlers.getEbookDownloadUrl.__endpoint;
+  check("discovery ebook chapter omit false", chapterEp && chapterEp.omit !== true);
+  check("discovery ebook download omit false", downloadEp && downloadEp.omit !== true);
+  check(
+    "handlers source has no omit+ALLOW coupling",
+    !readFileSync(join(repoRoot, "functions", "src", "ebook", "handlers.ts"), "utf8").includes(
+      "omit: !(runningInEmulator || allowInCloud)",
+    ),
+  );
+
+  const prevChapter = process.env.ALLOW_EBOOK_CHAPTER_FUNCTION;
+  const prevDownload = process.env.ALLOW_EBOOK_DOWNLOAD_FUNCTION;
+  const prevEmu = process.env.FUNCTIONS_EMULATOR;
+  const prevHub = process.env.FIREBASE_EMULATOR_HUB;
+  try {
+    delete process.env.ALLOW_EBOOK_CHAPTER_FUNCTION;
+    delete process.env.ALLOW_EBOOK_DOWNLOAD_FUNCTION;
+    delete process.env.FUNCTIONS_EMULATOR;
+    delete process.env.FIREBASE_EMULATOR_HUB;
+    check(
+      "runtime chapter ALLOW unset fail-closed",
+      handlers.isEbookChapterCallableEnabled() === false,
+    );
+    check(
+      "runtime download ALLOW unset fail-closed",
+      handlers.isEbookDownloadCallableEnabled() === false,
+    );
+
+    process.env.ALLOW_EBOOK_CHAPTER_FUNCTION = "false";
+    process.env.ALLOW_EBOOK_DOWNLOAD_FUNCTION = "false";
+    check(
+      "runtime chapter ALLOW false fail-closed",
+      handlers.isEbookChapterCallableEnabled({ ...process.env }) === false,
+    );
+    check(
+      "runtime download ALLOW false fail-closed",
+      handlers.isEbookDownloadCallableEnabled({ ...process.env }) === false,
+    );
+
+    process.env.ALLOW_EBOOK_CHAPTER_FUNCTION = "true";
+    process.env.ALLOW_EBOOK_DOWNLOAD_FUNCTION = "true";
+    check(
+      "runtime chapter ALLOW true enabled",
+      handlers.isEbookChapterCallableEnabled({ ...process.env }) === true,
+    );
+    check(
+      "runtime download ALLOW true enabled",
+      handlers.isEbookDownloadCallableEnabled({ ...process.env }) === true,
+    );
+
+    check(
+      "runtime chapter emulator enabled without ALLOW",
+      handlers.isEbookChapterCallableEnabled({ FUNCTIONS_EMULATOR: "true" }) === true,
+    );
+  } finally {
+    if (prevChapter === undefined) delete process.env.ALLOW_EBOOK_CHAPTER_FUNCTION;
+    else process.env.ALLOW_EBOOK_CHAPTER_FUNCTION = prevChapter;
+    if (prevDownload === undefined) delete process.env.ALLOW_EBOOK_DOWNLOAD_FUNCTION;
+    else process.env.ALLOW_EBOOK_DOWNLOAD_FUNCTION = prevDownload;
+    if (prevEmu === undefined) delete process.env.FUNCTIONS_EMULATOR;
+    else process.env.FUNCTIONS_EMULATOR = prevEmu;
+    if (prevHub === undefined) delete process.env.FIREBASE_EMULATOR_HUB;
+    else process.env.FIREBASE_EMULATOR_HUB = prevHub;
+  }
+}
+
 console.log(failed === 0 ? "\nCHAPTER API ALL PASS" : `\nFAILED=${failed}`);
 process.exit(failed === 0 ? 0 : 1);
