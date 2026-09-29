@@ -1,0 +1,769 @@
+{
+  "productId": "ai-first-ebook-for-50s",
+  "revision": 2,
+  "instructionId": "wi_plan_1789914868666",
+  "author": "SotongWare",
+  "publisher": "SotongWare",
+  "aiAssisted": true,
+  "humanEditorialContribution": "Human planned topic, TOC, fact-check policy, and editorial constraints; AI assisted drafting — contribution extent requires human attestation before cleared",
+  "reviewStatus": "needs_review",
+  "reviewedAt": null,
+  "thirdPartySources": [
+    {
+      "id": "SRC01",
+      "title": "연령별 생성형 인공지능 서비스 이용현황 분석",
+      "publisher": "KISDI",
+      "url": "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1865976&key=m2101113025790",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC02",
+      "title": "AI 포용 관점에서 본 생성형 AI 이용 격차",
+      "publisher": "KISDI",
+      "url": "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1938416&key=m2101113025790",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC03",
+      "title": "앉아 있으면 책이 완성된다",
+      "publisher": "브런치 공개 후기",
+      "url": "https://brunch.co.kr/@5482fb6d0e13442/79",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC04",
+      "title": "중년, AI를 만나다. 캄파로드에서 시작된 전자책 실험기",
+      "publisher": "브런치 공개 후기",
+      "url": "https://brunch.co.kr/@5482fb6d0e13442/81",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC05",
+      "title": "50대 디지털 부업으로 전자책 출판하기",
+      "publisher": "peachyaho.com",
+      "url": "https://peachyaho.com/10",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC06",
+      "title": "[독자 사례] AI로 첫 전자책을 낸 한의사",
+      "publisher": "보표레터",
+      "url": "https://www.bopyoletters.com/https-www-bopyoletters-com-non-developer-ai-agent-first-ebook/",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC07",
+      "title": "ChatGPT와 매일 대화하며 전자책을 쓰는 중입니다",
+      "publisher": "지피터스",
+      "url": "https://www.gpters.org/ai-writing/post/writing-e-books-every-0Ta2R6qzuJ2HbIi",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC08",
+      "title": "전자책 출판 과정(강동)",
+      "publisher": "서울시 50플러스포털·강동50플러스센터",
+      "url": "https://www.50plus.or.kr/gdc/education-detail.do?id=70486687",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC09",
+      "title": "How basic is basic digital literacy for older adults?",
+      "publisher": "Frontiers in Education",
+      "url": "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2023.1231701/full",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC10",
+      "title": "생성형 AI 저작권 안내서(국/영문)",
+      "publisher": "한국저작권위원회",
+      "url": "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=52591",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC11",
+      "title": "생성형 인공지능 활용 저작물의 저작권 등록 안내서",
+      "publisher": "한국저작권위원회",
+      "url": "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54253",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC12",
+      "title": "이용허락이란?(저작권법 제46조 안내)",
+      "publisher": "저작권비즈니스 지원센터·한국저작권위원회",
+      "url": "https://findcopyright.or.kr/user/useCntrct/guide/info.do",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC13",
+      "title": "자료의 납본",
+      "publisher": "국립중앙도서관",
+      "url": "https://www.nl.go.kr/NL/contents/N50107020100.do",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC14",
+      "title": "ISBN·ISSN·UCI·납본 시스템",
+      "publisher": "국립중앙도서관",
+      "url": "https://www.nl.go.kr/seoji/",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC15",
+      "title": "EPUB 3.3",
+      "publisher": "W3C",
+      "url": "https://www.w3.org/TR/epub-33/",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    },
+    {
+      "id": "SRC16",
+      "title": "EPUB Accessibility 1.1",
+      "publisher": "W3C",
+      "url": "https://www.w3.org/TR/epub-a11y-11/",
+      "attributionPresent": true,
+      "licenseStatus": "unknown",
+      "commercialUseStatus": "unknown",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+    }
+  ],
+  "trademarks": [
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "ap-a",
+      "disposition": "review"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "ap-b",
+      "disposition": "review"
+    },
+    {
+      "id": "chatgpt",
+      "label": "ChatGPT",
+      "chapterId": "ap-c",
+      "disposition": "review"
+    },
+    {
+      "id": "openai",
+      "label": "OpenAI",
+      "chapterId": "ap-c",
+      "disposition": "review"
+    },
+    {
+      "id": "w3c",
+      "label": "W3C",
+      "chapterId": "ap-c",
+      "disposition": "review"
+    },
+    {
+      "id": "brunch",
+      "label": "브런치",
+      "chapterId": "ap-c",
+      "disposition": "review"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "ap-c",
+      "disposition": "review"
+    },
+    {
+      "id": "microsoft",
+      "label": "Microsoft/오피스 계열",
+      "chapterId": "ch-07",
+      "disposition": "review"
+    },
+    {
+      "id": "google",
+      "label": "Google Docs/Drive",
+      "chapterId": "ch-07",
+      "disposition": "review"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "ch-07",
+      "disposition": "review"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "ch-08",
+      "disposition": "review"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "ch-09",
+      "disposition": "review"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "ch-11",
+      "disposition": "review"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "ch-12",
+      "disposition": "review"
+    },
+    {
+      "id": "microsoft",
+      "label": "Microsoft/오피스 계열",
+      "chapterId": "fm-01",
+      "disposition": "review"
+    },
+    {
+      "id": "google",
+      "label": "Google Docs/Drive",
+      "chapterId": "fm-01",
+      "disposition": "review"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "fm-01",
+      "disposition": "review"
+    },
+    {
+      "id": "epub",
+      "label": "EPUB",
+      "chapterId": "toc",
+      "disposition": "review"
+    }
+  ],
+  "citations": [
+    {
+      "srcId": "SRC15",
+      "hits": 5,
+      "chapters": [
+        "ap-a",
+        "ap-c",
+        "ch-08"
+      ]
+    },
+    {
+      "srcId": "SRC12",
+      "hits": 5,
+      "chapters": [
+        "ap-a",
+        "ap-c",
+        "ch-10"
+      ]
+    },
+    {
+      "srcId": "SRC10",
+      "hits": 11,
+      "chapters": [
+        "ap-a",
+        "ap-c",
+        "ap-d",
+        "ch-05",
+        "ch-09",
+        "ch-10"
+      ]
+    },
+    {
+      "srcId": "SRC11",
+      "hits": 10,
+      "chapters": [
+        "ap-a",
+        "ap-c",
+        "ap-d",
+        "ch-05",
+        "ch-10"
+      ]
+    },
+    {
+      "srcId": "SRC01",
+      "hits": 10,
+      "chapters": [
+        "ap-c",
+        "ch-01",
+        "ch-09",
+        "fm-02"
+      ]
+    },
+    {
+      "srcId": "SRC16",
+      "hits": 4,
+      "chapters": [
+        "ap-c",
+        "ch-08"
+      ]
+    },
+    {
+      "srcId": "SRC02",
+      "hits": 5,
+      "chapters": [
+        "ap-c",
+        "ch-01",
+        "ch-09",
+        "fm-02"
+      ]
+    },
+    {
+      "srcId": "SRC03",
+      "hits": 7,
+      "chapters": [
+        "ap-c",
+        "ch-03",
+        "ch-06",
+        "ch-07",
+        "ch-09"
+      ]
+    },
+    {
+      "srcId": "SRC04",
+      "hits": 4,
+      "chapters": [
+        "ap-c",
+        "ch-01",
+        "ch-02",
+        "ch-04"
+      ]
+    },
+    {
+      "srcId": "SRC05",
+      "hits": 5,
+      "chapters": [
+        "ap-c",
+        "ch-02",
+        "ch-03",
+        "ch-04",
+        "fm-02"
+      ]
+    },
+    {
+      "srcId": "SRC06",
+      "hits": 5,
+      "chapters": [
+        "ap-c",
+        "ch-05",
+        "ch-06",
+        "ch-09"
+      ]
+    },
+    {
+      "srcId": "SRC07",
+      "hits": 5,
+      "chapters": [
+        "ap-c",
+        "ch-03",
+        "ch-04",
+        "ch-05",
+        "ch-06"
+      ]
+    },
+    {
+      "srcId": "SRC08",
+      "hits": 4,
+      "chapters": [
+        "ap-c",
+        "ch-02",
+        "ch-03",
+        "ch-07"
+      ]
+    },
+    {
+      "srcId": "SRC09",
+      "hits": 4,
+      "chapters": [
+        "ap-c",
+        "ch-07",
+        "fm-01"
+      ]
+    },
+    {
+      "srcId": "SRC13",
+      "hits": 4,
+      "chapters": [
+        "ap-c",
+        "ch-11"
+      ]
+    },
+    {
+      "srcId": "SRC14",
+      "hits": 4,
+      "chapters": [
+        "ap-c",
+        "ch-11"
+      ]
+    }
+  ],
+  "openIssues": [
+    {
+      "id": "license_unknown_SRC01",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC01 (KISDI) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC01",
+        "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1865976&key=m2101113025790"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC02",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC02 (KISDI) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC02",
+        "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1938416&key=m2101113025790"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC03",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC03 (브런치 공개 후기) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC03",
+        "https://brunch.co.kr/@5482fb6d0e13442/79"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC04",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC04 (브런치 공개 후기) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC04",
+        "https://brunch.co.kr/@5482fb6d0e13442/81"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC05",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC05 (peachyaho.com) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC05",
+        "https://peachyaho.com/10"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC06",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC06 (보표레터) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC06",
+        "https://www.bopyoletters.com/https-www-bopyoletters-com-non-developer-ai-agent-first-ebook/"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC07",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC07 (지피터스) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC07",
+        "https://www.gpters.org/ai-writing/post/writing-e-books-every-0Ta2R6qzuJ2HbIi"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC08",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC08 (서울시 50플러스포털·강동50플러스센터) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC08",
+        "https://www.50plus.or.kr/gdc/education-detail.do?id=70486687"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC09",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC09 (Frontiers in Education) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC09",
+        "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2023.1231701/full"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC10",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC10 (한국저작권위원회) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC10",
+        "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=52591"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC11",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC11 (한국저작권위원회) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC11",
+        "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54253"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC12",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC12 (저작권비즈니스 지원센터·한국저작권위원회) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC12",
+        "https://findcopyright.or.kr/user/useCntrct/guide/info.do"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC13",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC13 (국립중앙도서관) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC13",
+        "https://www.nl.go.kr/NL/contents/N50107020100.do"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC14",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC14 (국립중앙도서관) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC14",
+        "https://www.nl.go.kr/seoji/"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC15",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC15 (W3C) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC15",
+        "https://www.w3.org/TR/epub-33/"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "license_unknown_SRC16",
+      "severity": "high",
+      "category": "license_unknown",
+      "summary": "SRC16 (W3C) — commercial reuse / license not verified by automated scan",
+      "evidenceRefs": [
+        "SRC16",
+        "https://www.w3.org/TR/epub-a11y-11/"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "quote_suspect_ch-04_0",
+      "severity": "medium",
+      "category": "unattributed_substantial_quotation_suspect",
+      "summary": "Long quoted span in ch-04 — human must confirm originality or attribution",
+      "evidenceRefs": [
+        "ch-04_ai_questions.md"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "trademark_mentions_review",
+      "severity": "low",
+      "category": "trademark_review",
+      "summary": "Product/service names detected — descriptive use likely OK but human must confirm no logo misuse or endorsement claims",
+      "evidenceRefs": [
+        "EPUB",
+        "ChatGPT",
+        "OpenAI",
+        "W3C",
+        "브런치",
+        "Microsoft/오피스 계열",
+        "Google Docs/Drive"
+      ],
+      "blocksPublication": false,
+      "resolved": false
+    },
+    {
+      "id": "author_rights_confirmation",
+      "severity": "high",
+      "category": "rights_holder_unconfirmed",
+      "summary": "Author/publisher commercial distribution rights must be human-confirmed",
+      "evidenceRefs": [
+        "SotongWare"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    },
+    {
+      "id": "ai_provenance_human_review",
+      "severity": "medium",
+      "category": "ai_provenance",
+      "summary": "AI-assisted production indicated — record human editorial contribution; do not auto-clear commercial rights",
+      "evidenceRefs": [
+        "ap-a",
+        "ap-c",
+        "ap-d",
+        "ch-01",
+        "ch-02",
+        "ch-05",
+        "ch-07",
+        "ch-09",
+        "ch-10",
+        "fm-01"
+      ],
+      "blocksPublication": true,
+      "resolved": false
+    }
+  ],
+  "scanSummary": {
+    "scannedAt": "2026-09-29T00:17:47.029Z",
+    "fileCount": 19,
+    "sourceCount": 16,
+    "citationHits": 92,
+    "imageCount": 0,
+    "screenshotKeywordHits": 0,
+    "logoKeywordHits": 0,
+    "tableBlocksApprox": 53,
+    "quoteSuspectCount": 1,
+    "trademarkHitCount": 18,
+    "codeBlockFiles": 2
+  },
+  "gate": {
+    "ok": false,
+    "errors": [
+      "reviewStatus_needs_review",
+      "unresolved_license_unknown:license_unknown_SRC01",
+      "unresolved_license_unknown:license_unknown_SRC02",
+      "unresolved_license_unknown:license_unknown_SRC03",
+      "unresolved_license_unknown:license_unknown_SRC04",
+      "unresolved_license_unknown:license_unknown_SRC05",
+      "unresolved_license_unknown:license_unknown_SRC06",
+      "unresolved_license_unknown:license_unknown_SRC07",
+      "unresolved_license_unknown:license_unknown_SRC08",
+      "unresolved_license_unknown:license_unknown_SRC09",
+      "unresolved_license_unknown:license_unknown_SRC10",
+      "unresolved_license_unknown:license_unknown_SRC11",
+      "unresolved_license_unknown:license_unknown_SRC12",
+      "unresolved_license_unknown:license_unknown_SRC13",
+      "unresolved_license_unknown:license_unknown_SRC14",
+      "unresolved_license_unknown:license_unknown_SRC15",
+      "unresolved_license_unknown:license_unknown_SRC16",
+      "unresolved_unattributed_substantial_quotation_suspect:quote_suspect_ch-04_0",
+      "unresolved_rights_holder_unconfirmed:author_rights_confirmation",
+      "unresolved_ai_provenance:ai_provenance_human_review",
+      "unknown_license:SRC01",
+      "unknown_commercial_use:SRC01",
+      "unknown_license:SRC02",
+      "unknown_commercial_use:SRC02",
+      "unknown_license:SRC03",
+      "unknown_commercial_use:SRC03",
+      "unknown_license:SRC04",
+      "unknown_commercial_use:SRC04",
+      "unknown_license:SRC05",
+      "unknown_commercial_use:SRC05",
+      "unknown_license:SRC06",
+      "unknown_commercial_use:SRC06",
+      "unknown_license:SRC07",
+      "unknown_commercial_use:SRC07",
+      "unknown_license:SRC08",
+      "unknown_commercial_use:SRC08",
+      "unknown_license:SRC09",
+      "unknown_commercial_use:SRC09",
+      "unknown_license:SRC10",
+      "unknown_commercial_use:SRC10",
+      "unknown_license:SRC11",
+      "unknown_commercial_use:SRC11",
+      "unknown_license:SRC12",
+      "unknown_commercial_use:SRC12",
+      "unknown_license:SRC13",
+      "unknown_commercial_use:SRC13",
+      "unknown_license:SRC14",
+      "unknown_commercial_use:SRC14",
+      "unknown_license:SRC15",
+      "unknown_commercial_use:SRC15",
+      "unknown_license:SRC16",
+      "unknown_commercial_use:SRC16"
+    ],
+    "warnings": [
+      "trademark_review:trademark_mentions_review"
+    ]
+  },
+  "generatedAt": "2026-09-29T00:17:47.031Z"
+}
