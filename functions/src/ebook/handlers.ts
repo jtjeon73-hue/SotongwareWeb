@@ -3,7 +3,15 @@ import { initializeApp, getApps } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { FirestoreProductEntitlementLookup } from "./firestore-entitlements";
 import { EbookChapterAccessError, handleGetEbookChapterBody } from "./get-chapter-body";
-import { createEbookContentProvider } from "./provider-factory";
+import {
+  createEbookContentProvider,
+  resolveEbookContentProviderMode,
+} from "./provider-factory";
+import {
+  EBOOK_CLIENT_INTERNAL_MESSAGE,
+  logEbookCallableFailure,
+  type EbookCallableFailureContext,
+} from "./diagnostic-log";
 import { isFunctionsEmulatorRuntime } from "../commerce/emulator-runtime";
 import {
   handleGetEbookDownloadUrl,
@@ -21,13 +29,16 @@ function getDb() {
   return getFirestore();
 }
 
-function mapError(e: unknown): never {
+/**
+ * Map domain denials to HttpsError; unexpected errors → generic internal for clients.
+ * Diagnostic details go to server logs only (never HttpsError details).
+ */
+function mapError(e: unknown, ctx: EbookCallableFailureContext = {}): never {
   if (e instanceof EbookChapterAccessError) {
     throw new HttpsError(e.code, e.message);
   }
-  // Do not log chapter bodies or storage paths.
-  console.error("ebook_callable_failed", e instanceof Error ? e.name : "unknown");
-  throw new HttpsError("internal", "요청을 처리할 수 없습니다.");
+  logEbookCallableFailure(e, ctx);
+  throw new HttpsError("internal", EBOOK_CLIENT_INTERNAL_MESSAGE);
 }
 
 function createSignedUrlProvider() {
@@ -63,19 +74,28 @@ export const getEbookChapterBody = onCall(
     maxInstances: 5,
   },
   async (request) => {
+    let stage = "entry";
+    let providerMode = "unknown";
     try {
+      stage = "provider_init";
+      providerMode = resolveEbookContentProviderMode();
+      const content = createEbookContentProvider();
+      stage = "db_init";
+      const entitlements = new FirestoreProductEntitlementLookup(getDb());
+      stage = "auth_context";
       const auth = request.auth
         ? { uid: request.auth.uid, token: (request.auth.token || {}) as Record<string, unknown> }
         : null;
       const data = (request.data || {}) as Record<string, unknown>;
+      stage = "handle_chapter";
       return await handleGetEbookChapterBody({
         auth,
         data,
-        entitlements: new FirestoreProductEntitlementLookup(getDb()),
-        content: createEbookContentProvider(),
+        entitlements,
+        content,
       });
     } catch (e) {
-      mapError(e);
+      mapError(e, { stage, providerMode });
     }
   },
 );
@@ -97,19 +117,29 @@ export const getEbookDownloadUrl = onCall(
     maxInstances: 5,
   },
   async (request) => {
+    let stage = "entry";
+    let providerMode = "unknown";
     try {
+      stage = "provider_init";
+      providerMode = resolveEbookContentProviderMode();
+      stage = "signed_url_provider";
+      const signedUrls = createSignedUrlProvider();
+      stage = "db_init";
+      const entitlements = new FirestoreProductEntitlementLookup(getDb());
+      stage = "auth_context";
       const auth = request.auth
         ? { uid: request.auth.uid, token: (request.auth.token || {}) as Record<string, unknown> }
         : null;
       const data = (request.data || {}) as Record<string, unknown>;
+      stage = "handle_download";
       return await handleGetEbookDownloadUrl({
         auth,
         data,
-        entitlements: new FirestoreProductEntitlementLookup(getDb()),
-        signedUrls: createSignedUrlProvider(),
+        entitlements,
+        signedUrls,
       });
     } catch (e) {
-      mapError(e);
+      mapError(e, { stage, providerMode });
     }
   },
 );

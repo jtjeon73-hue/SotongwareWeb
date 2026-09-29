@@ -41,3 +41,9 @@ export {
   MemoryStorageObjectReader,
 } from "./storage-provider";
 export { createEbookContentProvider, resolveEbookContentProviderMode } from "./provider-factory";
+export {
+  EBOOK_CLIENT_INTERNAL_MESSAGE,
+  sanitizeEbookDiagnosticMessage,
+  buildEbookCallableFailureLog,
+  logEbookCallableFailure,
+} from "./diagnostic-log";

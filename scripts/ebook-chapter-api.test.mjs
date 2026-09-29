@@ -344,5 +344,27 @@ await expectDeny(
   check("16 no pdfUrl in public catalog", !/"pdfUrl"|"epubUrl"/.test(publicTs));
 }
 
+// Diagnostic logging — client stays generic; server gets sanitized message
+{
+  const { runEbookDiagnosticLogChecks } = await import("./ebook-diagnostic-log.checks.mjs");
+  runEbookDiagnosticLogChecks(ebook, check);
+  const handlersSrc = readFileSync(join(repoRoot, "functions", "src", "ebook", "handlers.ts"), "utf8");
+  check("diag handlers use sanitized logger", handlersSrc.includes("logEbookCallableFailure"));
+  check("diag handlers keep client internal constant", handlersSrc.includes("EBOOK_CLIENT_INTERNAL_MESSAGE"));
+  check(
+    "diag handlers do not put Error.message in HttpsError",
+    !/HttpsError\(\s*["']internal["']\s*,\s*[eE]\.message/.test(handlersSrc),
+  );
+  check(
+    "diag stage labels present",
+    handlersSrc.includes('stage = "provider_init"') && handlersSrc.includes('stage = "handle_chapter"'),
+  );
+  const clientApi = readFileSync(join(repoRoot, "src", "lib", "ebook-chapter-api.ts"), "utf8");
+  check(
+    "diag client maps unknown to generic unavailable",
+    clientApi.includes("본문을 불러오지 못했습니다"),
+  );
+}
+
 console.log(failed === 0 ? "\nCHAPTER API ALL PASS" : `\nFAILED=${failed}`);
 process.exit(failed === 0 ? 0 : 1);
