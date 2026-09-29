@@ -10,6 +10,8 @@ export const CURRENT_TERMS_VERSION = "2026-09-11";
 export const CURRENT_PRIVACY_VERSION = "2026-09-11";
 
 export function isAuthEmulatorEnabled(): boolean {
+  // Production bundles must never treat Auth as emulator (Hosting safety).
+  if (process.env.NODE_ENV === "production") return false;
   return process.env.NEXT_PUBLIC_FIREBASE_USE_EMULATOR === "true";
 }
 

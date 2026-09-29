@@ -24,9 +24,14 @@ SotongWare **공식 홈페이지 전용** Firebase 프로젝트입니다.
 ```bash
 npm install
 npm run lint
-npm run build          # out/ 생성
-npm run deploy:hosting # build + firebase deploy (project: sotongware)
+npm run build:hosting  # production client flags (emulator OFF, Google Auth UI ON)
+npm run test:hosting:production-client
+# Hosting publish is a separate approved step (not part of this builder alone)
 ```
+
+**중요:** `.env.local`에 `NEXT_PUBLIC_FIREBASE_USE_EMULATOR=true`가 있어도
+`npm run build:hosting`은 운영 번들에 에뮬레이터를 넣지 않는다.
+일반 `npm run build` / `next dev`의 로컬 에뮬레이터 동작은 유지된다.
 
 수동 배포:
 

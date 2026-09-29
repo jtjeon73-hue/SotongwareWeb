@@ -18,6 +18,8 @@ export function isFirebaseConfigured(): boolean {
 }
 
 export function isFirebaseEmulatorClient(): boolean {
+  // Static Hosting / next build must never connect emulators even if .env.local leaked.
+  if (process.env.NODE_ENV === "production") return false;
   return process.env.NEXT_PUBLIC_FIREBASE_USE_EMULATOR === "true";
 }
 
