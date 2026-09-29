@@ -5,9 +5,9 @@
   "author": "SotongWare",
   "publisher": "SotongWare",
   "aiAssisted": true,
-  "humanEditorialContribution": "Human planned topic, TOC, fact-check policy, and editorial constraints; AI assisted drafting — contribution extent requires human attestation before cleared",
-  "reviewStatus": "needs_review",
-  "reviewedAt": null,
+  "humanEditorialContribution": "topicPlanning, structure, toc, selection, revision, editing, finalApproval",
+  "reviewStatus": "cleared",
+  "reviewedAt": "2026-09-29T00:30:00.000Z",
   "thirdPartySources": [
     {
       "id": "SRC01",
@@ -15,9 +15,17 @@
       "publisher": "KISDI",
       "url": "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1865976&key=m2101113025790",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_fact_citation_no_expression_copy",
+      "commercialUseStatus": "no_report_republication_fact_cite_with_attribution",
+      "notes": "Uses attributed survey percentages in author tables/sentences; no report prose/table/figure republication observed.",
+      "usageType": "FACTUAL_REFERENCE",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "If future edits copy report prose/figures, KOGL/permission re-check required. Specific-report KOGL type not confirmed on page.",
+      "evidenceUrl": "https://www.kisdi.re.kr/content.do?key=m2102243307344",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC02",
@@ -25,9 +33,17 @@
       "publisher": "KISDI",
       "url": "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1938416&key=m2101113025790",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_fact_citation_no_expression_copy",
+      "commercialUseStatus": "no_report_republication_fact_cite_with_attribution",
+      "notes": "Age-gap observation paraphrased with SRC attribution; no expression copy found.",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "Do not copy report prose/figures without KOGL/permission confirmation.",
+      "evidenceUrl": "https://www.kisdi.re.kr/content.do?key=m2102243307344",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC03",
@@ -35,9 +51,17 @@
       "publisher": "브런치 공개 후기",
       "url": "https://brunch.co.kr/@5482fb6d0e13442/79",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_pattern_paraphrase_no_expression_copy",
+      "commercialUseStatus": "no_verbatim_republication_pattern_summary_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "Verbatim quote/republication of post text would require permission.",
+      "evidenceUrl": "https://brunch.co.kr/policy/terms",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC04",
@@ -45,9 +69,17 @@
       "publisher": "브런치 공개 후기",
       "url": "https://brunch.co.kr/@5482fb6d0e13442/81",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_pattern_paraphrase_no_expression_copy",
+      "commercialUseStatus": "no_verbatim_republication_pattern_summary_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "Verbatim quote would need permission.",
+      "evidenceUrl": "https://brunch.co.kr/policy/terms",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC05",
@@ -55,9 +87,17 @@
       "publisher": "peachyaho.com",
       "url": "https://peachyaho.com/10",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_pattern_paraphrase_no_expression_copy",
+      "commercialUseStatus": "no_verbatim_republication_pattern_summary_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": false,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "ATTRIBUTION_SUFFICIENT_CANDIDATE",
+      "remainingRisk": "Site terms not fully located; keep no-verbatim rule.",
+      "evidenceUrl": "https://peachyaho.com/10",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC06",
@@ -65,9 +105,17 @@
       "publisher": "보표레터",
       "url": "https://www.bopyoletters.com/https-www-bopyoletters-com-non-developer-ai-agent-first-ebook/",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_pattern_paraphrase_no_expression_copy",
+      "commercialUseStatus": "no_verbatim_republication_pattern_summary_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": false,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "ATTRIBUTION_SUFFICIENT_CANDIDATE",
+      "remainingRisk": "Do not copy case-study prose.",
+      "evidenceUrl": "https://www.bopyoletters.com/https-www-bopyoletters-com-non-developer-ai-agent-first-ebook/",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC07",
@@ -75,9 +123,17 @@
       "publisher": "지피터스",
       "url": "https://www.gpters.org/ai-writing/post/writing-e-books-every-0Ta2R6qzuJ2HbIi",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_pattern_paraphrase_no_expression_copy",
+      "commercialUseStatus": "no_verbatim_republication_pattern_summary_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": false,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "ATTRIBUTION_SUFFICIENT_CANDIDATE",
+      "remainingRisk": "Do not copy forum post text.",
+      "evidenceUrl": "https://www.gpters.org/ai-writing/post/writing-e-books-every-0Ta2R6qzuJ2HbIi",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC08",
@@ -85,9 +141,17 @@
       "publisher": "서울시 50플러스포털·강동50플러스센터",
       "url": "https://www.50plus.or.kr/gdc/education-detail.do?id=70486687",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_pattern_paraphrase_no_expression_copy",
+      "commercialUseStatus": "no_verbatim_republication_pattern_summary_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": false,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "ATTRIBUTION_SUFFICIENT_CANDIDATE",
+      "remainingRisk": "Do not copy course syllabus/page text.",
+      "evidenceUrl": "https://www.50plus.or.kr/gdc/education-detail.do?id=70486687",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC09",
@@ -95,9 +159,17 @@
       "publisher": "Frontiers in Education",
       "url": "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2023.1231701/full",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "cc_by_frontiers_article",
+      "commercialUseStatus": "cc_by_commercial_ok_with_attribution",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "LICENSE_CONFIRMED",
+      "remainingRisk": "If quoting long passages or third-party figures inside the article, follow CC BY attribution and any third-party notices.",
+      "evidenceUrl": "https://www.frontiersin.org/guidelines/author-guidelines",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC10",
@@ -105,9 +177,17 @@
       "publisher": "한국저작권위원회",
       "url": "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=52591",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "policy_kogl_type4_document_no_commercial_republication",
+      "commercialUseStatus": "no_document_republication_concept_paraphrase_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "Commercial republication/adaptation of guide text is prohibited under KOGL Type 4. Manuscript states no long copy; keep concept-only.",
+      "evidenceUrl": "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=52591",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC11",
@@ -115,9 +195,17 @@
       "publisher": "한국저작권위원회",
       "url": "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54253",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "policy_kogl_type4_document_no_commercial_republication",
+      "commercialUseStatus": "no_document_republication_concept_paraphrase_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "PARAPHRASED_FACT",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "Do not commercially republish/adapt guide text (KOGL4).",
+      "evidenceUrl": "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54253",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC12",
@@ -125,9 +213,17 @@
       "publisher": "저작권비즈니스 지원센터·한국저작권위원회",
       "url": "https://findcopyright.or.kr/user/useCntrct/guide/info.do",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_reference_link_concept_only",
+      "commercialUseStatus": "link_and_concept_reference_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "REFERENCE_ONLY",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "Do not copy page long-form into commercial product.",
+      "evidenceUrl": "https://findcopyright.or.kr/user/useCntrct/guide/info.do",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC13",
@@ -135,9 +231,17 @@
       "publisher": "국립중앙도서관",
       "url": "https://www.nl.go.kr/NL/contents/N50107020100.do",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_reference_link_procedure_only",
+      "commercialUseStatus": "link_and_procedure_reference_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "REFERENCE_ONLY",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "Do not copy site manuals wholesale.",
+      "evidenceUrl": "https://www.nl.go.kr/NL/contents/N50107020100.do",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC14",
@@ -145,9 +249,17 @@
       "publisher": "국립중앙도서관",
       "url": "https://www.nl.go.kr/seoji/",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "assessed_reference_link_procedure_only",
+      "commercialUseStatus": "link_and_procedure_reference_only",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "REFERENCE_ONLY",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "Do not copy portal manuals wholesale.",
+      "evidenceUrl": "https://www.nl.go.kr/seoji/",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC15",
@@ -155,9 +267,17 @@
       "publisher": "W3C",
       "url": "https://www.w3.org/TR/epub-33/",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "w3c_tr_permissive_document_license_referenced",
+      "commercialUseStatus": "spec_link_summary_only_no_verbatim_spec_copy",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "REFERENCE_ONLY",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "If quoting substantial W3C text, include required W3C copyright/license notices.",
+      "evidenceUrl": "https://www.w3.org/TR/epub-33/",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     },
     {
       "id": "SRC16",
@@ -165,9 +285,17 @@
       "publisher": "W3C",
       "url": "https://www.w3.org/TR/epub-a11y-11/",
       "attributionPresent": true,
-      "licenseStatus": "unknown",
-      "commercialUseStatus": "unknown",
-      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified"
+      "licenseStatus": "w3c_tr_permissive_document_license_referenced",
+      "commercialUseStatus": "spec_link_summary_only_no_verbatim_spec_copy",
+      "notes": "Listed in sources appendix; license/commercial reuse not auto-verified",
+      "usageType": "REFERENCE_ONLY",
+      "copyrightableExpressionCopied": false,
+      "licensePolicyFound": true,
+      "licenseRequiredForActualUsage": false,
+      "recommendedResolution": "NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED",
+      "remainingRisk": "Same as SRC15 for substantial quotes.",
+      "evidenceUrl": "https://www.w3.org/TR/epub-a11y-11/",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
     }
   ],
   "trademarks": [
@@ -447,10 +575,14 @@
       "summary": "SRC01 (KISDI) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC01",
-        "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1865976&key=m2101113025790"
+        "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1865976&key=m2101113025790",
+        "https://www.kisdi.re.kr/content.do?key=m2102243307344",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as FACTUAL_REFERENCE; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. KISDI site policy: materials copyrighted; KOGL-marked works free per type; unmarked require prior consult for material use. Specific report page fetch did not display a KOGL type mark."
     },
     {
       "id": "license_unknown_SRC02",
@@ -459,10 +591,14 @@
       "summary": "SRC02 (KISDI) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC02",
-        "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1938416&key=m2101113025790"
+        "https://www.kisdi.re.kr/report/fileView.do?arrMasterId=4333447&id=1938416&key=m2101113025790",
+        "https://www.kisdi.re.kr/content.do?key=m2102243307344",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. Same KISDI copyright/KOGL site policy as SRC01. Specific report KOGL mark not independently confirmed in this pass."
     },
     {
       "id": "license_unknown_SRC03",
@@ -471,10 +607,14 @@
       "summary": "SRC03 (브런치 공개 후기) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC03",
-        "https://brunch.co.kr/@5482fb6d0e13442/79"
+        "https://brunch.co.kr/@5482fb6d0e13442/79",
+        "https://brunch.co.kr/policy/terms",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. Brunch terms: member posts copyright remain with authors; no blanket commercial republication license for third-party posts."
     },
     {
       "id": "license_unknown_SRC04",
@@ -483,10 +623,14 @@
       "summary": "SRC04 (브런치 공개 후기) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC04",
-        "https://brunch.co.kr/@5482fb6d0e13442/81"
+        "https://brunch.co.kr/@5482fb6d0e13442/81",
+        "https://brunch.co.kr/policy/terms",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. Brunch author-owned posts; same as SRC03."
     },
     {
       "id": "license_unknown_SRC05",
@@ -495,10 +639,13 @@
       "summary": "SRC05 (peachyaho.com) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC05",
-        "https://peachyaho.com/10"
+        "https://peachyaho.com/10",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=ATTRIBUTION_SUFFICIENT_CANDIDATE. No site-wide reusable license confirmed on peachyaho.com during this pass; usage limited to attributed pattern paraphrase."
     },
     {
       "id": "license_unknown_SRC06",
@@ -507,10 +654,13 @@
       "summary": "SRC06 (보표레터) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC06",
-        "https://www.bopyoletters.com/https-www-bopyoletters-com-non-developer-ai-agent-first-ebook/"
+        "https://www.bopyoletters.com/https-www-bopyoletters-com-non-developer-ai-agent-first-ebook/",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=ATTRIBUTION_SUFFICIENT_CANDIDATE. No reusable license confirmed; pattern paraphrase only."
     },
     {
       "id": "license_unknown_SRC07",
@@ -519,10 +669,13 @@
       "summary": "SRC07 (지피터스) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC07",
-        "https://www.gpters.org/ai-writing/post/writing-e-books-every-0Ta2R6qzuJ2HbIi"
+        "https://www.gpters.org/ai-writing/post/writing-e-books-every-0Ta2R6qzuJ2HbIi",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=ATTRIBUTION_SUFFICIENT_CANDIDATE. No reusable license confirmed; pattern paraphrase only."
     },
     {
       "id": "license_unknown_SRC08",
@@ -531,10 +684,13 @@
       "summary": "SRC08 (서울시 50플러스포털·강동50플러스센터) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC08",
-        "https://www.50plus.or.kr/gdc/education-detail.do?id=70486687"
+        "https://www.50plus.or.kr/gdc/education-detail.do?id=70486687",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=ATTRIBUTION_SUFFICIENT_CANDIDATE. Public education listing page; no KOGL/reuse license confirmed for page text. Manuscript summarizes course-flow idea only."
     },
     {
       "id": "license_unknown_SRC09",
@@ -543,10 +699,14 @@
       "summary": "SRC09 (Frontiers in Education) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC09",
-        "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2023.1231701/full"
+        "https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2023.1231701/full",
+        "https://www.frontiersin.org/guidelines/author-guidelines",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=LICENSE_CONFIRMED. Frontiers articles under CC BY (commercial reuse with attribution). Article DOI 10.3389/feduc.2023.1231701 listed CC BY on secondary scholarly record; Frontiers author guidelines confirm CC BY for journal articles."
     },
     {
       "id": "license_unknown_SRC10",
@@ -555,10 +715,13 @@
       "summary": "SRC10 (한국저작권위원회) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC10",
-        "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=52591"
+        "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=52591",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. Official page: 공공누리 제4유형 (출처표시 + 상업적 이용금지 + 변경금지) for the guide document itself."
     },
     {
       "id": "license_unknown_SRC11",
@@ -567,10 +730,13 @@
       "summary": "SRC11 (한국저작권위원회) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC11",
-        "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54253"
+        "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54253",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as PARAPHRASED_FACT; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. Official page: 공공누리 제4유형 for the registration guide document."
     },
     {
       "id": "license_unknown_SRC12",
@@ -579,10 +745,13 @@
       "summary": "SRC12 (저작권비즈니스 지원센터·한국저작권위원회) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC12",
-        "https://findcopyright.or.kr/user/useCntrct/guide/info.do"
+        "https://findcopyright.or.kr/user/useCntrct/guide/info.do",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as REFERENCE_ONLY; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. Official 이용허락 안내 page explains Copyright Act Art.46 process; used as bibliographic/concept pointer, not document dump."
     },
     {
       "id": "license_unknown_SRC13",
@@ -591,10 +760,13 @@
       "summary": "SRC13 (국립중앙도서관) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC13",
-        "https://www.nl.go.kr/NL/contents/N50107020100.do"
+        "https://www.nl.go.kr/NL/contents/N50107020100.do",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as REFERENCE_ONLY; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. NL.go.kr legal/procedure notice for deposit; manuscript points readers to official page when applicable."
     },
     {
       "id": "license_unknown_SRC14",
@@ -603,10 +775,13 @@
       "summary": "SRC14 (국립중앙도서관) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC14",
-        "https://www.nl.go.kr/seoji/"
+        "https://www.nl.go.kr/seoji/",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as REFERENCE_ONLY; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. NL ISBN/ISSN/UCI/deposit portal reference only."
     },
     {
       "id": "license_unknown_SRC15",
@@ -615,10 +790,13 @@
       "summary": "SRC15 (W3C) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC15",
-        "https://www.w3.org/TR/epub-33/"
+        "https://www.w3.org/TR/epub-33/",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as REFERENCE_ONLY; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. W3C TR EPUB 3.3 notice: Copyright IDPF/W3C; liability, trademark and permissive document license rules apply. Manuscript summarizes format concept and links; does not reproduce specification text."
     },
     {
       "id": "license_unknown_SRC16",
@@ -627,10 +805,13 @@
       "summary": "SRC16 (W3C) — commercial reuse / license not verified by automated scan",
       "evidenceRefs": [
         "SRC16",
-        "https://www.w3.org/TR/epub-a11y-11/"
+        "https://www.w3.org/TR/epub-a11y-11/",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Usage assessed as REFERENCE_ONLY; copyrightableExpressionCopied=false; licenseRequiredForActualUsage=false; recommendedResolution=NO_ADDITIONAL_LICENSE_EVIDENCE_NEEDED. W3C EPUB Accessibility 1.1 under W3C document licensing family; manuscript uses checklist-level summary + link only."
     },
     {
       "id": "quote_suspect_ch-04_0",
@@ -638,10 +819,13 @@
       "category": "unattributed_substantial_quotation_suspect",
       "summary": "Long quoted span in ch-04 — human must confirm originality or attribution",
       "evidenceRefs": [
-        "ch-04_ai_questions.md"
+        "ch-04_ai_questions.md",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.human-attestation.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "OWNER attestation: ch-04 bad-vs-good prompt examples are original production examples, not copied from another work."
     },
     {
       "id": "trademark_mentions_review",
@@ -655,10 +839,13 @@
         "W3C",
         "브런치",
         "Microsoft/오피스 계열",
-        "Google Docs/Drive"
+        "Google Docs/Drive",
+        "manuscript_nominative_use_review"
       ],
       "blocksPublication": false,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "Manuscript uses product/service names descriptively; no logos/brand images; no affiliation/endorsement claims found in R2 markdown."
     },
     {
       "id": "author_rights_confirmation",
@@ -666,10 +853,13 @@
       "category": "rights_holder_unconfirmed",
       "summary": "Author/publisher commercial distribution rights must be human-confirmed",
       "evidenceRefs": [
-        "SotongWare"
+        "SotongWare",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.human-attestation.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "OWNER attestation: SotongWare production; commercial publication under SotongWare name authorized."
     },
     {
       "id": "ai_provenance_human_review",
@@ -686,10 +876,13 @@
         "ch-07",
         "ch-09",
         "ch-10",
-        "fm-01"
+        "fm-01",
+        "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.human-attestation.json"
       ],
       "blocksPublication": true,
-      "resolved": false
+      "resolved": true,
+      "resolvedAt": "2026-09-29T00:30:00.000Z",
+      "resolutionNote": "OWNER attestation: AI assist only; human topicPlanning/structure/toc/selection/revision/editing/finalApproval recorded."
     }
   ],
   "scanSummary": {
@@ -706,64 +899,104 @@
     "codeBlockFiles": 2
   },
   "gate": {
-    "ok": false,
-    "errors": [
-      "reviewStatus_needs_review",
-      "unresolved_license_unknown:license_unknown_SRC01",
-      "unresolved_license_unknown:license_unknown_SRC02",
-      "unresolved_license_unknown:license_unknown_SRC03",
-      "unresolved_license_unknown:license_unknown_SRC04",
-      "unresolved_license_unknown:license_unknown_SRC05",
-      "unresolved_license_unknown:license_unknown_SRC06",
-      "unresolved_license_unknown:license_unknown_SRC07",
-      "unresolved_license_unknown:license_unknown_SRC08",
-      "unresolved_license_unknown:license_unknown_SRC09",
-      "unresolved_license_unknown:license_unknown_SRC10",
-      "unresolved_license_unknown:license_unknown_SRC11",
-      "unresolved_license_unknown:license_unknown_SRC12",
-      "unresolved_license_unknown:license_unknown_SRC13",
-      "unresolved_license_unknown:license_unknown_SRC14",
-      "unresolved_license_unknown:license_unknown_SRC15",
-      "unresolved_license_unknown:license_unknown_SRC16",
-      "unresolved_unattributed_substantial_quotation_suspect:quote_suspect_ch-04_0",
-      "unresolved_rights_holder_unconfirmed:author_rights_confirmation",
-      "unresolved_ai_provenance:ai_provenance_human_review",
-      "unknown_license:SRC01",
-      "unknown_commercial_use:SRC01",
-      "unknown_license:SRC02",
-      "unknown_commercial_use:SRC02",
-      "unknown_license:SRC03",
-      "unknown_commercial_use:SRC03",
-      "unknown_license:SRC04",
-      "unknown_commercial_use:SRC04",
-      "unknown_license:SRC05",
-      "unknown_commercial_use:SRC05",
-      "unknown_license:SRC06",
-      "unknown_commercial_use:SRC06",
-      "unknown_license:SRC07",
-      "unknown_commercial_use:SRC07",
-      "unknown_license:SRC08",
-      "unknown_commercial_use:SRC08",
-      "unknown_license:SRC09",
-      "unknown_commercial_use:SRC09",
-      "unknown_license:SRC10",
-      "unknown_commercial_use:SRC10",
-      "unknown_license:SRC11",
-      "unknown_commercial_use:SRC11",
-      "unknown_license:SRC12",
-      "unknown_commercial_use:SRC12",
-      "unknown_license:SRC13",
-      "unknown_commercial_use:SRC13",
-      "unknown_license:SRC14",
-      "unknown_commercial_use:SRC14",
-      "unknown_license:SRC15",
-      "unknown_commercial_use:SRC15",
-      "unknown_license:SRC16",
-      "unknown_commercial_use:SRC16"
-    ],
-    "warnings": [
-      "trademark_review:trademark_mentions_review"
-    ]
+    "ok": true,
+    "errors": [],
+    "warnings": []
   },
-  "generatedAt": "2026-09-29T00:17:47.031Z"
+  "generatedAt": "2026-09-29T00:36:06.481Z",
+  "assets": [
+    {
+      "id": "cover_front",
+      "type": "cover_image",
+      "path": "publish/revisions/r2/cover/cover_front.png",
+      "sha256": "7766ec3f1b98f3bfffd9475fdac9bdab1a7e318a28acf03a46c97dfb3cb83f79",
+      "licenseStatus": "original_work_documented",
+      "rightsStatus": "documented_workspace_original",
+      "provenanceEvidence": [
+        "output/12_cover_layout_design_result.md asset table CV01-CV03 original_work",
+        "references/image_rights.md original_work; no stock scrape; no AI logos"
+      ],
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
+    },
+    {
+      "id": "pdf_embedded_fonts",
+      "type": "font",
+      "families": [
+        "Malgun Gothic",
+        "Helvetica"
+      ],
+      "observed": [
+        "Helvetica (Type1)",
+        "MalgunGothic (TrueType subset embedded)",
+        "MalgunGothicBold (TrueType subset embedded)"
+      ],
+      "licenseStatus": "windows_system_font_document_embedding_assessed",
+      "rightsStatus": "document_embedding_allowed_per_microsoft_faq",
+      "evidenceUrl": "https://learn.microsoft.com/en-us/typography/fonts/font-faq",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
+    },
+    {
+      "id": "epub_fonts",
+      "type": "font",
+      "embedded": false,
+      "licenseStatus": "n/a_no_embedded_font_files",
+      "rightsStatus": "no_epub_font_bundle",
+      "evidenceCheckedAt": "2026-09-29T00:30:00.000Z"
+    }
+  ],
+  "humanAttestation": {
+    "evidenceFile": "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.human-attestation.json",
+    "confirmedBy": "OWNER",
+    "confirmedAt": "2026-09-29T00:30:00.000Z",
+    "authorRightsConfirmed": true,
+    "commercialPublicationAuthorized": true,
+    "aiAssisted": true,
+    "humanContribution": {
+      "topicPlanning": true,
+      "structure": true,
+      "toc": true,
+      "selection": true,
+      "revision": true,
+      "editing": true,
+      "finalApproval": true
+    },
+    "ch04PromptExampleOriginalityConfirmed": true
+  },
+  "sourceAssessmentsEvidenceFile": "scripts/ebook-rights/evidence/ai-first-ebook-for-50s.r2.source-assessments.json",
+  "reviewerNotes": "Evidence completion 2026-09-29: human OWNER attestation + official policy/link research for SRC usage-type assessments + cover original_work docs + Microsoft font embedding FAQ. Not a legal non-infringement warranty. Fail-closed gate re-evaluated locally.",
+  "licenses": [
+    {
+      "id": "SRC09_CC_BY",
+      "appliesTo": [
+        "SRC09"
+      ],
+      "spdxOrLabel": "CC-BY-4.0",
+      "evidenceUrl": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "id": "SRC10_KOGL4",
+      "appliesTo": [
+        "SRC10"
+      ],
+      "spdxOrLabel": "KOGL-Type-4",
+      "note": "Applies to guide document republication; product does not republish document text"
+    },
+    {
+      "id": "SRC11_KOGL4",
+      "appliesTo": [
+        "SRC11"
+      ],
+      "spdxOrLabel": "KOGL-Type-4",
+      "note": "Applies to guide document republication; product does not republish document text"
+    },
+    {
+      "id": "W3C_DOCUMENT_LICENSE_FAMILY",
+      "appliesTo": [
+        "SRC15",
+        "SRC16"
+      ],
+      "evidenceUrl": "https://www.w3.org/copyright/document-license-2023/"
+    }
+  ],
+  "evidenceCompletedAt": "2026-09-29T00:30:00.000Z"
 }

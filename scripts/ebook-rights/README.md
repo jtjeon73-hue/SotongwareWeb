@@ -22,3 +22,16 @@ npm run test:ebook:rights
 ## Privacy
 
 Rights manifests/evidence are not imported by Next.js public catalog/Reader.
+
+Private evidence lives under `scripts/ebook-rights/evidence/` (human attestation + source assessments). Do not import these into public catalog/Reader.
+
+## Evidence completion
+
+After official policy research + OWNER attestation (local only):
+
+```bash
+node scripts/ebook-rights/apply-evidence-completion.mjs
+npm run test:ebook:rights
+```
+
+`reviewStatus=cleared` is allowed only when every blocking issue is resolved with evidence and no source/asset remains `unknown`. This is not a legal non-infringement warranty.

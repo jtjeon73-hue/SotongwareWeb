@@ -246,16 +246,34 @@ function baseManifest(over = {}) {
   check("I reader has no rights gate fields", !reader.includes("openIssues") && !reader.includes("reviewStatus"));
 }
 
-// Golden record (after run-scan)
+// Golden record (after evidence completion)
 {
   const record = join(__dirname, "records", "ai-first-ebook-for-50s.r2.rights.json");
   if (existsSync(record)) {
     const man = JSON.parse(readFileSync(record, "utf8"));
-    check("Golden record reviewStatus needs_review", man.reviewStatus === "needs_review");
+    const blob = JSON.stringify(man);
     check("Golden sources >= 1", (man.thirdPartySources || []).length >= 1);
     check("Golden openIssues present", (man.openIssues || []).length >= 1);
-    check("Golden publication gate FAIL", man.gate && man.gate.ok === false);
-    check("Golden no absolute Users path", !JSON.stringify(man).includes("C:\\\\Users") && !JSON.stringify(man).includes("C:/Users"));
+    check(
+      "Golden no absolute Users path",
+      !blob.includes("C:\\\\Users") && !blob.includes("C:/Users") && !blob.includes("C:\\Users"),
+    );
+    const unresolved = (man.openIssues || []).filter((i) => i.resolved !== true);
+    const liveGate = evaluateRightsPublicationGate(man);
+    if (man.reviewStatus === "cleared") {
+      check("Golden cleared has zero unresolved", unresolved.length === 0, String(unresolved.length));
+      check("Golden cleared gate OK", liveGate.ok === true, liveGate.errors.join(","));
+      check("Golden human attestation present", Boolean(man.humanAttestation?.authorRightsConfirmed));
+      check(
+        "Golden sources not unknown",
+        (man.thirdPartySources || []).every(
+          (s) => s.licenseStatus && s.licenseStatus !== "unknown" && s.commercialUseStatus && s.commercialUseStatus !== "unknown",
+        ),
+      );
+    } else {
+      check("Golden record reviewStatus needs_review", man.reviewStatus === "needs_review");
+      check("Golden publication gate FAIL", liveGate.ok === false);
+    }
   } else {
     check("Golden rights record present", false, "run ebook:rights:scan first");
   }
