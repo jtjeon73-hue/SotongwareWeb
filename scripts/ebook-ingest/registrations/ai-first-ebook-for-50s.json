@@ -1,0 +1,46 @@
+{
+  "slug": "ai-first-ebook-for-50s",
+  "instructionId": "wi_plan_1789914868666",
+  "finalRevision": 2,
+  "expectedPdfSha256": "ca2ecebe8667ccb67f5b6cd5515358781406b0ce65d157a01e3abc9adda28336",
+  "expectedEpubSha256": "147d9ccc15bea8c5917296498a5dc8cbc30f85c9df9210f3730abe09c5fde3e6",
+  "title": {
+    "ko": "50대 초보자가 AI로 첫 전자책을 만드는 방법",
+    "en": null
+  },
+  "summary": {
+    "ko": "독자 문제와 학습 목표를 정하고, 무료 도구로 PDF·EPUB까지 이어가는 초보 실습서입니다.",
+    "en": null
+  },
+  "category": {
+    "ko": "AI·전자책",
+    "en": "AI & ebooks"
+  },
+  "author": {
+    "ko": "SotongWare",
+    "en": "SotongWare"
+  },
+  "accessTier": "premium",
+  "status": "preparing",
+  "coverTone": "amber",
+  "priceNote": {
+    "ko": "단품 3,000원 · 회원 웹 열람 · 다운로드는 단품 (준비 중 · 실결제 아님)",
+    "en": "₩3,000 one-time · members: web reader · download needs purchase (preparing · not live)"
+  },
+  "featured": true,
+  "sortOrder": 5,
+  "chapterAccess": {
+    "default": "premium",
+    "byId": {
+      "fm-01": "free",
+      "fm-02": "free",
+      "ch-01": "free"
+    }
+  },
+  "notes": [
+    "Paid product: book.accessTier=premium. Do not set free to grant owner reading.",
+    "Owner/admin full unlock must use entitlement/claims bypass — never by making the SKU free.",
+    "status=preparing until payment/entitlement and operator go-live decision.",
+    "Preview-only free chapters: fm-01, fm-02, ch-01. All other chapters require premium."
+  ]
+}

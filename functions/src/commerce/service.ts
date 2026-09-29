@@ -1,4 +1,4 @@
-import { FieldValue, type Firestore } from "firebase-admin/firestore";
+import { FieldValue, Timestamp, type Firestore } from "firebase-admin/firestore";
 import {
   createSafeOrderId,
   hashIdempotency,
@@ -7,6 +7,19 @@ import {
 } from "./adapter";
 import { createTossCustomerKey, assertValidCustomerKey } from "./mode";
 import { CommerceError, maskPaymentKey } from "./errors";
+import {
+  GOLDEN_EBOOK_PRODUCT,
+  GOLDEN_EBOOK_PRODUCT_ID,
+  MEMBERSHIP_MONTHLY_PRODUCT,
+  MEMBERSHIP_YEARLY_PRODUCT,
+  MEMBERSHIP_MONTHLY_PRODUCT_ID,
+  MEMBERSHIP_YEARLY_PRODUCT_ID,
+  assertClientAmountAgainstPolicy,
+  assertProductDocMatchesPolicy,
+  getCommercePolicyProduct,
+  isMembershipProductId,
+  membershipExpiresAtForProduct,
+} from "./product-policy";
 import type {
   CommerceOrderDoc,
   CommerceProductDoc,
@@ -116,19 +129,13 @@ function snapshotFromProduct(p: CommerceProductDoc) {
   };
 }
 
-export function assertOneTimeKrwProduct(product: CommerceProductDoc): void {
+/**
+ * Allow one-time KRW products and prepaid membership term purchases.
+ * Does NOT implement Toss billing-key recurring auto-charge.
+ */
+export function assertPurchasableKrwProduct(product: CommerceProductDoc): void {
   if (product.status !== "published") {
     throw new CommerceError("product/not-published", "구매할 수 없는 상품입니다.", "failed-precondition");
-  }
-  if (product.pricingType !== "one_time") {
-    throw new CommerceError(
-      "product/not-one-time",
-      "이번 단계에서는 단건 결제만 지원합니다.",
-      "failed-precondition",
-    );
-  }
-  if (product.billingCycle !== "none") {
-    throw new CommerceError("product/bad-cycle", "상품 결제 주기가 올바르지 않습니다.", "failed-precondition");
   }
   if (product.currency !== "KRW") {
     throw new CommerceError("product/currency", "원화 결제만 지원합니다.", "failed-precondition");
@@ -136,6 +143,59 @@ export function assertOneTimeKrwProduct(product: CommerceProductDoc): void {
   if (!Number.isInteger(product.amount) || product.amount <= 0) {
     throw new CommerceError("product/amount", "상품 금액이 올바르지 않습니다.", "failed-precondition");
   }
+  if (product.pricingType === "one_time") {
+    if (product.billingCycle !== "none") {
+      throw new CommerceError("product/bad-cycle", "상품 결제 주기가 올바르지 않습니다.", "failed-precondition");
+    }
+    return;
+  }
+  if (product.pricingType === "subscription") {
+    // Prepaid term contract only — not recurring billing.
+    if (product.billingCycle !== "monthly" && product.billingCycle !== "annual") {
+      throw new CommerceError(
+        "product/bad-cycle",
+        "멤버십 기간이 올바르지 않습니다.",
+        "failed-precondition",
+      );
+    }
+    if (!isMembershipProductId(product.id)) {
+      throw new CommerceError(
+        "product/not-supported",
+        "지원하지 않는 구독 상품입니다.",
+        "failed-precondition",
+      );
+    }
+    return;
+  }
+  throw new CommerceError(
+    "product/not-purchasable",
+    "이번 단계에서 구매할 수 없는 상품 유형입니다.",
+    "failed-precondition",
+  );
+}
+
+/** @deprecated Use assertPurchasableKrwProduct — kept for one_time-only call sites/tests. */
+export function assertOneTimeKrwProduct(product: CommerceProductDoc): void {
+  assertPurchasableKrwProduct(product);
+  if (product.pricingType !== "one_time") {
+    throw new CommerceError(
+      "product/not-one-time",
+      "단건 결제 상품이 아닙니다.",
+      "failed-precondition",
+    );
+  }
+}
+
+function entitlementDatesForOrder(order: CommerceOrderDoc, startsAt: Date): {
+  startsAt: Date;
+  expiresAt: Date | null;
+} {
+  const expiresAt = membershipExpiresAtForProduct(
+    order.productSnapshot.productId,
+    order.productSnapshot.billingCycle,
+    startsAt,
+  );
+  return { startsAt, expiresAt };
 }
 
 export class MemoryCommerceStore implements CommerceStore {
@@ -238,15 +298,19 @@ export class MemoryCommerceStore implements CommerceStore {
     let ent = this.entitlements.get(entId);
     let created = false;
     if (!ent) {
+      const accessLevel =
+        order.productSnapshot.pricingType === "subscription" ? "subscribed" : "owned";
+      const startsAtDate = new Date();
+      const { expiresAt } = entitlementDatesForOrder(order, startsAtDate);
       ent = {
         id: entId,
         userId: order.userId,
         productId: order.productSnapshot.productId,
         orderId: order.id,
-        accessLevel: "owned",
+        accessLevel,
         status: "active",
-        startsAt: ts,
-        expiresAt: null,
+        startsAt: startsAtDate,
+        expiresAt,
         createdAt: ts,
         updatedAt: ts,
         source: "commerce",
@@ -465,19 +529,26 @@ export class FirestoreCommerceStore implements CommerceStore {
         needsReconciliation: false,
       });
       let created = false;
+      const accessLevel =
+        order.productSnapshot.pricingType === "subscription" ? "subscribed" : "owned";
+      const startsAtDate = new Date();
+      const { expiresAt } = entitlementDatesForOrder(order, startsAtDate);
+      const expiresField = expiresAt ? Timestamp.fromDate(expiresAt) : null;
       if (!entSnap.exists) {
         created = true;
         tx.set(entRef, {
           userId: order.userId,
           productId: order.productSnapshot.productId,
           orderId: order.id,
-          accessLevel: "owned",
+          accessLevel,
           status: "active",
-          startsAt: nowField(),
-          expiresAt: null,
+          startsAt: Timestamp.fromDate(startsAtDate),
+          expiresAt: expiresField,
           createdAt: nowField(),
           updatedAt: nowField(),
           source: "commerce",
+          autoRenew: false,
+          recurringBilling: false,
         });
       }
       const entitlement: ProductEntitlementDoc = entSnap.exists
@@ -487,10 +558,10 @@ export class FirestoreCommerceStore implements CommerceStore {
             userId: order.userId,
             productId: order.productSnapshot.productId,
             orderId: order.id,
-            accessLevel: "owned",
+            accessLevel,
             status: "active",
-            startsAt: nowField(),
-            expiresAt: null,
+            startsAt: startsAtDate,
+            expiresAt,
             createdAt: nowField(),
             updatedAt: nowField(),
             source: "commerce",
@@ -652,16 +723,40 @@ export class CommerceCheckoutService {
       return this.publicPrepareResult(existing, { customerKey, pgMode });
     }
 
-    if ((process.env.FUNCTIONS_EMULATOR === "true" || process.env.COMMERCE_PG_MODE === "mock" || !process.env.TOSS_SECRET_KEY) && input.productId === FIXTURE_ONE_TIME_PRODUCT.id) {
-      if (this.store.ensureFixtureProduct) {
+    const emulatorOrMock =
+      process.env.FUNCTIONS_EMULATOR === "true" ||
+      process.env.COMMERCE_PG_MODE === "mock" ||
+      !process.env.TOSS_SECRET_KEY;
+    if (emulatorOrMock && this.store.ensureFixtureProduct) {
+      if (input.productId === FIXTURE_ONE_TIME_PRODUCT.id) {
         await this.store.ensureFixtureProduct(FIXTURE_ONE_TIME_PRODUCT);
       }
+      if (input.productId === GOLDEN_EBOOK_PRODUCT_ID) {
+        await this.store.ensureFixtureProduct(GOLDEN_EBOOK_PRODUCT);
+      }
+      if (input.productId === MEMBERSHIP_MONTHLY_PRODUCT_ID) {
+        await this.store.ensureFixtureProduct(MEMBERSHIP_MONTHLY_PRODUCT);
+      }
+      if (input.productId === MEMBERSHIP_YEARLY_PRODUCT_ID) {
+        await this.store.ensureFixtureProduct(MEMBERSHIP_YEARLY_PRODUCT);
+      }
     }
+
+    const policyAmountCheck = assertClientAmountAgainstPolicy(input.productId, input.clientAmount);
+    if (!policyAmountCheck.ok) {
+      throw new CommerceError(policyAmountCheck.code, policyAmountCheck.message, "invalid-argument");
+    }
+
     const product = await this.store.getProduct(input.productId);
     if (!product) {
       throw new CommerceError("product/missing", "상품을 찾을 수 없습니다.", "not-found");
     }
-    assertOneTimeKrwProduct(product);
+    assertPurchasableKrwProduct(product);
+
+    const policyDocCheck = assertProductDocMatchesPolicy(product);
+    if (!policyDocCheck.ok) {
+      throw new CommerceError(policyDocCheck.code, policyDocCheck.message, "failed-precondition");
+    }
 
     if (
       typeof input.clientAmount === "number" &&
@@ -669,6 +764,13 @@ export class CommerceCheckoutService {
       input.clientAmount !== product.amount
     ) {
       throw new CommerceError("amount/mismatch", "결제 금액이 일치하지 않습니다.", "invalid-argument");
+    }
+
+    // Reject forged productId that is not the catalog product being purchased
+    // when client also sends an alternate id field (handlers strip extras; defensive).
+    const policy = getCommercePolicyProduct(input.productId);
+    if (policy && product.id !== policy.id) {
+      throw new CommerceError("productId/mismatch", "상품 정보가 일치하지 않습니다.", "invalid-argument");
     }
 
     const orderId = createSafeOrderId();

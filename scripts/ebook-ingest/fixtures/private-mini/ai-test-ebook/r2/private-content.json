@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "productId": "ai-test-ebook",
+  "slug": "ai-test-ebook",
+  "finalRevision": 2,
+  "accessTier": "premium",
+  "chapters": [
+    {
+      "id": "ch-prem-01",
+      "title": { "ko": "유료 테스트 장", "en": "Paid test chapter" },
+      "accessTier": "premium",
+      "pages": [
+        {
+          "paragraphs": [
+            {
+              "ko": "PRIVATE_MARKER_PHASE2_UNIQUE_SENTENCE_ALPHA",
+              "en": "PRIVATE_MARKER_PHASE2_UNIQUE_SENTENCE_ALPHA"
+            },
+            {
+              "ko": "이 문장은 테스트용 프리미엄 본문이며 public catalog에 없어야 합니다.",
+              "en": "이 문장은 테스트용 프리미엄 본문이며 public catalog에 없어야 합니다."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "instructionId": "wi_fixture_private_mini",
+    "finalRevision": 2,
+    "sourcePdfSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "sourceEpubSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "generatedAt": "2026-09-29T00:00:00.000Z"
+  },
+  "stats": { "chapterCount": 1, "pageCount": 1, "paragraphCount": 2 }
+}

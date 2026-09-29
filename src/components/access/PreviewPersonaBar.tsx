@@ -35,8 +35,8 @@ export function PreviewPersonaBar({ locale }: { locale: Locale }) {
       </p>
       <p className="mt-1 text-xs text-sky-900/80">
         {locale === "en"
-          ? "Not a real membership. Does not call live Auth or payments."
-          : "실제 회원 상태가 아닙니다. 운영 Auth·결제를 호출하지 않습니다."}
+          ? "Mock only: guest/member/premium simulation. Not Auth claims, not admin, not payments."
+          : "Mock 전용: guest/member/premium 시뮬레이션. Auth claims·admin·결제가 아닙니다."}
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {PERSONAS.map((p) => {

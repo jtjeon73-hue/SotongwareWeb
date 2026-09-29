@@ -1,10 +1,15 @@
 import type { EbookCatalogItem } from "./types";
+import { generatedEbookCatalogItem } from "./generated/ai-first-ebook-for-50s.catalog";
 
 /**
  * Static ebook catalog for library / detail / web-reader preview.
- * No public PDF/EPUB asset URLs — reader uses inlined mock text only.
+ * No public PDF/EPUB asset URLs — reader uses inlined text only.
+ *
+ * Golden / production ingest entries live under ./generated and are merged here.
+ * Registration policy (accessTier/status/priceNote) is driven by
+ * scripts/ebook-ingest/registrations/*.json — re-run ingest after policy changes.
  */
-export const ebookCatalog: EbookCatalogItem[] = [
+const fixtureEbookCatalog: EbookCatalogItem[] = [
   {
     slug: "field-software-primer",
     sortOrder: 10,
@@ -212,6 +217,12 @@ export const ebookCatalog: EbookCatalogItem[] = [
       },
     ],
   },
+];
+
+/** Fixture demos + generated Golden ingest entries (no runtime filesystem paths). */
+export const ebookCatalog: EbookCatalogItem[] = [
+  ...fixtureEbookCatalog,
+  generatedEbookCatalogItem,
 ];
 
 export function getEbookCatalog(): EbookCatalogItem[] {

@@ -5,8 +5,10 @@ import { EbookCover } from "@/components/ebook/EbookLibraryView";
 import { LocalizedButton } from "@/components/locale/LocalizedButton";
 import { LocalizedLink } from "@/components/locale/LocalizedLink";
 import { MembershipGate, ComingSoonCta } from "@/components/access/MembershipGate";
+import { EbookCommercePolicyPanel } from "@/components/ebook/EbookCommercePolicyPanel";
 import { PreviewPersonaBar } from "@/components/access/PreviewPersonaBar";
 import { Suspense } from "react";
+import { GOLDEN_EBOOK_PRODUCT_ID } from "@/lib/commerce-policy";
 
 export function EbookDetailView({ book, locale }: { book: EbookCatalogItem; locale: Locale }) {
   return (
@@ -47,9 +49,19 @@ export function EbookDetailView({ book, locale }: { book: EbookCatalogItem; loca
                 </LocalizedButton>
                 <ComingSoonCta
                   locale={locale}
-                  label={locale === "en" ? "Purchase coming soon" : "구매·이용권 준비중"}
+                  label={
+                    locale === "en"
+                      ? "Purchase preparing (not live)"
+                      : "구매·이용권 준비중 (실결제 아님)"
+                  }
                 />
               </div>
+
+              {book.slug === GOLDEN_EBOOK_PRODUCT_ID || book.slug === "ai-first-ebook-for-50s" ? (
+                <div className="mt-6">
+                  <EbookCommercePolicyPanel locale={locale} variant="detail" />
+                </div>
+              ) : null}
 
               <div className="mt-6">
                 <Suspense fallback={null}>
@@ -90,8 +102,8 @@ export function EbookDetailView({ book, locale }: { book: EbookCatalogItem; loca
               </li>
               <li>
                 {locale === "en"
-                  ? "Future: entitlement checks, download/print limits, optional watermark"
-                  : "향후: entitlement 확인, 다운로드·인쇄 제한, 워터마크 지원 구조"}
+                  ? "Server entitlement: membership → web reader; owned purchase → reader + download contract"
+                  : "서버 권한: 회원→웹 열람, 단품 구매→열람+다운로드 계약(전달 후속)"}
               </li>
               <li>
                 {locale === "en"

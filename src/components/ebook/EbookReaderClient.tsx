@@ -1,9 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import type { EbookCatalogItem } from "@/data/service-catalog";
-import { personaToTier, tierMeetsRequirement } from "@/types/access-tier";
+import { useAuth } from "@/contexts/AuthProvider";
+import {
+  EbookChapterFetchError,
+  fetchEbookChapterBody,
+  type EbookChapterBodyResult,
+} from "@/lib/ebook-chapter-api";
+import {
+  higherAccessTier,
+  personaToTier,
+  tierMeetsRequirement,
+  type AccessTier,
+} from "@/types/access-tier";
 import { AccessBadge } from "@/components/access/AccessBadge";
 import { MembershipGate } from "@/components/access/MembershipGate";
 import { PreviewPersonaBar, usePreviewPersona } from "@/components/access/PreviewPersonaBar";
@@ -13,32 +24,184 @@ function progressKey(slug: string) {
   return `sw-ebook-progress:${slug}`;
 }
 
+type ReaderSlot = {
+  chapterId: string;
+  chapterTitle: string;
+  accessTier: AccessTier;
+  paragraphs: string[];
+  bodySource: "inline" | "private";
+};
+
+type PrivateLoadState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "ready"; body: EbookChapterBodyResult }
+  | { status: "denied" }
+  | { status: "error" };
+
+function PremiumChapterPanel({
+  locale,
+  signedIn,
+  load,
+}: {
+  locale: Locale;
+  signedIn: boolean;
+  load: PrivateLoadState;
+}) {
+  if (!signedIn) {
+    return (
+      <div data-ebook-body="premium-locked">
+        <MembershipGate
+          locale={locale}
+          title={locale === "en" ? "Premium chapter" : "프리미엄 챕터"}
+          description={
+            locale === "en"
+              ? "Sign in with a purchase or admin account. Preview persona cannot unlock server content."
+              : "구매 또는 admin 계정으로 로그인이 필요합니다. Preview persona만으로는 서버 본문을 열 수 없습니다."
+          }
+        />
+      </div>
+    );
+  }
+
+  if (load.status === "loading" || load.status === "idle") {
+    return (
+      <div className="rounded-2xl border border-sky-200 bg-sky-50/80 p-5" role="status" data-ebook-body="loading">
+        <p className="text-sm font-semibold text-sky-950">
+          {locale === "en" ? "Loading premium chapter…" : "프리미엄 본문을 불러오는 중…"}
+        </p>
+      </div>
+    );
+  }
+
+  if (load.status === "denied") {
+    return (
+      <div data-ebook-body="premium-denied">
+        <MembershipGate
+          locale={locale}
+          title={locale === "en" ? "Access denied" : "접근 권한 없음"}
+          description={
+            locale === "en"
+              ? "Server entitlement check failed. Purchase this ebook or use an admin account."
+              : "서버 entitlement 검증에 실패했습니다. 해당 전자책 구매 또는 admin 권한이 필요합니다."
+          }
+        />
+      </div>
+    );
+  }
+
+  if (load.status === "error") {
+    return (
+      <div
+        className="rounded-2xl border border-rose-200 bg-rose-50/80 p-5"
+        role="alert"
+        data-ebook-body="fail-closed"
+      >
+        <p className="text-sm font-semibold text-rose-950">
+          {locale === "en" ? "Could not load chapter" : "본문을 불러오지 못했습니다"}
+        </p>
+        <p className="mt-2 text-sm text-rose-900/80">
+          {locale === "en"
+            ? "Fail-closed: premium text is not shown when the server is unavailable."
+            : "fail-closed: 서버 오류 시 프리미엄 본문을 표시하지 않습니다."}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4" data-ebook-body="premium-authorized">
+      {load.body.pages.flatMap((page, pi) =>
+        page.paragraphs.map((para, i) => <p key={`${pi}-${i}`}>{para[locale]}</p>),
+      )}
+    </div>
+  );
+}
+
 export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; locale: Locale }) {
+  const { user } = useAuth();
   const persona = usePreviewPersona();
-  const userTier = personaToTier(persona);
+  // PreviewPersona affects free/member UX simulation only — never authorizes private fetch.
+  const previewTier = personaToTier(persona);
+  const signedIn = Boolean(user);
 
   const flatPages = useMemo(() => {
-    const pages: {
-      chapterId: string;
-      chapterTitle: string;
-      accessTier: (typeof book.chapters)[0]["accessTier"];
-      paragraphs: string[];
-    }[] = [];
+    const slots: ReaderSlot[] = [];
     for (const ch of book.chapters) {
+      if (ch.pages.length === 0) {
+        slots.push({
+          chapterId: ch.id,
+          chapterTitle: ch.title[locale],
+          accessTier: ch.accessTier,
+          paragraphs: [],
+          bodySource: "private",
+        });
+        continue;
+      }
       for (const page of ch.pages) {
-        pages.push({
+        slots.push({
           chapterId: ch.id,
           chapterTitle: ch.title[locale],
           accessTier: ch.accessTier,
           paragraphs: page.paragraphs.map((p) => p[locale]),
+          bodySource: "inline",
         });
       }
     }
-    return pages;
+    return slots;
   }, [book, locale]);
 
   const [index, setIndex] = useState(0);
   const [fontScale, setFontScale] = useState(1);
+  const [privateCache, setPrivateCache] = useState<Record<string, PrivateLoadState>>({});
+
+  useEffect(() => {
+    // Re-auth must re-run server entitlement checks (never keep preview/forged unlock state).
+    setPrivateCache({});
+  }, [user?.uid]);
+
+  const page = flatPages[index];
+  // Inline free preview may use preview persona; private chapters never trust preview for unlock.
+  const inlineUserTier = higherAccessTier(signedIn ? "member" : "free", previewTier);
+  const inlineUnlocked =
+    page?.bodySource === "inline" ? tierMeetsRequirement(inlineUserTier, page.accessTier) : false;
+
+  const loadPrivate = useCallback(
+    async (chapterId: string) => {
+      if (!user) {
+        setPrivateCache((prev) => ({ ...prev, [chapterId]: { status: "denied" } }));
+        return;
+      }
+      setPrivateCache((prev) => ({ ...prev, [chapterId]: { status: "loading" } }));
+      try {
+        const body = await fetchEbookChapterBody({
+          productId: book.slug,
+          chapterId,
+        });
+        setPrivateCache((prev) => ({ ...prev, [chapterId]: { status: "ready", body } }));
+      } catch (e) {
+        if (e instanceof EbookChapterFetchError && e.code === "permission-denied") {
+          setPrivateCache((prev) => ({ ...prev, [chapterId]: { status: "denied" } }));
+        } else if (e instanceof EbookChapterFetchError && e.code === "unauthenticated") {
+          setPrivateCache((prev) => ({ ...prev, [chapterId]: { status: "denied" } }));
+        } else {
+          setPrivateCache((prev) => ({ ...prev, [chapterId]: { status: "error" } }));
+        }
+      }
+    },
+    [book.slug, user],
+  );
+
+  useEffect(() => {
+    if (!page || page.bodySource !== "private") return;
+    const existing = privateCache[page.chapterId];
+    if (existing && existing.status !== "idle") return;
+    if (!signedIn) {
+      setPrivateCache((prev) => ({ ...prev, [page.chapterId]: { status: "denied" } }));
+      return;
+    }
+    void loadPrivate(page.chapterId);
+  }, [page, signedIn, privateCache, loadPrivate]);
 
   useEffect(() => {
     try {
@@ -64,8 +227,11 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
     }
   }, [book.slug, index, fontScale]);
 
-  const page = flatPages[index];
-  const unlocked = page ? tierMeetsRequirement(userTier, page.accessTier) : false;
+  const privateState: PrivateLoadState =
+    page?.bodySource === "private"
+      ? privateCache[page.chapterId] || { status: signedIn ? "idle" : "denied" }
+      : { status: "idle" };
+
   const progress = flatPages.length ? Math.round(((index + 1) / flatPages.length) * 100) : 0;
 
   return (
@@ -112,7 +278,7 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
             <ul className="mt-3 space-y-2">
               {book.toc.map((item) => {
                 const firstIdx = flatPages.findIndex((p) => p.chapterId === item.id);
-                const locked = !tierMeetsRequirement(userTier, item.accessTier);
+                const showBadge = item.accessTier !== "free";
                 return (
                   <li key={item.id}>
                     <button
@@ -124,7 +290,7 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
                       }`}
                     >
                       <span>{item.title[locale]}</span>
-                      {locked ? <AccessBadge tier={item.accessTier} locale={locale} /> : null}
+                      {showBadge ? <AccessBadge tier={item.accessTier} locale={locale} /> : null}
                     </button>
                   </li>
                 );
@@ -133,8 +299,8 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
           </nav>
           <p className="text-[11px] leading-relaxed text-surface-500">
             {locale === "en"
-              ? "Reader preview disables text selection as a soft DRM cue. Full DRM is deferred."
-              : "Reader Preview는 소프트 DRM 신호로 텍스트 선택을 제한합니다. 완전한 DRM은 별도 단계입니다."}
+              ? "Premium chapters load only after server entitlement checks. Preview persona is mock-only."
+              : "프리미엄 장은 서버 entitlement 검증 후에만 로드됩니다. Preview persona는 mock 전용입니다."}
           </p>
         </aside>
 
@@ -146,11 +312,15 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
                 <AccessBadge tier={page.accessTier} locale={locale} />
               </div>
               <div
-                className={`mt-6 space-y-4 leading-relaxed text-surface-800 ${unlocked ? "select-none" : ""}`}
+                className={`mt-6 space-y-4 leading-relaxed text-surface-800 ${
+                  page.bodySource === "inline" && inlineUnlocked ? "select-none" : ""
+                }`}
                 style={{ fontSize: `${fontScale}rem` }}
                 onContextMenu={(e) => e.preventDefault()}
               >
-                {unlocked ? (
+                {page.bodySource === "private" ? (
+                  <PremiumChapterPanel locale={locale} signedIn={signedIn} load={privateState} />
+                ) : inlineUnlocked ? (
                   page.paragraphs.map((para, i) => <p key={i}>{para}</p>)
                 ) : (
                   <MembershipGate locale={locale} />

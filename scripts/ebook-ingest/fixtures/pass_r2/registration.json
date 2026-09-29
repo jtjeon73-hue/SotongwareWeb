@@ -1,0 +1,17 @@
+{
+  "slug": "fixture-pass-ebook",
+  "instructionId": "wi_fixture_pass",
+  "finalRevision": 2,
+  "expectedPdfSha256": "f3b3acbc389bdd2276878d4da1c6f09ef419c6634da035164789f0a596ee7c82",
+  "expectedEpubSha256": "37af80ee93acf5097e613eb37be3634a44fba233d1751ed017d766769392771b",
+  "title": { "ko": "픽스처 전자책", "en": null },
+  "summary": { "ko": "테스트용 요약", "en": null },
+  "category": { "ko": "테스트", "en": "Test" },
+  "author": { "ko": "SotongWare", "en": "SotongWare" },
+  "accessTier": "free",
+  "status": "preparing",
+  "coverTone": "sky",
+  "priceNote": { "ko": "테스트 · 미확정", "en": "Test · unset" },
+  "sortOrder": 999,
+  "chapterAccess": { "default": "free", "byId": {} }
+}

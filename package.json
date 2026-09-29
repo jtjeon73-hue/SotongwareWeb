@@ -37,7 +37,20 @@
     "test:commerce:toss-window": "npm --prefix functions run build && node scripts/commerce-toss-window.test.mjs",
     "emulators:local-commerce": "node scripts/start-local-commerce-emulators.mjs",
     "test:commerce:emulator-cors": "firebase emulators:exec --only functions --project sotongware \"node scripts/commerce-emulator-cors.test.mjs\"",
-    "check:recovery": "node scripts/check-recovery-readiness.mjs"
+    "check:recovery": "node scripts/check-recovery-readiness.mjs",
+    "test:ebook:ingest": "node scripts/ebook-ingest/golden-ebook-ingest.test.mjs",
+    "test:ebook:admin-access": "node scripts/ebook-admin-access.test.mjs",
+    "test:ebook:leakage": "node scripts/ebook-private-leakage-scan.mjs",
+    "test:ebook:chapter-api": "node scripts/ebook-chapter-api.test.mjs",
+    "test:ebook:storage": "node scripts/ebook-storage-phase3.test.mjs",
+    "test:ebook:storage:rules": "firebase emulators:exec --only storage --project sotongware \"node scripts/ebook-storage-rules.test.mjs\"",
+    "test:ebook:rights": "node scripts/ebook-rights/rights-gate.test.mjs",
+    "test:ebook:commerce-policy": "node scripts/ebook-commerce-policy.test.mjs",
+    "test:ebook:commercial-launch": "node scripts/ebook-commercial-launch.test.mjs",
+    "ebook:ingest": "node scripts/ebook-ingest/run-ingest.mjs",
+    "ebook:storage:dry-run": "node scripts/ebook-private-storage-upload.mjs --dry-run",
+    "ebook:binaries:dry-run": "node scripts/ebook-private-binary-package.mjs --dry-run",
+    "ebook:rights:scan": "node scripts/ebook-rights/run-scan.mjs"
   },
   "dependencies": {
     "@tosspayments/tosspayments-sdk": "^2.8.1",

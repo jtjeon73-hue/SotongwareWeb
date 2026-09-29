@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "productId": "ai-first-ebook-for-50s",
+  "revision": 2,
+  "instructionId": "wi_plan_1789914868666",
+  "privacy": "private_rights_evidence_not_for_public_catalog_or_reader",
+  "confirmedBy": "OWNER",
+  "confirmedAt": "2026-09-29T00:30:00.000Z",
+  "authorRightsConfirmed": true,
+  "commercialPublicationAuthorized": true,
+  "aiAssisted": true,
+  "publisherName": "SotongWare",
+  "humanContribution": {
+    "topicPlanning": true,
+    "structure": true,
+    "toc": true,
+    "selection": true,
+    "revision": true,
+    "editing": true,
+    "finalApproval": true
+  },
+  "ch04PromptExampleOriginalityConfirmed": true,
+  "ch04PromptExampleNote": "ch-04 bad-vs-good prompt examples authored during production; not copied from another work",
+  "statements": [
+    "Ebook produced under SotongWare",
+    "Owner decided topic and production direction",
+    "Owner reviewed, revised, and selected outputs",
+    "Owner approves final publication decision",
+    "AI used as production assist tool only",
+    "Owner authorizes SotongWare-named commercial sale/service",
+    "ch-04 prompt examples are original production examples"
+  ],
+  "notes": "No personal email/UID stored. Attestation recorded from OWNER confirmation in local rights evidence completion session."
+}
