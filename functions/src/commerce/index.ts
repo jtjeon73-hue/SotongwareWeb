@@ -10,6 +10,7 @@ export {
   MemoryCommerceStore,
   FirestoreCommerceStore,
   assertOneTimeKrwProduct,
+  assertPurchasableKrwProduct,
   FIXTURE_ONE_TIME_PRODUCT,
 } from "./service";
 export {
@@ -22,6 +23,10 @@ export {
   getCommercePolicyProduct,
   assertClientAmountAgainstPolicy,
   assertProductDocMatchesPolicy,
+  computeMembershipTerm,
+  membershipExpiresAtForProduct,
+  MEMBERSHIP_TERM_DAYS,
+  RECURRING_BILLING_IMPLEMENTED,
 } from "./product-policy";
 export { MockTossAdapter, HttpTossAdapter, createAdapterFromEnv, resolvePgMode } from "./adapter";
 export { CommerceError, maskPaymentKey } from "./errors";

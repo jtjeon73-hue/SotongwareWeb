@@ -75,7 +75,8 @@ export type ProductEntitlementDoc = {
   accessLevel: "owned" | "subscribed" | "licensed";
   status: "active" | "revoked" | "expired";
   startsAt: unknown;
-  expiresAt: null;
+  /** null for one-time owned; Date/Timestamp for prepaid membership term */
+  expiresAt: unknown | null;
   createdAt: unknown;
   updatedAt: unknown;
   /** Canonical commerce entitlement — never client-writable */

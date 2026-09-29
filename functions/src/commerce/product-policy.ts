@@ -28,12 +28,65 @@ export type CommercePolicyProductDoc = {
   deliveryType: "download" | "unlock" | "license" | "service_access" | "manual";
 };
 
+/** Prepaid term lengths — not Toss auto-billing cycles. */
+export const MEMBERSHIP_TERM_DAYS = {
+  monthly: 30,
+  annual: 365,
+} as const;
+
+/** Recurring / billing-key auto-charge is NOT implemented. */
+export const RECURRING_BILLING_IMPLEMENTED = false;
+
+export type MembershipTermContract = {
+  productId: string;
+  billingCycle: "monthly" | "annual";
+  termDays: number;
+  startsAt: Date;
+  expiresAt: Date;
+  autoRenew: false;
+  recurringBilling: false;
+};
+
+export function isMembershipProductId(productId: string): boolean {
+  return (MEMBERSHIP_PRODUCT_IDS as readonly string[]).includes(productId);
+}
+
+export function computeMembershipTerm(
+  productId: string,
+  billingCycle: "monthly" | "annual",
+  startsAt: Date,
+): MembershipTermContract {
+  const termDays =
+    billingCycle === "monthly" ? MEMBERSHIP_TERM_DAYS.monthly : MEMBERSHIP_TERM_DAYS.annual;
+  const expiresAt = new Date(startsAt.getTime() + termDays * 24 * 60 * 60 * 1000);
+  return {
+    productId,
+    billingCycle,
+    termDays,
+    startsAt,
+    expiresAt,
+    autoRenew: false,
+    recurringBilling: false,
+  };
+}
+
+export function membershipExpiresAtForProduct(
+  productId: string,
+  billingCycle: string,
+  startsAt: Date,
+): Date | null {
+  if (!isMembershipProductId(productId)) return null;
+  if (billingCycle !== "monthly" && billingCycle !== "annual") return null;
+  return computeMembershipTerm(productId, billingCycle, startsAt).expiresAt;
+}
+
 export const MEMBERSHIP_MONTHLY_PRODUCT: CommercePolicyProductDoc = {
   id: MEMBERSHIP_MONTHLY_PRODUCT_ID,
   businessUnit: "content",
   slug: "membership-basic-monthly",
   title: "SotongWare Basic 멤버십 (월간)",
-  summary: "활성 구독 기간 동안 전자책 웹 열람. PDF/EPUB 다운로드 미포함.",
+  summary:
+    "기간제 이용권(30일) · 자동갱신 아님. 활성 기간 웹 열람. PDF/EPUB 다운로드 미포함.",
   productType: "content",
   pricingType: "subscription",
   billingCycle: "monthly",
@@ -49,7 +102,8 @@ export const MEMBERSHIP_YEARLY_PRODUCT: CommercePolicyProductDoc = {
   businessUnit: "content",
   slug: "membership-basic-yearly",
   title: "SotongWare Basic 멤버십 (연간)",
-  summary: "활성 구독 기간 동안 전자책 웹 열람. PDF/EPUB 다운로드 미포함.",
+  summary:
+    "기간제 이용권(365일) · 자동갱신 아님. 활성 기간 웹 열람. PDF/EPUB 다운로드 미포함.",
   productType: "content",
   pricingType: "subscription",
   billingCycle: "annual",
@@ -65,7 +119,7 @@ export const GOLDEN_EBOOK_PRODUCT: CommercePolicyProductDoc = {
   businessUnit: "ebook",
   slug: "ai-first-ebook-for-50s",
   title: "50대 초보자가 AI로 첫 전자책을 만드는 방법",
-  summary: "단품 구매 시 웹 열람 + PDF/EPUB 다운로드 entitlement (다운로드 전달은 후속).",
+  summary: "단품 구매 시 웹 열람 + PDF/EPUB 다운로드 entitlement.",
   productType: "digital_download",
   pricingType: "one_time",
   billingCycle: "none",
@@ -86,10 +140,6 @@ const BY_ID = Object.fromEntries(COMMERCE_POLICY_PRODUCTS.map((p) => [p.id, p]))
 
 export function getCommercePolicyProduct(productId: string): CommercePolicyProductDoc | null {
   return BY_ID[productId] || null;
-}
-
-export function isMembershipProductId(productId: string): boolean {
-  return (MEMBERSHIP_PRODUCT_IDS as readonly string[]).includes(productId);
 }
 
 export function assertClientAmountAgainstPolicy(

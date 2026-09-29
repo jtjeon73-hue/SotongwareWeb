@@ -3,7 +3,7 @@ import { ebookCommerceUiCopy, GOLDEN_EBOOK_PRODUCT } from "@/lib/commerce-policy
 
 /**
  * Detail/reader commerce policy copy for preparing SKUs.
- * Never implies live checkout completion.
+ * Never implies live checkout, auto-renew, or live download completion.
  */
 export function EbookCommercePolicyPanel({
   locale,
@@ -24,23 +24,23 @@ export function EbookCommercePolicyPanel({
         {locale === "en" ? "Access policy (preparing)" : "이용 정책 (준비 중)"}
       </h2>
       <p className="mt-2 font-medium text-amber-900">{copy.preparingNotice}</p>
+      <p className="mt-1 text-xs text-surface-600">{copy.noAutoRenew}</p>
       <ul className="mt-3 list-disc space-y-1.5 pl-5">
         <li>
           <span className="font-medium text-surface-800">
             {locale === "en" ? "Guest:" : "비회원:"}
           </span>{" "}
-          {locale === "en" ? "Free preview" : "미리보기"} — {copy.guest}
+          {locale === "en" ? "Preview" : "미리보기"} — {copy.guest}
         </li>
         <li>
           <span className="font-medium text-surface-800">
             {locale === "en" ? "Member:" : "회원:"}
           </span>{" "}
-          {locale === "en" ? "Full web reader" : "회원 전체보기"} — {copy.memberReader}.{" "}
-          {copy.memberDownload}
+          {copy.memberReader}. {copy.memberDownload}
         </li>
         <li>
           <span className="font-medium text-surface-800">
-            {locale === "en" ? "Non-member:" : "비회원 단품:"}
+            {locale === "en" ? "One-time:" : "단품 구매:"}
           </span>{" "}
           {copy.nonMemberPurchase}
         </li>
@@ -48,15 +48,20 @@ export function EbookCommercePolicyPanel({
           <span className="font-medium text-surface-800">
             {locale === "en" ? "Owned:" : "구매 보유:"}
           </span>{" "}
-          {locale === "en" ? "Full reader" : "전체보기"} · {locale === "en" ? "Download" : "다운로드"} —{" "}
           {copy.ownedReader}. {copy.ownedDownload}
+        </li>
+        <li>
+          <span className="font-medium text-surface-800">
+            {locale === "en" ? "Admin:" : "관리자:"}
+          </span>{" "}
+          {copy.adminOps}
         </li>
       </ul>
       {variant === "detail" ? (
         <p className="mt-3 text-xs text-surface-500">
           {locale === "en"
-            ? `Catalog price SSOT: ₩${price} one-time. Membership monthly ₩2,000 / yearly ₩20,000.`
-            : `가격 SSOT: 단품 ${price}원 · 멤버십 월 2,000원 / 연 20,000원.`}
+            ? `Catalog price SSOT: ₩${price} one-time. Membership monthly ₩2,000 / yearly ₩20,000 (prepaid term).`
+            : `가격 SSOT: 단품 ${price}원 · 멤버십 월 2,000원 / 연 20,000원 (기간제 · 자동갱신 아님).`}
         </p>
       ) : null}
     </section>

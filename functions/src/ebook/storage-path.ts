@@ -45,7 +45,7 @@ export function canonicalEbookChapterObjectPath(
   return `private/ebooks/${p}/r${r}/chapters/${c}.json`;
 }
 
-/** Future binary layout (not implemented in Phase 3). */
+/** Private binary layout — never expose to clients; delivery via short-lived signed URL. */
 export function canonicalEbookBinaryObjectPath(
   productId: string,
   revision: number,
@@ -53,13 +53,14 @@ export function canonicalEbookBinaryObjectPath(
 ): string {
   const p = assertSafeSegment(productId, "productId");
   const r = assertSafeRevision(revision);
-  return `private/ebooks/${p}/r${r}/files/${fileName}`;
+  return `private/ebooks/${p}/r${r}/binaries/${fileName}`;
 }
 
 export const PRIVATE_EBOOK_STORAGE_LAYOUT = {
   chapterObject: "private/ebooks/{productId}/r{revision}/chapters/{chapterId}.json",
-  pdfObject: "private/ebooks/{productId}/r{revision}/files/book.pdf",
-  epubObject: "private/ebooks/{productId}/r{revision}/files/book.epub",
+  pdfObject: "private/ebooks/{productId}/r{revision}/binaries/book.pdf",
+  epubObject: "private/ebooks/{productId}/r{revision}/binaries/book.epub",
   clientAccess: "deny_all",
-  accessVia: "Functions Admin SDK only (Callable getEbookChapterBody)",
+  accessVia:
+    "Functions Admin SDK only (Callable getEbookChapterBody / getEbookDownloadUrl)",
 } as const;

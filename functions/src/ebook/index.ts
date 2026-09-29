@@ -1,4 +1,4 @@
-export { getEbookChapterBody } from "./handlers";
+export { getEbookChapterBody, getEbookDownloadUrl } from "./handlers";
 export {
   authorizeEbookChapterAccess,
   authorizeEbookDownloadAccess,
@@ -9,6 +9,13 @@ export {
   DEFAULT_GOLDEN_EBOOK_PRODUCT_ID,
 } from "./authorize";
 export { handleGetEbookChapterBody, EbookChapterAccessError } from "./get-chapter-body";
+export {
+  handleGetEbookDownloadUrl,
+  MemorySignedUrlProvider,
+  createGatedGcsSignedUrlProvider,
+  DOWNLOAD_URL_TTL_SECONDS,
+  assertEbookDownloadAsset,
+} from "./download-delivery";
 export {
   LocalPrivateArtifactProvider,
   MemoryEbookContentProvider,

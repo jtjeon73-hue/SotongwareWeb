@@ -272,7 +272,7 @@ const NOW = new Date("2026-09-29T12:00:00.000Z");
   check("firebase.json storage emulator port", fb.emulators?.storage?.port === 9199);
   check(
     "layout documents binary paths",
-    PRIVATE_EBOOK_STORAGE_LAYOUT.pdfObject.includes("files/book.pdf"),
+    PRIVATE_EBOOK_STORAGE_LAYOUT.pdfObject.includes("binaries/book.pdf"),
   );
 }
 

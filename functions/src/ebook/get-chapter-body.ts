@@ -13,6 +13,7 @@ export class EbookChapterAccessError extends Error {
       | "permission-denied"
       | "invalid-argument"
       | "not-found"
+      | "failed-precondition"
       | "internal",
     message: string,
   ) {
