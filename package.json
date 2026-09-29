@@ -45,6 +45,7 @@
     "test:ebook:storage": "node scripts/ebook-storage-phase3.test.mjs",
     "test:ebook:storage:rules": "firebase emulators:exec --only storage --project sotongware \"node scripts/ebook-storage-rules.test.mjs\"",
     "test:ebook:rights": "node scripts/ebook-rights/rights-gate.test.mjs",
+    "test:ebook:commerce-policy": "node scripts/ebook-commerce-policy.test.mjs",
     "ebook:ingest": "node scripts/ebook-ingest/run-ingest.mjs",
     "ebook:storage:dry-run": "node scripts/ebook-private-storage-upload.mjs --dry-run",
     "ebook:rights:scan": "node scripts/ebook-rights/run-scan.mjs"

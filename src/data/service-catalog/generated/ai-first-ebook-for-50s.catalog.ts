@@ -8,7 +8,7 @@ import type { EbookCatalogItem } from "../types";
 export const generatedEbookCatalogItem = {
   "slug": "ai-first-ebook-for-50s",
   "sortOrder": 5,
-  "updatedAt": "2026-09-28",
+  "updatedAt": "2026-09-29",
   "featured": true,
   "title": {
     "ko": "50대 초보자가 AI로 첫 전자책을 만드는 방법",
@@ -30,8 +30,8 @@ export const generatedEbookCatalogItem = {
   },
   "coverTone": "amber",
   "priceNote": {
-    "ko": "유료 · 가격 확정 전",
-    "en": "Paid · price not finalized"
+    "ko": "단품 3,000원 · 회원 웹 열람 · 다운로드는 단품 (준비 중 · 실결제 아님)",
+    "en": "₩3,000 one-time · members: web reader · download needs purchase (preparing · not live)"
   },
   "toc": [
     {

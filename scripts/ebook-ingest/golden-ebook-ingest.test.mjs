@@ -250,8 +250,13 @@ if (existsSync(genTs) && existsSync(genProv)) {
   check("generated accessTier premium", golden?.accessTier === "premium");
   check("generated status preparing", golden?.status === "preparing");
   check(
-    "generated priceNote paid unset",
-    Boolean(golden && /유료/.test(golden.priceNote.ko) && /가격 확정 전/.test(golden.priceNote.ko)),
+    "generated priceNote commerce policy preparing",
+    Boolean(
+      golden &&
+        /3,?000/.test(golden.priceNote.ko) &&
+        /준비/.test(golden.priceNote.ko) &&
+        /실결제|준비 중/.test(golden.priceNote.ko),
+    ),
   );
 
   const freeIds = (golden?.chapters || []).filter((c) => c.accessTier === "free").map((c) => c.id);

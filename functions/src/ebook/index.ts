@@ -1,5 +1,13 @@
 export { getEbookChapterBody } from "./handlers";
-export { authorizeEbookChapterAccess, isAdminFromToken, hasActiveProductEntitlement } from "./authorize";
+export {
+  authorizeEbookChapterAccess,
+  authorizeEbookDownloadAccess,
+  isAdminFromToken,
+  hasActiveProductEntitlement,
+  hasActiveMembershipEntitlement,
+  hasActiveOwnedEbookEntitlement,
+  DEFAULT_GOLDEN_EBOOK_PRODUCT_ID,
+} from "./authorize";
 export { handleGetEbookChapterBody, EbookChapterAccessError } from "./get-chapter-body";
 export {
   LocalPrivateArtifactProvider,

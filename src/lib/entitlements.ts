@@ -1,6 +1,10 @@
 import { doc, getDoc } from "firebase/firestore";
 import { getFirestoreDb } from "@/lib/firebase";
 import { isAdminFromClaims } from "@/lib/membership-grade";
+import {
+  GOLDEN_EBOOK_PRODUCT_ID,
+  MEMBERSHIP_PRODUCT_IDS,
+} from "@/lib/commerce-policy";
 import type { AccessTier } from "@/types/access-tier";
 import type { AccessLevel, Entitlement, MemberContentDocument } from "@/types/membership";
 import type { ProductType } from "@/types/product";
@@ -58,6 +62,68 @@ export function resolveEffectiveAccessTier(input: {
   }
   if (input.isAuthenticated) return "member";
   return "free";
+}
+
+/** UI helper — not authoritative; server Callable remains SSOT for premium body. */
+export type CommerceProductEntitlementLike = {
+  productId: string;
+  status: string;
+  expiresAt?: string | Date | null;
+};
+
+function isRowActive(row: CommerceProductEntitlementLike, now = new Date()): boolean {
+  if (row.status !== "active") return false;
+  if (row.expiresAt == null || row.expiresAt === "") return true;
+  const exp = row.expiresAt instanceof Date ? row.expiresAt : new Date(row.expiresAt);
+  return exp.getTime() > now.getTime();
+}
+
+export function uiHasActiveMembership(
+  rows: CommerceProductEntitlementLike[],
+  now = new Date(),
+): boolean {
+  return rows.some(
+    (r) => (MEMBERSHIP_PRODUCT_IDS as readonly string[]).includes(r.productId) && isRowActive(r, now),
+  );
+}
+
+export function uiHasOwnedEbook(
+  rows: CommerceProductEntitlementLike[],
+  productId: string = GOLDEN_EBOOK_PRODUCT_ID,
+  now = new Date(),
+): boolean {
+  return rows.some((r) => r.productId === productId && isRowActive(r, now));
+}
+
+/** Display-only reader allowance hint (server still gates chapter body). */
+export function uiMayReadFullEbook(input: {
+  claims?: Record<string, unknown> | null;
+  productEntitlements: CommerceProductEntitlementLike[];
+  productId?: string;
+  now?: Date;
+}): boolean {
+  if (isAdminFromClaims(input.claims)) return true;
+  const now = input.now ?? new Date();
+  const productId = input.productId ?? GOLDEN_EBOOK_PRODUCT_ID;
+  return (
+    uiHasOwnedEbook(input.productEntitlements, productId, now) ||
+    uiHasActiveMembership(input.productEntitlements, now)
+  );
+}
+
+/** Display-only download hint — membership alone is false. */
+export function uiMayDownloadEbook(input: {
+  claims?: Record<string, unknown> | null;
+  productEntitlements: CommerceProductEntitlementLike[];
+  productId?: string;
+  now?: Date;
+}): boolean {
+  if (isAdminFromClaims(input.claims)) return true;
+  return uiHasOwnedEbook(
+    input.productEntitlements,
+    input.productId ?? GOLDEN_EBOOK_PRODUCT_ID,
+    input.now ?? new Date(),
+  );
 }
 
 export async function fetchMemberContentBody(

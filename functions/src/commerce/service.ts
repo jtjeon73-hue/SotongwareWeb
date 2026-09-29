@@ -7,6 +7,13 @@ import {
 } from "./adapter";
 import { createTossCustomerKey, assertValidCustomerKey } from "./mode";
 import { CommerceError, maskPaymentKey } from "./errors";
+import {
+  GOLDEN_EBOOK_PRODUCT,
+  GOLDEN_EBOOK_PRODUCT_ID,
+  assertClientAmountAgainstPolicy,
+  assertProductDocMatchesPolicy,
+  getCommercePolicyProduct,
+} from "./product-policy";
 import type {
   CommerceOrderDoc,
   CommerceProductDoc,
@@ -238,12 +245,14 @@ export class MemoryCommerceStore implements CommerceStore {
     let ent = this.entitlements.get(entId);
     let created = false;
     if (!ent) {
+      const accessLevel =
+        order.productSnapshot.pricingType === "subscription" ? "subscribed" : "owned";
       ent = {
         id: entId,
         userId: order.userId,
         productId: order.productSnapshot.productId,
         orderId: order.id,
-        accessLevel: "owned",
+        accessLevel,
         status: "active",
         startsAt: ts,
         expiresAt: null,
@@ -465,13 +474,15 @@ export class FirestoreCommerceStore implements CommerceStore {
         needsReconciliation: false,
       });
       let created = false;
+      const accessLevel =
+        order.productSnapshot.pricingType === "subscription" ? "subscribed" : "owned";
       if (!entSnap.exists) {
         created = true;
         tx.set(entRef, {
           userId: order.userId,
           productId: order.productSnapshot.productId,
           orderId: order.id,
-          accessLevel: "owned",
+          accessLevel,
           status: "active",
           startsAt: nowField(),
           expiresAt: null,
@@ -487,7 +498,7 @@ export class FirestoreCommerceStore implements CommerceStore {
             userId: order.userId,
             productId: order.productSnapshot.productId,
             orderId: order.id,
-            accessLevel: "owned",
+            accessLevel,
             status: "active",
             startsAt: nowField(),
             expiresAt: null,
@@ -652,16 +663,34 @@ export class CommerceCheckoutService {
       return this.publicPrepareResult(existing, { customerKey, pgMode });
     }
 
-    if ((process.env.FUNCTIONS_EMULATOR === "true" || process.env.COMMERCE_PG_MODE === "mock" || !process.env.TOSS_SECRET_KEY) && input.productId === FIXTURE_ONE_TIME_PRODUCT.id) {
-      if (this.store.ensureFixtureProduct) {
+    const emulatorOrMock =
+      process.env.FUNCTIONS_EMULATOR === "true" ||
+      process.env.COMMERCE_PG_MODE === "mock" ||
+      !process.env.TOSS_SECRET_KEY;
+    if (emulatorOrMock && this.store.ensureFixtureProduct) {
+      if (input.productId === FIXTURE_ONE_TIME_PRODUCT.id) {
         await this.store.ensureFixtureProduct(FIXTURE_ONE_TIME_PRODUCT);
       }
+      if (input.productId === GOLDEN_EBOOK_PRODUCT_ID) {
+        await this.store.ensureFixtureProduct(GOLDEN_EBOOK_PRODUCT);
+      }
     }
+
+    const policyAmountCheck = assertClientAmountAgainstPolicy(input.productId, input.clientAmount);
+    if (!policyAmountCheck.ok) {
+      throw new CommerceError(policyAmountCheck.code, policyAmountCheck.message, "invalid-argument");
+    }
+
     const product = await this.store.getProduct(input.productId);
     if (!product) {
       throw new CommerceError("product/missing", "상품을 찾을 수 없습니다.", "not-found");
     }
     assertOneTimeKrwProduct(product);
+
+    const policyDocCheck = assertProductDocMatchesPolicy(product);
+    if (!policyDocCheck.ok) {
+      throw new CommerceError(policyDocCheck.code, policyDocCheck.message, "failed-precondition");
+    }
 
     if (
       typeof input.clientAmount === "number" &&
@@ -669,6 +698,13 @@ export class CommerceCheckoutService {
       input.clientAmount !== product.amount
     ) {
       throw new CommerceError("amount/mismatch", "결제 금액이 일치하지 않습니다.", "invalid-argument");
+    }
+
+    // Reject forged productId that is not the catalog product being purchased
+    // when client also sends an alternate id field (handlers strip extras; defensive).
+    const policy = getCommercePolicyProduct(input.productId);
+    if (policy && product.id !== policy.id) {
+      throw new CommerceError("productId/mismatch", "상품 정보가 일치하지 않습니다.", "invalid-argument");
     }
 
     const orderId = createSafeOrderId();

@@ -24,8 +24,8 @@
   "status": "preparing",
   "coverTone": "amber",
   "priceNote": {
-    "ko": "유료 · 가격 확정 전",
-    "en": "Paid · price not finalized"
+    "ko": "단품 3,000원 · 회원 웹 열람 · 다운로드는 단품 (준비 중 · 실결제 아님)",
+    "en": "₩3,000 one-time · members: web reader · download needs purchase (preparing · not live)"
   },
   "featured": true,
   "sortOrder": 5,
