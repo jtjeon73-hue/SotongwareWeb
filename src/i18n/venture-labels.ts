@@ -32,7 +32,7 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
       eyebrow: "E-books",
       title: "전자책 서재",
       description:
-        "SotongWare 자체 서재에서 표지·요약·공개등급을 탐색하고 Web Reader Preview로 열람합니다. 원본 파일 URL은 노출하지 않습니다.",
+        "표지와 요약을 살펴보고 웹 리더에서 무료 미리보기를 읽습니다. PDF/EPUB 공개 URL은 제공하지 않습니다.",
       emptyTitle: "첫 전자책이 준비되고 있습니다",
       emptyDescription: "기획·집필·편집·검수가 완료되는 순서대로 등록됩니다.",
       ctas: [
@@ -125,7 +125,7 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
       eyebrow: "E-books",
       title: "E-book library",
       description:
-        "Browse covers, summaries, and access tiers in the SotongWare library, then open the web reader preview. Original file URLs are never exposed.",
+        "Browse covers and summaries, then read free previews in the web reader. PDF/EPUB files are not exposed as public URLs.",
       emptyTitle: "Our first e-books are in preparation",
       emptyDescription: "Titles are registered as planning, writing, editing, and review complete.",
       ctas: [

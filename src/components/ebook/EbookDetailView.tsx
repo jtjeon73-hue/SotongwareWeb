@@ -6,8 +6,6 @@ import { LocalizedButton } from "@/components/locale/LocalizedButton";
 import { LocalizedLink } from "@/components/locale/LocalizedLink";
 import { MembershipGate, ComingSoonCta } from "@/components/access/MembershipGate";
 import { EbookCommercePolicyPanel } from "@/components/ebook/EbookCommercePolicyPanel";
-import { PreviewPersonaBar } from "@/components/access/PreviewPersonaBar";
-import { Suspense } from "react";
 import { GOLDEN_EBOOK_PRODUCT_ID } from "@/lib/commerce-policy";
 
 export function EbookDetailView({ book, locale }: { book: EbookCatalogItem; locale: Locale }) {
@@ -45,7 +43,7 @@ export function EbookDetailView({ book, locale }: { book: EbookCatalogItem; loca
 
               <div className="mt-6 flex flex-wrap gap-3">
                 <LocalizedButton href={`/ebooks/${book.slug}/read`} variant="primary" className="min-h-11">
-                  {locale === "en" ? "Open web reader preview" : "Web Reader Preview 열기"}
+                  {locale === "en" ? "Open reader" : "읽기"}
                 </LocalizedButton>
                 <ComingSoonCta
                   locale={locale}
@@ -63,11 +61,6 @@ export function EbookDetailView({ book, locale }: { book: EbookCatalogItem; loca
                 </div>
               ) : null}
 
-              <div className="mt-6">
-                <Suspense fallback={null}>
-                  <PreviewPersonaBar locale={locale} />
-                </Suspense>
-              </div>
             </div>
           </div>
 
@@ -92,13 +85,13 @@ export function EbookDetailView({ book, locale }: { book: EbookCatalogItem; loca
 
           <section className="mt-10" aria-labelledby="ebook-access-heading">
             <h2 id="ebook-access-heading" className="text-lg font-bold text-surface-900">
-              {locale === "en" ? "Access & DRM direction" : "공개범위 · DRM 방향"}
+              {locale === "en" ? "Access notes" : "이용 안내"}
             </h2>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-surface-600">
               <li>
                 {locale === "en"
-                  ? "No public PDF/EPUB URLs in this preview"
-                  : "본 Preview에서 PDF/EPUB public URL 미노출"}
+                  ? "PDF/EPUB files are not offered as public download URLs"
+                  : "PDF/EPUB 공개 다운로드 URL을 제공하지 않습니다"}
               </li>
               <li>
                 {locale === "en"

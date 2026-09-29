@@ -3,18 +3,34 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Locale } from "@/i18n/config";
 import type { PreviewPersona } from "@/types/access-tier";
-import { parsePreviewPersona, previewPersonaLabels } from "@/lib/access-tier";
+import {
+  isPreviewPersonaEnabled,
+  parsePreviewPersona,
+} from "@/lib/access-tier";
+
+export { usePreviewPersona } from "./usePreviewPersona";
+
+const previewPersonaLabels: Record<Locale, Record<PreviewPersona, string>> = {
+  ko: { guest: "비회원 Preview", member: "회원 Preview", premium: "프리미엄 Preview" },
+  en: { guest: "Guest preview", member: "Member preview", premium: "Premium preview" },
+};
 
 const PERSONAS: PreviewPersona[] = ["guest", "member", "premium"];
 
 /**
- * Explicit mock entitlement switcher — must never look like real Auth.
+ * Explicit mock entitlement switcher — local/dev only.
+ * Hidden in production builds; never treated as real Auth.
  */
 export function PreviewPersonaBar({ locale }: { locale: Locale }) {
   const router = useRouter();
   const pathname = usePathname() ?? "/";
   const searchParams = useSearchParams();
-  const persona = parsePreviewPersona(searchParams.get("previewAccess"));
+  const enabled = isPreviewPersonaEnabled();
+  const persona = enabled
+    ? parsePreviewPersona(searchParams.get("previewAccess"))
+    : ("guest" as const);
+
+  if (!enabled) return null;
 
   function setPersona(next: PreviewPersona) {
     const params = new URLSearchParams(searchParams.toString());
@@ -29,6 +45,7 @@ export function PreviewPersonaBar({ locale }: { locale: Locale }) {
       className="rounded-2xl border border-sky-200 bg-sky-50/80 px-4 py-3"
       role="group"
       aria-label={locale === "en" ? "Preview access mode" : "Preview 권한 모드"}
+      data-preview-persona-bar="dev-only"
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-sky-800">
         {locale === "en" ? "Preview access (mock only)" : "Preview 권한 (mock 전용)"}
@@ -60,9 +77,4 @@ export function PreviewPersonaBar({ locale }: { locale: Locale }) {
       </div>
     </div>
   );
-}
-
-export function usePreviewPersona(): PreviewPersona {
-  const searchParams = useSearchParams();
-  return parsePreviewPersona(searchParams.get("previewAccess"));
 }

@@ -17,7 +17,7 @@ import {
 } from "@/types/access-tier";
 import { AccessBadge } from "@/components/access/AccessBadge";
 import { MembershipGate } from "@/components/access/MembershipGate";
-import { PreviewPersonaBar, usePreviewPersona } from "@/components/access/PreviewPersonaBar";
+import { usePreviewPersona } from "@/components/access/usePreviewPersona";
 import { LocalizedLink } from "@/components/locale/LocalizedLink";
 
 function progressKey(slug: string) {
@@ -56,8 +56,8 @@ function PremiumChapterPanel({
           title={locale === "en" ? "Premium chapter" : "프리미엄 챕터"}
           description={
             locale === "en"
-              ? "Sign in with a purchase or admin account. Preview persona cannot unlock server content."
-              : "구매 또는 admin 계정으로 로그인이 필요합니다. Preview persona만으로는 서버 본문을 열 수 없습니다."
+              ? "Sign in with a purchase or admin account to open this chapter."
+              : "이 챕터를 열려면 구매 또는 관리자 계정으로 로그인해 주세요."
           }
         />
       </div>
@@ -270,7 +270,6 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
 
       <div className="container-main grid gap-6 py-6 lg:grid-cols-[240px_minmax(0,1fr)]">
         <aside className="space-y-4">
-          <PreviewPersonaBar locale={locale} />
           <nav aria-label={locale === "en" ? "Chapters" : "목차"} className="rounded-2xl border border-surface-200 bg-white p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-surface-500">
               {locale === "en" ? "Contents" : "목차"}
@@ -299,8 +298,8 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
           </nav>
           <p className="text-[11px] leading-relaxed text-surface-500">
             {locale === "en"
-              ? "Premium chapters load only after server entitlement checks. Preview persona is mock-only."
-              : "프리미엄 장은 서버 entitlement 검증 후에만 로드됩니다. Preview persona는 mock 전용입니다."}
+              ? "Premium chapters open only after server entitlement verification."
+              : "프리미엄 장은 서버 이용권 확인 후에만 열립니다."}
           </p>
         </aside>
 

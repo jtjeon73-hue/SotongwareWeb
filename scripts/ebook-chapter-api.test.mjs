@@ -247,8 +247,44 @@ await expectDeny(
       !api.includes("userTier:"),
   );
   check(
-    "Reader notes preview cannot unlock server content",
-    reader.includes("Preview persona") || reader.includes("Preview persona"),
+    "Reader notes server entitlement gate",
+    reader.includes("server entitlement") || reader.includes("서버 이용권"),
+  );
+  const personaBar = readFileSync(
+    join(repoRoot, "src", "components", "access", "PreviewPersonaBar.tsx"),
+    "utf8",
+  );
+  const personaHook = readFileSync(
+    join(repoRoot, "src", "components", "access", "usePreviewPersona.ts"),
+    "utf8",
+  );
+  const library = readFileSync(
+    join(repoRoot, "src", "components", "ebook", "EbookLibraryView.tsx"),
+    "utf8",
+  );
+  const detail = readFileSync(
+    join(repoRoot, "src", "components", "ebook", "EbookDetailView.tsx"),
+    "utf8",
+  );
+  const readerSrc = readFileSync(
+    join(repoRoot, "src", "components", "ebook", "EbookReaderClient.tsx"),
+    "utf8",
+  );
+  check(
+    "PreviewPersonaBar gated for production",
+    personaBar.includes("isPreviewPersonaEnabled") &&
+      personaBar.includes("if (!enabled) return null"),
+  );
+  check(
+    "ebook screens omit PreviewPersonaBar",
+    !library.includes("PreviewPersonaBar") &&
+      !detail.includes("PreviewPersonaBar") &&
+      !readerSrc.includes("PreviewPersonaBar"),
+  );
+  check(
+    "production persona hook force guest",
+    personaHook.includes('return "guest"') &&
+      personaHook.includes("isPreviewPersonaEnabled"),
   );
 }
 

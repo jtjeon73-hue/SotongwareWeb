@@ -11,12 +11,16 @@ export const opsStatusLabels: Record<Locale, Record<OpsStatus, string>> = {
   en: { live: "Live", preparing: "Preparing", comingSoon: "Coming soon" },
 };
 
-export const previewPersonaLabels: Record<Locale, Record<PreviewPersona, string>> = {
-  ko: { guest: "비회원 Preview", member: "회원 Preview", premium: "프리미엄 Preview" },
-  en: { guest: "Guest preview", member: "Member preview", premium: "Premium preview" },
-};
-
 export function parsePreviewPersona(raw: string | null | undefined): PreviewPersona {
   if (raw === "member" || raw === "premium") return raw;
   return "guest";
+}
+
+/**
+ * Mock previewAccess switcher for local/dev only.
+ * Production Hosting builds (NODE_ENV=production) never enable — URL ?previewAccess= is ignored.
+ */
+export function isPreviewPersonaEnabled(): boolean {
+  if (process.env.NODE_ENV === "production") return false;
+  return process.env.NEXT_PUBLIC_ENABLE_PREVIEW_PERSONA !== "false";
 }

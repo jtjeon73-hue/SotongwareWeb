@@ -4,8 +4,6 @@ import { getEbookCatalog } from "@/data/service-catalog";
 import { AccessBadge, OpsStatusBadge } from "@/components/access/AccessBadge";
 import { LocalizedLink } from "@/components/locale/LocalizedLink";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { PreviewPersonaBar } from "@/components/access/PreviewPersonaBar";
-import { Suspense } from "react";
 
 const COVER: Record<EbookCatalogItem["coverTone"], string> = {
   amber: "from-amber-200 via-orange-100 to-white",
@@ -35,7 +33,7 @@ export function EbookCover({ book, locale }: { book: EbookCatalogItem; locale: L
 }
 
 export function EbookCard({ book, locale }: { book: EbookCatalogItem; locale: Locale }) {
-  const readLabel = locale === "en" ? "Preview / read" : "미리보기 · 읽기";
+  const readLabel = locale === "en" ? "Read" : "읽기";
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-sky-100 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
       <LocalizedLink href={`/ebooks/${book.slug}`} className="block p-4 pb-0">
@@ -74,15 +72,10 @@ export function EbookLibraryView({ locale }: { locale: Locale }) {
             title={locale === "en" ? "E-book library" : "전자책 서재"}
             description={
               locale === "en"
-                ? "Browse covers, summaries, and access tiers—then open the in-site web reader preview. Original PDF/EPUB files are never exposed as public URLs."
-                : "표지·요약·공개등급을 살펴보고 SotongWare 자체 Web Reader Preview로 열람합니다. 원본 PDF/EPUB public URL은 노출하지 않습니다."
+                ? "Browse covers and summaries, then read free previews in the web reader. PDF/EPUB files are not exposed as public URLs."
+                : "표지와 요약을 살펴보고 웹 리더에서 무료 미리보기를 읽습니다. PDF/EPUB 공개 URL은 제공하지 않습니다."
             }
           />
-          <div className="mt-6">
-            <Suspense fallback={null}>
-              <PreviewPersonaBar locale={locale} />
-            </Suspense>
-          </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {books.map((book) => (
               <EbookCard key={book.slug} book={book} locale={locale} />
@@ -90,8 +83,8 @@ export function EbookLibraryView({ locale }: { locale: Locale }) {
           </div>
           <p className="mt-8 text-xs leading-relaxed text-surface-500">
             {locale === "en"
-              ? "Architecture note: future entitlement checks, watermarking, and direct-asset blocking are planned. Screen capture cannot be claimed as 100% preventable on the web."
-              : "구조 안내: 향후 entitlement 확인·워터마크·직접 자산 차단을 전제로 설계합니다. 웹 캡처를 100% 차단할 수 있다고 표현하지 않습니다."}
+              ? "Free preview chapters are open to everyone. Premium chapters require a membership or purchase. We do not claim screen capture can be fully blocked on the web."
+              : "무료 미리보기 챕터는 누구나 열 수 있습니다. 프리미엄 챕터는 회원 또는 구매가 필요합니다. 웹에서 화면 캡처를 완전히 막을 수 있다고 주장하지 않습니다."}
           </p>
         </div>
       </div>

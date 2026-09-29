@@ -19,8 +19,8 @@ export function MembershipGate({
   const d =
     description ??
     (locale === "en"
-      ? "This is a preview lock. Real sign-up and payments are not open yet—use the preview persona or check pricing when ready."
-      : "Preview 잠금 안내입니다. 실제 회원가입·결제는 아직 열리지 않았습니다. Preview 권한을 바꾸거나 요금·결제 준비 현황을 확인하세요.");
+      ? "Sign in with a membership or purchase to unlock this content. Checkout opening is preparing."
+      : "회원 또는 구매 이용권으로 로그인하면 이 콘텐츠를 열 수 있습니다. 결제 오픈은 준비 중입니다.");
 
   return (
     <div
@@ -31,10 +31,10 @@ export function MembershipGate({
       <p className="mt-2 text-sm leading-relaxed text-amber-900/80">{d}</p>
       <div className="mt-4 flex flex-wrap gap-2">
         <LocalizedButton href="/signup" variant="outline" size="sm" className="min-h-10">
-          {locale === "en" ? "Sign up (preparing)" : "회원가입 (준비중)"}
+          {locale === "en" ? "Sign up" : "회원가입"}
         </LocalizedButton>
-        <LocalizedButton href="/preview/commerce/service" variant="primary" size="sm" className="min-h-10">
-          {locale === "en" ? "Pricing preview" : "요금·결제 Preview"}
+        <LocalizedButton href="/login" variant="primary" size="sm" className="min-h-10">
+          {locale === "en" ? "Sign in" : "로그인"}
         </LocalizedButton>
         <LocalizedLink
           href="/guide"
