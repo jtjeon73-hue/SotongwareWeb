@@ -86,6 +86,10 @@ const {
   DOWNLOAD_URL_TTL_SECONDS,
   canonicalEbookBinaryObjectPath,
   PRIVATE_EBOOK_STORAGE_LAYOUT,
+  createGatedGcsSignedUrlProvider,
+  clampDownloadTtlSeconds,
+  assertCanonicalPrivateBinaryPath,
+  PRIVATE_BINARY_OBJECT_PATH_RE,
 } = ebook;
 const { CommerceCheckoutService, MemoryCommerceStore } = commerce;
 
@@ -572,6 +576,155 @@ const NOW = new Date("2026-09-29T12:00:00.000Z");
     pathOk = false;
   }
   check("binary path ok", pathOk);
+
+  // --- production signed URL provider (fake GCS File, no real mint) ---
+  check("TTL clamp 300", clampDownloadTtlSeconds(999) === 300);
+  check("TTL clamp default", clampDownloadTtlSeconds(-1) === DOWNLOAD_URL_TTL_SECONDS);
+  check(
+    "canonical path regex pdf",
+    PRIVATE_BINARY_OBJECT_PATH_RE.test(
+      `private/ebooks/${PRODUCT}/r2/binaries/book.pdf`,
+    ),
+  );
+  check(
+    "canonical path regex reject traversal",
+    !PRIVATE_BINARY_OBJECT_PATH_RE.test(
+      "private/ebooks/../evil/r2/binaries/book.pdf",
+    ),
+  );
+  let travDeny = false;
+  try {
+    assertCanonicalPrivateBinaryPath("private/ebooks/x/r2/binaries/../book.pdf");
+  } catch {
+    travDeny = true;
+  }
+  check("assertCanonical traversal DENY", travDeny);
+
+  const canonPdf = canonicalEbookBinaryObjectPath(PRODUCT, 2, "book.pdf");
+  const canonEpub = canonicalEbookBinaryObjectPath(PRODUCT, 2, "book.epub");
+  check(
+    "canonical objects",
+    canonPdf === `private/ebooks/${PRODUCT}/r2/binaries/book.pdf` &&
+      canonEpub === `private/ebooks/${PRODUCT}/r2/binaries/book.epub`,
+  );
+
+  const disabled = createGatedGcsSignedUrlProvider({
+    allow: false,
+    getFile: () => {
+      throw new Error("should not call getFile when disabled");
+    },
+  });
+  let gateDeny = false;
+  try {
+    await disabled.mint({
+      storagePath: canonPdf,
+      contentType: "application/pdf",
+      ttlSeconds: 300,
+      now: NOW,
+    });
+  } catch (e) {
+    gateDeny =
+      e?.name === "EbookChapterAccessError" &&
+      /disabled|Signed URL/i.test(String(e?.message || ""));
+  }
+  check("signed URL gate DENY when allow=false", gateDeny);
+
+  let mintedPath = null;
+  let mintedCfg = null;
+  const fakeGcs = createGatedGcsSignedUrlProvider({
+    allow: true,
+    getFile: (storagePath) => {
+      mintedPath = storagePath;
+      return {
+        getSignedUrl: async (cfg) => {
+          mintedCfg = cfg;
+          const exp = Math.floor(cfg.expires / 1000);
+          return [
+            `https://storage.googleapis.com/fake-bucket/${storagePath}?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Expires=300&X-Goog-Signature=abc&Expires=${exp}`,
+          ];
+        },
+      };
+    },
+  });
+  const gcsMint = await fakeGcs.mint({
+    storagePath: canonPdf,
+    contentType: "application/pdf",
+    ttlSeconds: 999,
+    now: NOW,
+  });
+  check("GCS provider uses canonical path only", mintedPath === canonPdf);
+  check(
+    "GCS TTL clamped <=300",
+    mintedCfg?.action === "read" &&
+      mintedCfg.expires === NOW.getTime() + 300 * 1000 &&
+      gcsMint.expiresAt.getTime() === NOW.getTime() + 300 * 1000,
+  );
+  check(
+    "GCS URL is V4 signed style (no permanent token)",
+    /X-Goog-Signature=/.test(gcsMint.downloadUrl) &&
+      !/[?&]token=/.test(gcsMint.downloadUrl),
+  );
+
+  const tokenReject = createGatedGcsSignedUrlProvider({
+    allow: true,
+    getFile: () => ({
+      getSignedUrl: async () => [
+        "https://firebasestorage.googleapis.com/v0/b/x/o/y?alt=media&token=permanent-uuid",
+      ],
+    }),
+  });
+  let permDeny = false;
+  try {
+    await tokenReject.mint({
+      storagePath: canonPdf,
+      contentType: "application/pdf",
+      ttlSeconds: 300,
+      now: NOW,
+    });
+  } catch (e) {
+    permDeny = e?.name === "EbookChapterAccessError";
+  }
+  check("permanent Firebase download token REJECT", permDeny);
+
+  const ownedIgnorePath = await dl(
+    user,
+    [{ productId: PRODUCT, status: "active", expiresAt: null }],
+    {
+      productId: PRODUCT,
+      assetType: "pdf",
+      storagePath: "private/ebooks/evil/r2/binaries/book.pdf",
+    },
+  );
+  check(
+    "client storagePath ignored",
+    ownedIgnorePath.delivery === "signed_url" &&
+      !JSON.stringify(ownedIgnorePath).includes("evil"),
+  );
+
+  const handlersSrc = readFileSync(
+    join(repoRoot, "functions", "src", "ebook", "handlers.ts"),
+    "utf8",
+  );
+  check(
+    "handlers use createProductionFirebaseSignedUrlProvider",
+    handlersSrc.includes("createProductionFirebaseSignedUrlProvider") &&
+      !handlersSrc.includes("Production signed URL provider is not enabled"),
+  );
+  const deliverySrc = readFileSync(
+    join(repoRoot, "functions", "src", "ebook", "download-delivery.ts"),
+    "utf8",
+  );
+  check(
+    "Admin SDK getStorage wired",
+    deliverySrc.includes('from "firebase-admin/storage"') &&
+      deliverySrc.includes("createAdminSdkStorageFileAccessor") &&
+      deliverySrc.includes("getSignedUrl"),
+  );
+  check(
+    "no makePublic / no firebaseStorageDownloadTokens",
+    !/\bmakePublic\s*\(/.test(deliverySrc) &&
+      !/firebaseStorageDownloadTokens\s*[:=]/.test(deliverySrc),
+  );
 }
 
 // ============================================================

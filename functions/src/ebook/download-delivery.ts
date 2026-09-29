@@ -3,6 +3,7 @@
  * Never returns permanent Storage URLs or private object paths to clients.
  */
 import { createHash, randomBytes } from "crypto";
+import { getStorage } from "firebase-admin/storage";
 import { authorizeEbookDownloadAccess } from "./authorize";
 import {
   canonicalEbookBinaryObjectPath,
@@ -15,6 +16,10 @@ import { EbookChapterAccessError } from "./get-chapter-body";
 export const DOWNLOAD_URL_TTL_SECONDS = 300;
 export const DEFAULT_EBOOK_REVISION = 2;
 export type EbookDownloadAsset = "pdf" | "epub";
+
+/** Server-only: must match canonicalEbookBinaryObjectPath layout. */
+export const PRIVATE_BINARY_OBJECT_PATH_RE =
+  /^private\/ebooks\/[a-z0-9][a-z0-9-]{0,120}\/r[1-9][0-9]{0,3}\/binaries\/book\.(pdf|epub)$/;
 
 export type SignedDownloadDelivery = {
   productId: string;
@@ -36,6 +41,31 @@ export type SignedUrlProvider = {
   }): Promise<{ downloadUrl: string; expiresAt: Date }>;
 };
 
+export type GcsSignedFile = {
+  getSignedUrl: (cfg: {
+    action: "read";
+    expires: number;
+    responseDisposition?: string;
+    contentType?: string;
+  }) => Promise<[string]>;
+};
+
+export function clampDownloadTtlSeconds(ttlSeconds: number): number {
+  if (!Number.isFinite(ttlSeconds) || ttlSeconds <= 0) return DOWNLOAD_URL_TTL_SECONDS;
+  return Math.min(Math.floor(ttlSeconds), DOWNLOAD_URL_TTL_SECONDS);
+}
+
+export function assertCanonicalPrivateBinaryPath(storagePath: string): string {
+  const p = (storagePath || "").trim();
+  if (!p || p.includes("..") || p.includes("\\") || p.includes("\0")) {
+    throw new EbookChapterAccessError("invalid-argument", "경로가 올바르지 않습니다.");
+  }
+  if (!PRIVATE_BINARY_OBJECT_PATH_RE.test(p)) {
+    throw new EbookChapterAccessError("invalid-argument", "경로가 올바르지 않습니다.");
+  }
+  return p;
+}
+
 /** Emulator/local fake — opaque token URLs, not real GCS. */
 export class MemorySignedUrlProvider implements SignedUrlProvider {
   readonly tokens = new Map<
@@ -49,10 +79,12 @@ export class MemorySignedUrlProvider implements SignedUrlProvider {
     ttlSeconds: number;
     now: Date;
   }) {
+    const storagePath = assertCanonicalPrivateBinaryPath(input.storagePath);
+    const ttlSeconds = clampDownloadTtlSeconds(input.ttlSeconds);
     const token = randomBytes(24).toString("hex");
-    const expiresAt = new Date(input.now.getTime() + input.ttlSeconds * 1000);
+    const expiresAt = new Date(input.now.getTime() + ttlSeconds * 1000);
     this.tokens.set(token, {
-      storagePath: input.storagePath,
+      storagePath,
       expiresAt,
       contentType: input.contentType,
     });
@@ -73,36 +105,69 @@ export class MemorySignedUrlProvider implements SignedUrlProvider {
 }
 
 /**
- * Production GCS signed URL mint — gated.
- * This phase never enables ALLOW_FIREBASE_STORAGE_SIGNED_URL.
+ * Production GCS V4 signed URL mint — gated by allow flag.
+ * Uses Admin SDK File#getSignedUrl (temporary signed URL, not Firebase download tokens).
+ * Does not call makePublic / does not set firebaseStorageDownloadTokens.
  */
 export function createGatedGcsSignedUrlProvider(input: {
   allow: boolean;
-  getFile: (storagePath: string) => {
-    getSignedUrl: (cfg: {
-      action: "read";
-      expires: number;
-      responseDisposition?: string;
-    }) => Promise<[string]>;
-  };
+  getFile: (storagePath: string) => GcsSignedFile;
 }): SignedUrlProvider {
   return {
-    async mint({ storagePath, ttlSeconds, now }) {
+    async mint({ storagePath, contentType, ttlSeconds, now }) {
       if (!input.allow) {
         throw new EbookChapterAccessError(
           "failed-precondition",
           "Signed URL minting is disabled.",
         );
       }
-      const expires = now.getTime() + ttlSeconds * 1000;
-      const [downloadUrl] = await input.getFile(storagePath).getSignedUrl({
+      const safePath = assertCanonicalPrivateBinaryPath(storagePath);
+      const ttl = clampDownloadTtlSeconds(ttlSeconds);
+      const expires = now.getTime() + ttl * 1000;
+      const [downloadUrl] = await input.getFile(safePath).getSignedUrl({
         action: "read",
         expires,
         responseDisposition: "attachment",
+        contentType,
       });
+      if (!downloadUrl || typeof downloadUrl !== "string") {
+        throw new EbookChapterAccessError("internal", "다운로드 URL을 발급할 수 없습니다.");
+      }
+      // Reject accidental permanent token-style Firebase media URLs if ever returned.
+      if (
+        /[?&]token=/.test(downloadUrl) &&
+        !/[?&]X-Goog-Signature=/.test(downloadUrl) &&
+        !/[?&]Signature=/.test(downloadUrl)
+      ) {
+        throw new EbookChapterAccessError("internal", "다운로드 URL을 발급할 수 없습니다.");
+      }
       return { downloadUrl, expiresAt: new Date(expires) };
     },
   };
+}
+
+/**
+ * Wire Admin SDK Storage file accessor for production signed URL mint.
+ * Bucket comes from env/default; object path is always caller-supplied canonical path.
+ */
+export function createAdminSdkStorageFileAccessor(
+  bucketName?: string,
+): (storagePath: string) => GcsSignedFile {
+  return (storagePath: string) => {
+    const safePath = assertCanonicalPrivateBinaryPath(storagePath);
+    const bucket = bucketName ? getStorage().bucket(bucketName) : getStorage().bucket();
+    return bucket.file(safePath);
+  };
+}
+
+export function createProductionFirebaseSignedUrlProvider(input: {
+  allow: boolean;
+  bucketName?: string;
+}): SignedUrlProvider {
+  return createGatedGcsSignedUrlProvider({
+    allow: input.allow,
+    getFile: createAdminSdkStorageFileAccessor(input.bucketName),
+  });
 }
 
 export function assertEbookDownloadAsset(raw: unknown): EbookDownloadAsset {
@@ -168,7 +233,10 @@ export async function handleGetEbookDownloadUrl(input: {
     now,
   });
   if (!authz.ok) {
-    const map: Record<string, { code: "unauthenticated" | "permission-denied" | "failed-precondition"; msg: string }> = {
+    const map: Record<
+      string,
+      { code: "unauthenticated" | "permission-denied" | "failed-precondition"; msg: string }
+    > = {
       unauthenticated: { code: "unauthenticated", msg: "로그인이 필요합니다." },
       download_requires_owned: {
         code: "permission-denied",
@@ -194,8 +262,10 @@ export async function handleGetEbookDownloadUrl(input: {
     }
     throw e;
   }
+  // Defense in depth — only binaries under private/ebooks/.../binaries/
+  assertCanonicalPrivateBinaryPath(storagePath);
 
-  const ttlSeconds = input.ttlSeconds ?? DOWNLOAD_URL_TTL_SECONDS;
+  const ttlSeconds = clampDownloadTtlSeconds(input.ttlSeconds ?? DOWNLOAD_URL_TTL_SECONDS);
   const minted = await input.signedUrls.mint({
     storagePath,
     contentType: contentTypeFor(asset),
@@ -204,7 +274,7 @@ export async function handleGetEbookDownloadUrl(input: {
   });
 
   // Leakage guard: response must not include storagePath.
-  return {
+  const response: SignedDownloadDelivery = {
     productId,
     assetType: asset,
     contentType: contentTypeFor(asset),
@@ -213,4 +283,9 @@ export async function handleGetEbookDownloadUrl(input: {
     delivery: "signed_url",
     ttlSeconds,
   };
+  const serialized = JSON.stringify(response);
+  if (serialized.includes("private/ebooks") || serialized.includes("storagePath")) {
+    throw new EbookChapterAccessError("internal", "다운로드 URL을 발급할 수 없습니다.");
+  }
+  return response;
 }

@@ -13,7 +13,12 @@ export {
   handleGetEbookDownloadUrl,
   MemorySignedUrlProvider,
   createGatedGcsSignedUrlProvider,
+  createProductionFirebaseSignedUrlProvider,
+  createAdminSdkStorageFileAccessor,
+  clampDownloadTtlSeconds,
+  assertCanonicalPrivateBinaryPath,
   DOWNLOAD_URL_TTL_SECONDS,
+  PRIVATE_BINARY_OBJECT_PATH_RE,
   assertEbookDownloadAsset,
 } from "./download-delivery";
 export {

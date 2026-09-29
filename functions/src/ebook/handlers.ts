@@ -8,7 +8,7 @@ import { isFunctionsEmulatorRuntime } from "../commerce/emulator-runtime";
 import {
   handleGetEbookDownloadUrl,
   MemorySignedUrlProvider,
-  createGatedGcsSignedUrlProvider,
+  createProductionFirebaseSignedUrlProvider,
 } from "./download-delivery";
 
 const runningInEmulator = isFunctionsEmulatorRuntime();
@@ -34,14 +34,16 @@ function createSignedUrlProvider() {
   if (runningInEmulator || process.env.EBOOK_DOWNLOAD_FAKE_SIGNED_URL === "true") {
     return new MemorySignedUrlProvider();
   }
-  return createGatedGcsSignedUrlProvider({
+  // Production: Admin SDK / GCS V4 signed URL (gated by ALLOW_FIREBASE_STORAGE_SIGNED_URL).
+  // Prefer EBOOK_STORAGE_BUCKET (same as chapter provider); else default app bucket.
+  const bucketName =
+    process.env.EBOOK_STORAGE_BUCKET ||
+    process.env.FIREBASE_STORAGE_BUCKET ||
+    process.env.GCLOUD_STORAGE_BUCKET ||
+    undefined;
+  return createProductionFirebaseSignedUrlProvider({
     allow: allowSignedUrl,
-    getFile: () => {
-      throw new EbookChapterAccessError(
-        "failed-precondition",
-        "Production signed URL provider is not enabled.",
-      );
-    },
+    bucketName,
   });
 }
 
