@@ -187,6 +187,13 @@ export type ContentRendererId =
   | "game"
   | "preparing";
 
+/** Ordered comic page — public path only; text overlays stay out of the bitmap when possible */
+export interface ContentComicPanel {
+  order: number;
+  src: string;
+  alt: LocalizedText;
+}
+
 export interface ContentCatalogItem extends AdminMeta {
   slug: string;
   title: LocalizedText;
@@ -201,4 +208,9 @@ export interface ContentCatalogItem extends AdminMeta {
   publication: ContentPublicationMeta;
   related?: ContentRelatedMeta;
   game?: ContentGameMeta;
+  /** Optional series bucket for multi-IP catalogs (e.g. sotong-cat) */
+  seriesId?: string;
+  episode?: number;
+  /** Comic reader panels — public web paths under /contents/... */
+  comicPanels?: ContentComicPanel[];
 }

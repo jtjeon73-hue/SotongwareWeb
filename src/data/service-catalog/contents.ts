@@ -9,6 +9,13 @@ import {
   formatIdToUiCategory as formatIdToUiCategoryJs,
   isCustomerLiveContent,
 } from "@/lib/content-publication-gate.mjs";
+import {
+  SOTONG_CAT_EP01_SLUG,
+  SOTONG_CAT_SERIES_ID,
+  sotongCatEp01PanelPublicPath,
+  sotongCatEp01PosterPublicPath,
+  sotongCatEp01ThumbnailPublicPath,
+} from "@/data/content-assets/sotong-cat-ep01";
 
 export const contentFormatLabels: Record<ContentFormatId, LocalizedText> = {
   shorts: { ko: "쇼츠", en: "Shorts" },
@@ -91,9 +98,28 @@ function emptyMedia(kind: ContentMediaKind, altKo: string, altEn: string) {
   };
 }
 
+/** Declared public paths for Ep.1 — files must exist before media.source becomes public_asset / live. */
+function sotongCatEp01Panels() {
+  const alts: LocalizedText[] = [
+    { ko: "침대에서 평온하게 자는 소통냥", en: "Sotong Cat sleeping peacefully in bed" },
+    { ko: "알람에 놀란 소통냥", en: "Sotong Cat startled by the alarm" },
+    { ko: "알람을 끄는 소통냥", en: "Sotong Cat tapping the alarm off" },
+    { ko: "다시 눕는 소통냥", en: "Sotong Cat lying back down" },
+    { ko: "다시 울린 알람에 놀라는 소통냥", en: "Sotong Cat startled when the alarm returns" },
+    { ko: "폰을 베개 밑에 넣는 소통냥", en: "Sotong Cat sliding the phone under the pillow" },
+    { ko: "베개 속 진동에 놀라는 소통냥", en: "Sotong Cat surprised by pillow vibrations" },
+    { ko: "아침 햇살 속 일어서는 소통냥", en: "Sotong Cat getting up in morning light" },
+  ];
+  return alts.map((alt, i) => ({
+    order: i + 1,
+    src: sotongCatEp01PanelPublicPath(i + 1),
+    alt,
+  }));
+}
+
 /**
- * Media library catalog — Phase 1: schema + honest preparing demos only.
- * No fake view/subscriber/revenue counts. No private Storage URLs.
+ * Media library catalog — honest preparing demos + Ep.1 comic contract.
+ * No fake view counts. No private Storage URLs. No invented bitmaps.
  */
 export const contentCatalog: ContentCatalogItem[] = [
   {
@@ -116,23 +142,47 @@ export const contentCatalog: ContentCatalogItem[] = [
     publication: { ...preparingPublication },
   },
   {
-    slug: "sotong-cat-episode-1",
-    sortOrder: 20,
+    slug: SOTONG_CAT_EP01_SLUG,
+    sortOrder: 15,
     updatedAt: "2026-09-30",
-    title: { ko: "소통냥 에피소드 1", en: "Sotong Cat episode 1" },
+    featured: true,
+    title: { ko: "알람과의 전쟁", en: "War with the Alarm" },
     summary: {
-      ko: "만화 컷 구성 Preview — 실제 컷·연재 연결 전 준비 중입니다.",
-      en: "Comic-panel preview — preparing before real panels publish.",
+      ko: "알람을 끄면 끝일 줄 알았다. 소통냥의 짧고 웃픈 아침 이야기.",
+      en: "Sotong Cat thought silencing the alarm would be enough. A short, funny morning story.",
     },
     formatId: "comic",
-    theme: { ko: "캐릭터", en: "Characters" },
+    theme: { ko: "소통냥 일상", en: "Sotong Cat daily" },
     accessTier: "free",
-    status: "preparing",
-    channel: { ko: "콘텐츠 허브 (준비 중)", en: "Content hub (preparing)" },
+    status: "live",
+    channel: { ko: "소통냥", en: "Sotong Cat" },
     coverTone: "amber",
-    media: emptyMedia("comic", "소통냥 에피소드 1 커버 자리", "Sotong Cat episode 1 cover placeholder"),
-    publication: { ...preparingPublication },
-    related: { knowledgeSlugs: [], ebookSlugs: [] },
+    seriesId: SOTONG_CAT_SERIES_ID,
+    episode: 1,
+    /**
+     * Public WebP under public/contents/sotong-cat/ep01/.
+     * User publication approval 2026-09-30. Own SotongWare character/story; AI-assisted art.
+     */
+    media: {
+      kind: "comic",
+      source: "public_asset",
+      publicSrc: sotongCatEp01PosterPublicPath(),
+      poster: sotongCatEp01ThumbnailPublicPath(),
+      aspectRatio: "4:5",
+      alt: {
+        ko: "소통냥 일상 Ep.1 알람과의 전쟁 표지",
+        en: "Sotong Cat daily Ep.1 War with the Alarm cover",
+      },
+    },
+    comicPanels: sotongCatEp01Panels(),
+    publication: {
+      rightsStatus: "cleared",
+      aiProvenance: "aiAssisted",
+      reviewed: true,
+      approvedForPublic: true,
+      publishedAt: "2026-09-30",
+    },
+    related: { knowledgeSlugs: [], ebookSlugs: [], appSlugs: [] },
   },
   {
     slug: "comic-motion-teaser",

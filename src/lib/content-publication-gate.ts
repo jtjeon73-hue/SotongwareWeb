@@ -1,11 +1,13 @@
 import type {
   ContentCatalogItem,
+  ContentComicPanel,
   ContentMediaMeta,
   ContentRendererId,
 } from "@/data/service-catalog/types";
 import {
   assertCatalogLiveGates as assertCatalogLiveGatesJs,
   contentMediaExists as contentMediaExistsJs,
+  getOrderedComicPanels as getOrderedComicPanelsJs,
   isCustomerLiveContent as isCustomerLiveContentJs,
   resolveContentRenderer as resolveContentRendererJs,
   validateContentLiveGate as validateContentLiveGateJs,
@@ -34,4 +36,8 @@ export function assertCatalogLiveGates(items: ContentCatalogItem[]): ContentLive
 
 export function resolveContentRenderer(item: ContentCatalogItem): ContentRendererId {
   return resolveContentRendererJs(item) as ContentRendererId;
+}
+
+export function getOrderedComicPanels(item: ContentCatalogItem): ContentComicPanel[] {
+  return getOrderedComicPanelsJs(item) as ContentComicPanel[];
 }

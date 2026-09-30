@@ -18,6 +18,7 @@
     "test:i18n:rendered": "node scripts/i18n-rendered.test.mjs",
     "test:header:layout": "node scripts/header-layout.test.mjs",
     "test:content:phase1": "node scripts/content-phase1.test.mjs",
+    "test:content:phase2b2": "node scripts/content-phase2b2-sotong-cat.test.mjs",
     "test:publication:gate": "node scripts/publication-gate.test.mjs",
     "test:preview:commerce": "node scripts/preview-commerce-smoke.test.mjs",
     "test:preview:locale": "node scripts/preview-locale-matrix.test.mjs",

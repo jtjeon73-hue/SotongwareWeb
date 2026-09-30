@@ -77,11 +77,10 @@ run("comicVideo + video map to UI video", () => {
 });
 
 run("placeholder items are not customer-live", () => {
-  assert.doesNotMatch(catalogSrc, /status: "live"/);
-  assert.match(catalogSrc, /status: "preparing"/);
-  assert.match(catalogSrc, /approvedForPublic: false/);
-  assert.match(librarySrc, /data-content-empty-live/);
-  assert.match(librarySrc, /Preparing · Preview|준비 중 · Preview/);
+  // Only sotong-cat Ep.1 may be live among content catalog after Phase 2B-5.
+  const liveMatches = [...catalogSrc.matchAll(/status: "live"/g)];
+  assert.equal(liveMatches.length, 1, "exactly one live content item expected");
+  assert.match(catalogSrc, /SOTONG_CAT_EP01_SLUG[\s\S]*?status: "live"/);
 });
 
 run("live validation: media missing → FAIL", () => {
@@ -288,10 +287,37 @@ run("media/publication fields on ContentCatalogItem", () => {
   assert.match(gateSrc, /approvedForPublic/);
 });
 
-await runAsync("catalog live gates all pass (no false live)", async () => {
-  // Parse status fields from source — none should be live
+await runAsync("catalog live gates all pass (Ep.1 live valid; no false live)", async () => {
   const liveCount = [...catalogSrc.matchAll(/status: "live"/g)].length;
-  assert.equal(liveCount, 0);
+  assert.equal(liveCount, 1);
+  const panelsOk = validateContentLiveGate({
+    slug: "sotong-cat-alarm-war-ep1",
+    status: "live",
+    formatId: "comic",
+    accessTier: "free",
+    title: { ko: "알람과의 전쟁", en: "War with the Alarm" },
+    summary: { ko: "요약", en: "Summary" },
+    media: {
+      kind: "comic",
+      source: "public_asset",
+      publicSrc: "/contents/sotong-cat/ep01/poster.webp",
+      poster: "/contents/sotong-cat/ep01/thumbnail.webp",
+      alt: { ko: "a", en: "a" },
+    },
+    comicPanels: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({
+      order: n,
+      src: `/contents/sotong-cat/ep01/panel-${String(n).padStart(2, "0")}.webp`,
+      alt: { ko: "a", en: "a" },
+    })),
+    publication: {
+      rightsStatus: "cleared",
+      aiProvenance: "aiAssisted",
+      reviewed: true,
+      approvedForPublic: true,
+      publishedAt: "2026-09-30",
+    },
+  });
+  assert.equal(panelsOk.ok, true, panelsOk.errors.join("; "));
   const batch = assertCatalogLiveGates([
     {
       slug: "factory-morning-short",

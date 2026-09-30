@@ -48,6 +48,8 @@ function ContentCard({
 }) {
   const canOpen = tierMeetsRequirement(tier, item.accessTier);
   const live = isCustomerLiveContent(item);
+  const showPoster =
+    Boolean(item.media.poster) && (live || item.media.source === "public_asset");
 
   return (
     <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-rose-100 bg-white shadow-sm">
@@ -55,8 +57,8 @@ function ContentCard({
         className={`relative aspect-video min-w-0 bg-gradient-to-br ${TONE[item.coverTone]}`}
         data-content-visual="cover"
       >
-        {item.media.poster ? (
-          // eslint-disable-next-line @next/next/no-img-element -- Phase 1 public poster path when present
+        {showPoster ? (
+          // eslint-disable-next-line @next/next/no-img-element -- public poster for live or preparing preview
           <img
             src={item.media.poster}
             alt={item.media.alt[locale]}

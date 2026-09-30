@@ -30,6 +30,8 @@ check("library description line-clamp-2 on mobile", lib.includes("line-clamp-2")
 check("library keeps getEbookCatalog", lib.includes("getEbookCatalog"));
 check("mobile compact card present", lib.includes('data-ebook-card="mobile-compact"') && lib.includes("sm:hidden"));
 check("desktop vertical card retained", lib.includes('data-ebook-card="desktop-vertical"') && lib.includes("sm:flex"));
+check("desktop compact density marker", lib.includes('data-ebook-desktop-density="compact-lg"'));
+check("desktop grid denser on xl", lib.includes("xl:grid-cols-4"));
 check("mobile cover width ~80px (w-20)", lib.includes("w-20 shrink-0"));
 check("mobile card shows priceNote", /mobile-compact[\s\S]*?priceNote/.test(lib));
 {

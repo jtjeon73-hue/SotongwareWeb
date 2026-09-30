@@ -52,6 +52,22 @@ export function validateContentLiveGate(item) {
     errors.push("live media of this kind requires poster/thumbnail");
   }
 
+  if (item.media?.kind === "comic" || item.formatId === "comic") {
+    const panels = item.comicPanels ?? [];
+    if (panels.length < 1) {
+      errors.push("live comic requires comicPanels");
+    } else {
+      const orders = panels.map((p) => p.order);
+      const sorted = [...orders].sort((a, b) => a - b);
+      if (orders.join(",") !== sorted.join(",")) {
+        errors.push("comicPanels must be listed in ascending order");
+      }
+      for (const p of panels) {
+        if (!p?.src?.trim()) errors.push(`comic panel ${p?.order} missing src`);
+      }
+    }
+  }
+
   const badUrl = /storage\.googleapis\.com|firebasestorage\.googleapis|X-Goog-Signature|token=/i;
   if (item.media?.publicSrc && badUrl.test(item.media.publicSrc)) {
     errors.push("public catalog must not embed private/signed Storage URLs");
@@ -82,7 +98,17 @@ export function resolveContentRenderer(item) {
   if (!isCustomerLiveContent(item) || !contentMediaExists(item.media)) {
     return "preparing";
   }
+  if (item.media.kind === "comic") {
+    const panels = item.comicPanels ?? [];
+    if (panels.length < 1) return "preparing";
+  }
   return item.media.kind;
+}
+
+/** Sorted comic panels for reader — empty when not renderable as live comic. */
+export function getOrderedComicPanels(item) {
+  if (!item?.comicPanels?.length) return [];
+  return [...item.comicPanels].sort((a, b) => a.order - b.order);
 }
 
 export function formatIdToUiCategory(formatId) {

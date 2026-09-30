@@ -87,26 +87,34 @@ export function EbookCard({ book, locale }: { book: EbookCatalogItem; locale: Lo
         </div>
       </div>
 
-      {/* sm+ vertical card (existing desktop/tablet look) */}
-      <div className="hidden h-full flex-col sm:flex" data-ebook-card="desktop-vertical">
-        <LocalizedLink href={detailHref} className="block p-4 pb-0">
+      {/* sm+ vertical card — tighter on lg+ for compact PC browsing; mobile block unchanged */}
+      <div
+        className="hidden h-full flex-col sm:flex"
+        data-ebook-card="desktop-vertical"
+        data-ebook-desktop-density="compact-lg"
+      >
+        <LocalizedLink href={detailHref} className="mx-auto block w-full max-w-[14rem] p-3 pb-0 lg:max-w-[11.5rem] lg:p-2.5 lg:pb-0">
           <EbookCover book={book} locale={locale} />
         </LocalizedLink>
-        <div className="flex flex-1 flex-col p-4">
+        <div className="flex flex-1 flex-col p-3 lg:p-2.5">
           <div className="flex flex-wrap gap-1.5">
             <AccessBadge tier={book.accessTier} locale={locale} />
             <OpsStatusBadge status={book.status} locale={locale} />
           </div>
-          <h3 className="mt-3 text-base font-bold text-surface-900">
+          <h3 className="mt-2 text-sm font-bold leading-snug text-surface-900 lg:mt-1.5 lg:text-[0.9375rem]">
             <LocalizedLink href={detailHref} className="hover:text-brand-700">
               {book.title[locale]}
             </LocalizedLink>
           </h3>
-          <p className="mt-2 flex-1 text-sm leading-relaxed text-surface-600">{book.summary[locale]}</p>
-          <p className="mt-2 text-xs font-medium text-brand-800">{book.priceNote[locale]}</p>
+          <p className="mt-1.5 line-clamp-3 flex-1 text-xs leading-relaxed text-surface-600 lg:mt-1 lg:line-clamp-2">
+            {book.summary[locale]}
+          </p>
+          <p className="mt-1.5 text-[11px] font-medium leading-snug text-brand-800 lg:mt-1">
+            {book.priceNote[locale]}
+          </p>
           <LocalizedLink
             href={readHref}
-            className="mt-4 inline-flex min-h-11 items-center justify-center rounded-lg bg-brand-600 px-4 text-sm font-semibold text-white hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="mt-3 inline-flex min-h-10 items-center justify-center rounded-lg bg-brand-600 px-3 text-sm font-semibold text-white hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 lg:mt-2.5"
           >
             {readLabel}
           </LocalizedLink>
@@ -136,7 +144,7 @@ export function EbookLibraryView({ locale }: { locale: Locale }) {
                 : "표지와 요약을 살펴보고 웹 리더에서 무료 미리보기를 읽습니다. PDF/EPUB 공개 URL은 제공하지 않습니다."}
             </p>
           </header>
-          <div className="mt-4 grid gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+          <div className="mt-4 grid gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 lg:mt-8 lg:grid-cols-3 lg:gap-3 xl:grid-cols-4">
             {books.map((book) => (
               <EbookCard key={book.slug} book={book} locale={locale} />
             ))}
