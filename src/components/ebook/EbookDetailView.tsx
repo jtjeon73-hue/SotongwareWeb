@@ -11,38 +11,50 @@ import { GOLDEN_EBOOK_PRODUCT_ID } from "@/lib/commerce-policy";
 export function EbookDetailView({ book, locale }: { book: EbookCatalogItem; locale: Locale }) {
   return (
     <div className="bg-[linear-gradient(180deg,#f8fbff_0%,#ffffff_40%)]">
-      <div className="section-padding">
+      {/* Local padding: tighter on mobile only — do not change global .section-padding */}
+      <div className="py-6 sm:py-16 lg:py-20">
         <div className="container-main">
           <LocalizedLink
             href="/ebooks"
-            className="inline-flex min-h-11 items-center text-sm font-medium text-brand-700 hover:text-brand-800"
+            className="inline-flex min-h-10 items-center text-sm font-medium text-brand-700 hover:text-brand-800 sm:min-h-11"
           >
             ← {locale === "en" ? "Back to library" : "서재로 돌아가기"}
           </LocalizedLink>
 
-          <div className="mt-6 grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start">
-            <div className="mx-auto w-48 sm:w-56 lg:w-full">
-              <EbookCover book={book} locale={locale} />
+          {/* Mobile: compact 2-col; sm: stacked cover; lg: desktop side cover */}
+          <div
+            className="mt-4 grid grid-cols-[104px_minmax(0,1fr)] items-start gap-3 sm:mt-6 sm:grid-cols-1 sm:gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start"
+            data-ebook-detail-hero="compact-mobile"
+          >
+            <div className="w-full sm:mx-auto sm:w-56 lg:mx-0 lg:w-full">
+              <div className="sm:hidden">
+                <EbookCover book={book} locale={locale} compact />
+              </div>
+              <div className="hidden sm:block">
+                <EbookCover book={book} locale={locale} />
+              </div>
             </div>
-            <div>
-              <div className="flex flex-wrap gap-2">
+            <div className="min-w-0">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 <AccessBadge tier={book.accessTier} locale={locale} />
                 <OpsStatusBadge status={book.status} locale={locale} />
                 <span className="rounded-full bg-white px-2.5 py-0.5 text-[11px] font-medium text-surface-600 ring-1 ring-surface-200">
                   {book.category[locale]}
                 </span>
               </div>
-              <h1 className="mt-4 text-2xl font-bold tracking-tight text-surface-950 sm:text-3xl">
+              <h1 className="mt-2 text-xl font-bold tracking-tight text-surface-950 sm:mt-4 sm:text-3xl">
                 {book.title[locale]}
               </h1>
-              <p className="mt-2 text-sm text-surface-500">
+              <p className="mt-1 text-xs text-surface-500 sm:mt-2 sm:text-sm">
                 {locale === "en" ? "Author" : "저자"} · {book.author[locale]}
               </p>
-              <p className="mt-4 text-base leading-relaxed text-surface-700">{book.summary[locale]}</p>
-              <p className="mt-3 text-sm font-medium text-brand-800">{book.priceNote[locale]}</p>
+              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-surface-700 sm:mt-4 sm:line-clamp-none sm:text-base">
+                {book.summary[locale]}
+              </p>
+              <p className="mt-2 text-sm font-medium text-brand-800 sm:mt-3">{book.priceNote[locale]}</p>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <LocalizedButton href={`/ebooks/${book.slug}/read`} variant="primary" className="min-h-11">
+              <div className="mt-3 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
+                <LocalizedButton href={`/ebooks/${book.slug}/read`} variant="primary" className="min-h-11 w-full sm:w-auto">
                   {locale === "en" ? "Open reader" : "읽기"}
                 </LocalizedButton>
                 <ComingSoonCta
@@ -54,17 +66,16 @@ export function EbookDetailView({ book, locale }: { book: EbookCatalogItem; loca
                   }
                 />
               </div>
-
-              {book.slug === GOLDEN_EBOOK_PRODUCT_ID || book.slug === "ai-first-ebook-for-50s" ? (
-                <div className="mt-6">
-                  <EbookCommercePolicyPanel locale={locale} variant="detail" />
-                </div>
-              ) : null}
-
             </div>
           </div>
 
-          <section className="mt-12" aria-labelledby="ebook-toc-heading">
+          {book.slug === GOLDEN_EBOOK_PRODUCT_ID || book.slug === "ai-first-ebook-for-50s" ? (
+            <div className="mt-6 sm:mt-8">
+              <EbookCommercePolicyPanel locale={locale} variant="detail" />
+            </div>
+          ) : null}
+
+          <section className="mt-10 sm:mt-12" aria-labelledby="ebook-toc-heading">
             <h2 id="ebook-toc-heading" className="text-lg font-bold text-surface-900">
               {locale === "en" ? "Table of contents" : "목차"}
             </h2>
