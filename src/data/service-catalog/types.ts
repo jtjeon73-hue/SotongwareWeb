@@ -46,9 +46,26 @@ export interface EbookCatalogItem extends AdminMeta {
   priceNote: LocalizedText;
 }
 
-export type KnowledgeThemeId = "ai" | "electrical" | "plc" | "rural" | "hobby" | "other";
+export type KnowledgeThemeId =
+  | "ai"
+  | "electrical"
+  | "plc"
+  | "rural"
+  | "hobby"
+  | "other"
+  | "mobility"
+  | "finance"
+  | "language"
+  | "health"
+  | "dev"
+  | "life";
+
+export type KnowledgeDisclaimerType = "ymyl_health" | "ymyl_finance";
 
 export interface KnowledgeSiteItem extends AdminMeta {
+  id: string;
+  /** Former preview slug or upstream site id — admin / redirect only */
+  legacySiteId?: string;
   slug: string;
   name: LocalizedText;
   themeId: KnowledgeThemeId;
@@ -59,6 +76,13 @@ export interface KnowledgeSiteItem extends AdminMeta {
   /** Internal relative path or preview placeholder — never requires live Auth */
   openHref?: string;
   urlNote: LocalizedText;
+  /** Live public hub URL — customer CTA opens this site */
+  externalUrl: string;
+  /** Planned member perks — not delivered locks */
+  memberBenefits?: LocalizedText[];
+  disclaimerType?: KnowledgeDisclaimerType;
+  /** Admin-only repo hint — never shown in customer UI */
+  sourceRepo?: string;
 }
 
 export interface KnowledgeContentItem extends AdminMeta {

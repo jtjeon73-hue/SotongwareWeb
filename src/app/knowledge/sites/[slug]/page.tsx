@@ -1,10 +1,10 @@
 import { RedirectToLocale } from "@/components/locale/RedirectToLocale";
-import { knowledgeSiteSlugs } from "@/data/service-catalog";
+import { knowledgeSiteStaticSlugs } from "@/data/service-catalog";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return knowledgeSiteSlugs().map((slug) => ({ slug }));
+  return knowledgeSiteStaticSlugs().map((slug) => ({ slug }));
 }
 
 export default async function KnowledgeSiteRedirect({ params }: PageProps) {

@@ -9,7 +9,6 @@ import { AccessBadge, OpsStatusBadge } from "@/components/access/AccessBadge";
 import { MembershipGate } from "@/components/access/MembershipGate";
 import { LocalizedLink } from "@/components/locale/LocalizedLink";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { PreviewPersonaBar } from "@/components/access/PreviewPersonaBar";
 import { Suspense } from "react";
 import { KnowledgeThemeFilter } from "@/components/knowledge/KnowledgeThemeFilter";
 
@@ -24,24 +23,18 @@ export function KnowledgeHubView({
   const contents = getKnowledgeContents(themeFilter);
 
   return (
-    <div className="bg-[linear-gradient(180deg,#f3fbf7_0%,#ffffff_40%,#f8fbff_100%)]">
+    <div className="min-w-0 bg-[linear-gradient(180deg,#f3fbf7_0%,#ffffff_40%,#f8fbff_100%)]">
       <div className="section-padding">
-        <div className="container-main">
+        <div className="container-main min-w-0">
           <SectionHeader
             eyebrow={locale === "en" ? "Knowledge portal" : "지식·교육 포털"}
             title={locale === "en" ? "Explore themes & linked sites" : "테마와 연동 사이트 탐색"}
             description={
               locale === "en"
-                ? "Guests can browse themes, sites, and sample content first. The member portal is for managing your library, courses, and passes—not the only entry point."
-                : "비회원도 테마·연동 사이트·대표 콘텐츠를 먼저 볼 수 있습니다. 회원 포털은 내 강의·자료·서재·이용권 관리 허브입니다."
+                ? "Browse free public theme hubs first. Member dashboard features are planned separately — not required to explore."
+                : "무료 공개 테마 허브를 먼저 탐색할 수 있습니다. 회원 대시보드 기능은 별도 준비 중이며, 탐색에 필수는 아닙니다."
             }
           />
-
-          <div className="mt-6">
-            <Suspense fallback={null}>
-              <PreviewPersonaBar locale={locale} />
-            </Suspense>
-          </div>
 
           <section className="mt-10" aria-labelledby="knowledge-themes-heading">
             <h2 id="knowledge-themes-heading" className="text-lg font-bold text-surface-900">
@@ -62,7 +55,7 @@ export function KnowledgeHubView({
               {sites.map((site) => (
                 <article
                   key={site.slug}
-                  className="flex h-full flex-col rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm"
+                  className="flex h-full min-w-0 flex-col rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm"
                 >
                   <div className="flex flex-wrap gap-1.5">
                     <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 ring-1 ring-emerald-200">
@@ -73,22 +66,12 @@ export function KnowledgeHubView({
                   </div>
                   <h3 className="mt-3 text-base font-bold text-surface-900">{site.name[locale]}</h3>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-surface-600">{site.description[locale]}</p>
-                  <p className="mt-3 text-xs font-medium text-surface-500">
-                    {locale === "en" ? "Featured" : "대표 콘텐츠"} · {site.featuredContent[locale]}
-                  </p>
-                  <p className="mt-2 text-xs text-surface-500">{site.urlNote[locale]}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="mt-4">
                     <LocalizedLink
                       href={`/knowledge/sites/${site.slug}`}
-                      className="inline-flex min-h-10 items-center rounded-lg bg-emerald-600 px-3 text-sm font-semibold text-white hover:bg-emerald-700"
+                      className="inline-flex min-h-10 w-full items-center justify-center rounded-lg bg-emerald-600 px-3 text-sm font-semibold text-white hover:bg-emerald-700 sm:w-auto"
                     >
-                      {locale === "en" ? "Open site card" : "사이트 열기"}
-                    </LocalizedLink>
-                    <LocalizedLink
-                      href={`/knowledge?theme=${site.themeId}`}
-                      className="inline-flex min-h-10 items-center rounded-lg border border-emerald-200 px-3 text-sm font-medium text-emerald-900 hover:bg-emerald-50"
-                    >
-                      {locale === "en" ? "View content" : "콘텐츠 보기"}
+                      {locale === "en" ? "Site details" : "상세 보기"}
                     </LocalizedLink>
                   </div>
                 </article>
@@ -102,7 +85,7 @@ export function KnowledgeHubView({
             </h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {contents.map((item) => (
-                <article key={item.id} className="rounded-2xl border border-surface-200 bg-white p-5">
+                <article key={item.id} className="min-w-0 rounded-2xl border border-surface-200 bg-white p-5">
                   <div className="flex flex-wrap gap-1.5">
                     <AccessBadge tier={item.accessTier} locale={locale} />
                     <OpsStatusBadge status={item.status} locale={locale} />
