@@ -4,6 +4,9 @@
  * Forces client flags so a local .env.local with USE_EMULATOR=true
  * cannot leak into the static export. Preserves local `next dev` emulator use.
  *
+ * Google Auth UI is enabled in production via auth-safety.ts (NODE_ENV bake),
+ * not via a runtime NEXT_PUBLIC_AUTH_GOOGLE_ENABLED lookup.
+ *
  * Usage: node scripts/build-hosting-production.mjs
  */
 import { spawnSync } from "node:child_process";
@@ -19,6 +22,7 @@ const env = {
   NODE_ENV: "production",
   // Explicit overrides beat .env.local for Next.js (already-set process.env wins).
   NEXT_PUBLIC_FIREBASE_USE_EMULATOR: "false",
+  // Public feature intent (Google UI bake is NODE_ENV-based in auth-safety; keep flag aligned).
   NEXT_PUBLIC_AUTH_GOOGLE_ENABLED: "true",
   // Do not enable email/password signup for this Hosting production path.
   NEXT_PUBLIC_AUTH_EMAIL_ENABLED: "false",
@@ -27,7 +31,7 @@ const env = {
 
 console.log("[build:hosting] production client flags:");
 console.log("  NEXT_PUBLIC_FIREBASE_USE_EMULATOR=false");
-console.log("  NEXT_PUBLIC_AUTH_GOOGLE_ENABLED=true");
+console.log("  NEXT_PUBLIC_AUTH_GOOGLE_ENABLED=true (UI bake: NODE_ENV=production)");
 console.log("  NEXT_PUBLIC_AUTH_EMAIL_ENABLED=false");
 console.log("  NEXT_PUBLIC_AUTH_SIGNUP_ENABLED=false");
 

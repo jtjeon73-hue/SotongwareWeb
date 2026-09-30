@@ -22,6 +22,7 @@ function check(name, ok, detail = "") {
 const firebaseSrc = readFileSync(join(root, "src/lib/firebase.ts"), "utf8");
 const authSrc = readFileSync(join(root, "src/lib/auth-safety.ts"), "utf8");
 const pkg = readFileSync(join(root, "package.json"), "utf8");
+const assertSrc = readFileSync(join(root, "scripts/assert-production-firebase-client.mjs"), "utf8");
 
 check(
   "firebase.ts blocks emulator in NODE_ENV production",
@@ -37,6 +38,11 @@ check(
 );
 
 check(
+  "auth-safety Google UI ON in production via NODE_ENV bake",
+  /isGoogleAuthUiEnabled[\s\S]{0,200}NODE_ENV === "production"[\s\S]{0,40}return true/.test(authSrc),
+);
+
+check(
   "build:hosting uses production builder",
   pkg.includes("build-hosting-production.mjs"),
 );
@@ -44,6 +50,17 @@ check(
 check(
   "local next build script still present",
   /"build":\s*"next build"/.test(pkg),
+);
+
+check(
+  "assert detects any *.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED runtime lookup",
+  assertSrc.includes("GOOGLE_RUNTIME_ENV_LOOKUP") &&
+    /env\\s\*\\.\\s\*NEXT_PUBLIC_AUTH_GOOGLE_ENABLED/.test(assertSrc),
+);
+
+check(
+  "assert requires baked Google-on auth-safety cluster",
+  assertSrc.includes("AUTH_SAFETY_GOOGLE_ON_CLUSTER"),
 );
 
 const outDir = join(root, "out");

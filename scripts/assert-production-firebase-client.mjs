@@ -1,6 +1,6 @@
 /**
  * Assert static Hosting export does not wire Firebase client to local emulators,
- * and that Google Auth UI is not left as an unset runtime env read.
+ * and that Google Auth UI is bake-inlined (not a runtime env property read).
  *
  * Usage: node scripts/assert-production-firebase-client.mjs [outDir]
  */
@@ -18,6 +18,17 @@ function walkJs(dir, acc = []) {
   return acc;
 }
 
+/** Runtime property access of the Google flag (any minified env object name). */
+const GOOGLE_RUNTIME_ENV_LOOKUP =
+  /(?:process\s*\.\s*)?env\s*\.\s*NEXT_PUBLIC_AUTH_GOOGLE_ENABLED\b/;
+
+/**
+ * auth-safety production cluster after bake:
+ * emulator off (return!1) then Google on (return!0), next to policy version constants.
+ */
+const AUTH_SAFETY_GOOGLE_ON_CLUSTER =
+  /"2026-09-11"[\s\S]{0,80}function \w\(\)\{return!1\}function \w\(\)\{return!0\}/;
+
 export function assertProductionFirebaseClientBundle(outDir) {
   const lines = [];
   const files = walkJs(outDir);
@@ -28,8 +39,6 @@ export function assertProductionFirebaseClientBundle(outDir) {
   let blob = "";
   for (const f of files) blob += `${readFileSync(f, "utf8")}\n`;
 
-  // Firebase SDK may still contain export names like connectFirestoreEmulator.
-  // Fail only on actual local emulator host/port wiring in the client bundle.
   const strictForbidden = [
     { id: "loopback_host", re: /127\.0\.0\.1/ },
     { id: "auth_emulator_url", re: /http:\/\/127\.0\.0\.1:9099/ },
@@ -48,22 +57,40 @@ export function assertProductionFirebaseClientBundle(outDir) {
     }
   }
 
-  if (
-    /"true"===i\.env\.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED/.test(blob) ||
-    /"true"===process\.env\.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED/.test(blob)
-  ) {
+  if (GOOGLE_RUNTIME_ENV_LOOKUP.test(blob)) {
     ok = false;
     lines.push("FAIL google_auth_still_runtime_env");
   } else {
     lines.push("PASS google_auth_not_runtime_env");
   }
 
-  // Expect baked Google UI enable (isGoogleAuthUiEnabled -> return!0) and signup/email off.
-  if (!/function \w\(\)\{return!0\}/.test(blob) || !/Firebase 운영 Auth/.test(blob)) {
+  if (AUTH_SAFETY_GOOGLE_ON_CLUSTER.test(blob) && /Firebase 운영 Auth/.test(blob)) {
+    lines.push("PASS google_auth_ui_baked_enabled");
+  } else {
     ok = false;
     lines.push("FAIL google_or_prod_auth_label_not_baked");
+  }
+
+  // Email/signup must not be baked ON. Prefer no explicit Google-style true bake for signup.
+  // Runtime undefined === "true" is false (safe-off); only fail if clearly forced true near signup flag.
+  if (/NEXT_PUBLIC_AUTH_SIGNUP_ENABLED[\s\S]{0,40}return!0/.test(blob)) {
+    ok = false;
+    lines.push("FAIL signup_appears_baked_on");
   } else {
-    lines.push("PASS google_auth_ui_baked_enabled");
+    lines.push("PASS signup_not_baked_on");
+  }
+  if (/NEXT_PUBLIC_AUTH_EMAIL_ENABLED[\s\S]{0,40}return!0/.test(blob)) {
+    ok = false;
+    lines.push("FAIL email_appears_baked_on");
+  } else {
+    lines.push("PASS email_not_baked_on");
+  }
+
+  if (!/Google로 계속하기/.test(blob)) {
+    ok = false;
+    lines.push("FAIL google_continue_label_missing");
+  } else {
+    lines.push("PASS google_continue_label_present");
   }
 
   const hasProdLabel = /Firebase 운영 Auth/.test(blob);

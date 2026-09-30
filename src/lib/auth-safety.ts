@@ -15,7 +15,14 @@ export function isAuthEmulatorEnabled(): boolean {
   return process.env.NEXT_PUBLIC_FIREBASE_USE_EMULATOR === "true";
 }
 
+/**
+ * Google sign-in UI gate.
+ * Production static Hosting must not depend on NEXT_PUBLIC_* runtime env lookups
+ * (they are undefined in the browser and hide the button). NODE_ENV is webpack-inlined.
+ * Non-production (next dev) still requires an explicit NEXT_PUBLIC_AUTH_GOOGLE_ENABLED=true.
+ */
 export function isGoogleAuthUiEnabled(): boolean {
+  if (process.env.NODE_ENV === "production") return true;
   return process.env.NEXT_PUBLIC_AUTH_GOOGLE_ENABLED === "true";
 }
 
