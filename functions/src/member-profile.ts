@@ -1,7 +1,7 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import * as functionsV1 from "firebase-functions/v1";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
-import { initializeApp, getApps } from "firebase-admin/app";
+import { ensureFirebaseAdminApp } from "./firebase-admin-app";
 
 /** Server-authoritative policy versions — client must match exactly to accept. */
 export const CURRENT_TERMS_VERSION = "2026-09-11";
@@ -10,9 +10,7 @@ export const CURRENT_PRIVACY_VERSION = "2026-09-11";
 type ProfileData = Record<string, unknown>;
 
 function getDb() {
-  if (!getApps().length) {
-    initializeApp();
-  }
+  ensureFirebaseAdminApp();
   return getFirestore();
 }
 
