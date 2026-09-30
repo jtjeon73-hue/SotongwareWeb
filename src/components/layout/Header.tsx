@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HeaderAccountBar } from "@/components/layout/HeaderAccountBar";
@@ -24,6 +24,8 @@ import type { Locale } from "@/i18n/config";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname() ?? "/";
   const isAuthPath = /^\/(login|signup|forgot-password)(\/|$)/.test(pathname);
   const authLocale = useAuthLocale();
@@ -31,6 +33,35 @@ export function Header() {
   const locale: Locale = isAuthPath ? authLocale : routeLocale;
   const dict = getFullDictionary(locale);
   const nav = dict.site.nav;
+
+  const closeMobileMenu = useCallback(() => {
+    const panel = menuPanelRef.current;
+    const active = document.activeElement;
+    if (panel && active instanceof HTMLElement && panel.contains(active)) {
+      active.blur();
+    }
+    setMobileOpen(false);
+    queueMicrotask(() => {
+      menuButtonRef.current?.focus();
+    });
+  }, []);
+
+  const toggleMobileMenu = useCallback(() => {
+    if (mobileOpen) {
+      closeMobileMenu();
+    } else {
+      setMobileOpen(true);
+    }
+  }, [mobileOpen, closeMobileMenu]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMobileMenu();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen, closeMobileMenu]);
 
   const resourceLinks = [
     { label: nav.about, href: "/about" },
@@ -101,12 +132,14 @@ export function Header() {
         <div className="ml-auto flex shrink-0 items-center gap-2 lg:hidden">
           <LocaleSwitcher compact />
           <button
+            ref={menuButtonRef}
             type="button"
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-surface-700 transition-colors hover:bg-surface-100"
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={toggleMobileMenu}
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
             aria-label={mobileOpen ? nav.closeMenu : nav.openMenu}
+            data-testid="mobile-menu-button"
           >
             {mobileOpen ? (
               <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -122,9 +155,12 @@ export function Header() {
       </div>
 
       <div
+        ref={menuPanelRef}
         id="mobile-menu"
         className={cn("border-t border-surface-200 bg-white lg:hidden", mobileOpen ? "block" : "hidden")}
         aria-hidden={!mobileOpen}
+        {...(!mobileOpen ? { inert: true } : {})}
+        data-testid="mobile-menu-panel"
       >
         <nav className="header-shell flex max-h-[80vh] flex-col overflow-y-auto py-3" aria-label={nav.mobileMenu}>
           <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-400">{nav.technology}</p>
@@ -133,7 +169,7 @@ export function Header() {
               key={item.slug}
               href={`/capabilities/${item.slug}`}
               className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
-              onClick={() => setMobileOpen(false)}
+              onClick={closeMobileMenu}
             >
               {item.label}
             </LocalizedLink>
@@ -144,7 +180,7 @@ export function Header() {
               key={item.href}
               href={item.href}
               className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
-              onClick={() => setMobileOpen(false)}
+              onClick={closeMobileMenu}
             >
               {item.label}
             </LocalizedLink>
@@ -155,7 +191,7 @@ export function Header() {
               key={item.label + item.href}
               href={item.href}
               className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
-              onClick={() => setMobileOpen(false)}
+              onClick={closeMobileMenu}
             >
               {item.label}
             </LocalizedLink>
@@ -166,20 +202,20 @@ export function Header() {
               key={item.href}
               href={item.href}
               className="min-h-11 rounded-lg px-3 py-3 text-base font-medium text-surface-800 hover:bg-surface-50"
-              onClick={() => setMobileOpen(false)}
+              onClick={closeMobileMenu}
             >
               {item.label}
             </LocalizedLink>
           ))}
           <div className="mt-2 space-y-2 border-t border-surface-100 px-3 pt-4">
-            <HeaderAccountBar locale={locale} compact onNavigate={() => setMobileOpen(false)} />
+            <HeaderAccountBar locale={locale} compact onNavigate={closeMobileMenu} />
             <Button
               href={localizePath("/contact", locale)}
               variant="primary"
               size="md"
               className="w-full min-h-11"
               aria-label={nav.contactCtaAria}
-              onClick={() => setMobileOpen(false)}
+              onClick={closeMobileMenu}
             >
               {nav.contactCta}
             </Button>

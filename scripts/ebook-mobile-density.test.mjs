@@ -32,6 +32,18 @@ check("mobile compact card present", lib.includes('data-ebook-card="mobile-compa
 check("desktop vertical card retained", lib.includes('data-ebook-card="desktop-vertical"') && lib.includes("sm:flex"));
 check("mobile cover width ~80px (w-20)", lib.includes("w-20 shrink-0"));
 check("mobile card shows priceNote", /mobile-compact[\s\S]*?priceNote/.test(lib));
+{
+  const mobileBlock = lib.slice(lib.indexOf('data-ebook-card="mobile-compact"'), lib.indexOf('data-ebook-card="desktop-vertical"'));
+  check("mobile card uses compactPriceNoteForCard", mobileBlock.includes("compactPriceNoteForCard"));
+  check("mobile price marker data-ebook-price", mobileBlock.includes('data-ebook-price="mobile-compact"'));
+  check("mobile price no line-clamp-1 on priceNote row", !/priceNote[sS]{0,120}line-clamp-1/.test(mobileBlock));
+  check("mobile price title full note", mobileBlock.includes("title={book.priceNote[locale]}"));
+  const desktopBlock = lib.slice(lib.indexOf('data-ebook-card="desktop-vertical"'));
+  check("desktop card full priceNote unchanged", desktopBlock.includes("{book.priceNote[locale]}") && !desktopBlock.includes("compactPriceNoteForCard"));
+}
+check("library imports ebook-price-note helper", lib.includes("@/lib/ebook-price-note"));
+check("detail still full priceNote (no compact helper)", !detail.includes("compactPriceNoteForCard") && detail.includes("book.priceNote[locale]"));
+
 check("desktop card also shows priceNote", /desktop-vertical[\s\S]*?priceNote/.test(lib));
 check("read CTA retained", lib.includes("/read"));
 check("aspect 3/4 retained", lib.includes("aspect-[3/4]"));

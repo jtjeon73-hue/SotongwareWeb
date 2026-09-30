@@ -3,6 +3,7 @@ import type { EbookCatalogItem } from "@/data/service-catalog";
 import { getEbookCatalog } from "@/data/service-catalog";
 import { AccessBadge, OpsStatusBadge } from "@/components/access/AccessBadge";
 import { LocalizedLink } from "@/components/locale/LocalizedLink";
+import { compactPriceNoteForCard } from "@/lib/ebook-price-note";
 
 const COVER: Record<EbookCatalogItem["coverTone"], string> = {
   amber: "from-amber-200 via-orange-100 to-white",
@@ -66,7 +67,13 @@ export function EbookCard({ book, locale }: { book: EbookCatalogItem; locale: Lo
             </LocalizedLink>
           </h3>
           <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-surface-600">{book.summary[locale]}</p>
-          <p className="mt-1 line-clamp-1 text-[11px] font-medium text-brand-800">{book.priceNote[locale]}</p>
+          <p
+            className="mt-1 text-[11px] font-medium text-brand-800"
+            data-ebook-price="mobile-compact"
+            title={book.priceNote[locale]}
+          >
+            {compactPriceNoteForCard(book.priceNote[locale])}
+          </p>
           <div className="mt-1.5 flex flex-wrap gap-1">
             <AccessBadge tier={book.accessTier} locale={locale} />
             <OpsStatusBadge status={book.status} locale={locale} />
