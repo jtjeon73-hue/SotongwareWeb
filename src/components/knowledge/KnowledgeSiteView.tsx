@@ -60,7 +60,7 @@ export function KnowledgeSiteView({ site, locale }: { site: KnowledgeSiteItem; l
           {site.memberBenefits && site.memberBenefits.length > 0 ? (
             <section className="mt-8 rounded-xl border border-dashed border-surface-200 bg-surface-50 p-4">
               <h2 className="text-sm font-bold text-surface-800">
-                {locale === "en" ? "Planned member benefits" : "회원 혜택 (준비 중)"}
+                {locale === "en" ? "Basic member benefits" : "Basic 회원 혜택"}
               </h2>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-surface-600">
                 {site.memberBenefits.map((b) => (

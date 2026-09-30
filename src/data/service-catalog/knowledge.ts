@@ -31,7 +31,11 @@ export const knowledgeThemes: KnowledgeThemeId[] = [
 ];
 
 const memberPrep: LocalizedText[] = [
-  { ko: "회원 전용 심화 자료 — 준비 중", en: "Member deep-dive materials — preparing" },
+  {
+    ko: "통합 학습 레일 — Basic 회원 전용, 12개 허브를 목적별로 엮은 안내서 (지식 포털에서 열람)",
+    en: "Unified learning rail — Basic members only, a guide connecting the 12 hubs by goal (read on the knowledge portal)",
+  },
+  { ko: "허브별 심화 자료 — 준비 중", en: "Per-hub deep-dive materials — preparing" },
   { ko: "학습 진행·북마크 — 준비 중", en: "Progress & bookmarks — preparing" },
 ];
 

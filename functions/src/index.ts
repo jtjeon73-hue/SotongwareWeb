@@ -9,6 +9,7 @@ export {
   handleTossPaymentWebhook,
 } from "./commerce";
 export { getEbookChapterBody, getEbookDownloadUrl } from "./ebook";
+export { getKnowledgeMemberBody } from "./knowledge";
 import { isFunctionsEmulatorRuntime } from "./commerce/emulator-runtime";
 
 function getDb() {
