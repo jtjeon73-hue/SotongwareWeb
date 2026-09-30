@@ -108,7 +108,8 @@ if (parseLoad.status !== 0) {
   check("reader mobile chapter bar", reader.includes('data-reader-chrome="mobile-chapter-bar"'));
   check("reader mobile toc overlay", reader.includes('data-reader-chrome="mobile-toc-overlay"'));
   check("reader desktop toc hidden on mobile", reader.includes('data-reader-chrome="desktop-toc"') && reader.includes("hidden") && reader.includes("lg:block"));
-  check("reader scroll into view on chapter change", reader.includes("scrollIntoView") && reader.includes('data-reader-anchor="chapter-body-start"'));
+  check("reader scroll anchor present", reader.includes('data-reader-anchor="chapter-body-start"'));
+  check("reader schedules chapter scroll", reader.includes("scheduleChapterScroll") && reader.includes("window.scrollTo"));
   check("reader closes toc on chapter select", reader.includes("setTocOpen(false)"));
   check("reader overflow-x-hidden on reading pane", reader.includes("overflow-x-hidden"));
   check("reader break-words on long titles", reader.includes("break-words"));

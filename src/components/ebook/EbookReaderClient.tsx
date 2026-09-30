@@ -20,9 +20,22 @@ import { MembershipGate } from "@/components/access/MembershipGate";
 import { usePreviewPersona } from "@/components/access/usePreviewPersona";
 import { LocalizedLink } from "@/components/locale/LocalizedLink";
 import { EbookMarkdownParagraph } from "@/components/ebook/EbookMarkdownParagraph";
+import {
+  computeMobileChapterScrollTop,
+  isMobileReaderViewportWidth,
+} from "@/lib/ebook-reader-scroll";
 
 function progressKey(slug: string) {
   return `sw-ebook-progress:${slug}`;
+}
+
+function isMobileReaderViewport(): boolean {
+  if (typeof window === "undefined") return false;
+  return isMobileReaderViewportWidth(window.innerWidth);
+}
+
+function privateStateStatusIsPending(status: string | undefined): boolean {
+  return status === undefined || status === "idle" || status === "loading";
 }
 
 type ReaderSlot = {
@@ -196,8 +209,11 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
   const [fontScale, setFontScale] = useState(1);
   const [privateCache, setPrivateCache] = useState<Record<string, PrivateLoadState>>({});
   const [tocOpen, setTocOpen] = useState(false);
-  const bodyStartRef = useRef<HTMLDivElement>(null);
+  const chapterBarRef = useRef<HTMLDivElement>(null);
+  const readingFocusRef = useRef<HTMLDivElement>(null);
   const skipScrollOnMountRef = useRef(true);
+  const scrollGenRef = useRef(0);
+  const pendingChapterScrollRef = useRef(false);
 
   useEffect(() => {
     // Re-auth must re-run server entitlement checks (never keep preview/forged unlock state).
@@ -271,13 +287,64 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
     }
   }, [book.slug, index, fontScale]);
 
+  const scrollReadingFocusIntoView = useCallback(() => {
+    const target = readingFocusRef.current;
+    if (!target) return;
+
+    if (!isMobileReaderViewport()) {
+      // Desktop: keep left TOC + right pane; only nudge if needed.
+      target.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      return;
+    }
+
+    // Mobile: place chapter body start just under the sticky chapter bar.
+    const barH = chapterBarRef.current?.getBoundingClientRect().height ?? 0;
+    const top = computeMobileChapterScrollTop(
+      window.scrollY,
+      target.getBoundingClientRect().top,
+      barH,
+    );
+    window.scrollTo({ top, behavior: "auto" });
+  }, []);
+
+  const scheduleChapterScroll = useCallback(() => {
+    const gen = ++scrollGenRef.current;
+    const run = () => {
+      if (gen !== scrollGenRef.current) return;
+      if (tocOpen) return;
+      scrollReadingFocusIntoView();
+    };
+    // Wait until overlay unmount + new chapter DOM paint.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        run();
+        window.setTimeout(run, 50);
+        window.setTimeout(run, 120);
+      });
+    });
+  }, [scrollReadingFocusIntoView, tocOpen]);
+
   useEffect(() => {
     if (skipScrollOnMountRef.current) {
       skipScrollOnMountRef.current = false;
       return;
     }
-    bodyStartRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [index]);
+    if (!pendingChapterScrollRef.current) return;
+    if (tocOpen) return;
+
+    const privatePending =
+      page?.bodySource === "private" &&
+      privateStateStatusIsPending(privateCache[page.chapterId]?.status);
+
+    // Scroll after overlay close; for premium, keep pending until body settles then re-scroll.
+    if (privatePending) {
+      scheduleChapterScroll();
+      return;
+    }
+
+    pendingChapterScrollRef.current = false;
+    scheduleChapterScroll();
+  }, [index, tocOpen, page, privateCache, scheduleChapterScroll]);
 
   useEffect(() => {
     if (!tocOpen) return;
@@ -289,8 +356,9 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
   }, [tocOpen]);
 
   const goToIndex = useCallback((next: number) => {
-    setIndex(next);
+    pendingChapterScrollRef.current = true;
     setTocOpen(false);
+    setIndex(next);
   }, []);
 
   const privateState: PrivateLoadState =
@@ -336,6 +404,7 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
 
       {/* Mobile: compact chapter bar + overlay TOC (does not consume reading height). */}
       <div
+        ref={chapterBarRef}
         className="sticky top-0 z-20 border-b border-sky-100 bg-white/95 backdrop-blur lg:hidden"
         data-reader-chrome="mobile-chapter-bar"
       >
@@ -428,7 +497,6 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
           className="min-w-0 overflow-x-hidden rounded-2xl border border-sky-100 bg-white p-5 shadow-sm sm:p-8"
           data-reader-chrome="reading-pane"
         >
-          <div ref={bodyStartRef} className="scroll-mt-24 lg:scroll-mt-6" data-reader-anchor="chapter-body-start" />
           {page ? (
             <>
               <div className="mb-4 hidden flex-wrap items-center gap-2 lg:flex">
@@ -436,6 +504,9 @@ export function EbookReaderClient({ book, locale }: { book: EbookCatalogItem; lo
                 <AccessBadge tier={page.accessTier} locale={locale} />
               </div>
               <div
+                ref={readingFocusRef}
+                key={page.chapterId}
+                data-reader-anchor="chapter-body-start"
                 className={`space-y-4 leading-relaxed text-surface-800 ${
                   page.bodySource === "inline" && inlineUnlocked ? "select-none" : ""
                 }`}
