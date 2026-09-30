@@ -56,7 +56,7 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
       eyebrow: "Content",
       title: "콘텐츠 라이브러리",
       description:
-        "쇼츠·만화·만화영상·노래·영상·이미지 등 제작 결과물과 연동 채널을 형식·테마로 탐색합니다. 가짜 조회수는 표시하지 않습니다.",
+        "쇼츠·음악·만화·영상·이미지·게임을 한곳에서 탐색합니다. 검수·승인된 작품만 운영중이며, 가짜 조회수는 표시하지 않습니다.",
       emptyTitle: "콘텐츠가 준비되고 있습니다",
       emptyDescription:
         "음악, Shorts, 영상 등 제작·검수 완료 후 등록됩니다. YouTube 링크는 실제 업로드 후에만 표시됩니다.",
@@ -149,7 +149,7 @@ export const ventureLabels: Record<Locale, Record<VenturePageId, VenturePageLabe
       eyebrow: "Content",
       title: "Content library",
       description:
-        "Explore shorts, comics, comic video, music, video, and graphics by format and theme. No fake view counts.",
+        "Explore shorts, music, comics, video, images, and games in one place. Only reviewed, approved works go live—no fake view counts.",
       emptyTitle: "Content is being prepared",
       emptyDescription:
         "Works are listed after production and review. YouTube links appear only after real uploads.",

@@ -17,6 +17,7 @@
     "test:i18n:parity": "node scripts/i18n-parity.test.mjs",
     "test:i18n:rendered": "node scripts/i18n-rendered.test.mjs",
     "test:header:layout": "node scripts/header-layout.test.mjs",
+    "test:content:phase1": "node scripts/content-phase1.test.mjs",
     "test:publication:gate": "node scripts/publication-gate.test.mjs",
     "test:preview:commerce": "node scripts/preview-commerce-smoke.test.mjs",
     "test:preview:locale": "node scripts/preview-locale-matrix.test.mjs",

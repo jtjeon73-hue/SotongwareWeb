@@ -96,6 +96,7 @@ export interface KnowledgeContentItem extends AdminMeta {
   format: LocalizedText;
 }
 
+/** Internal catalog format — comicVideo stays distinct from video. */
 export type ContentFormatId =
   | "shorts"
   | "comic"
@@ -103,7 +104,88 @@ export type ContentFormatId =
   | "music"
   | "video"
   | "image"
+  | "game"
   | "other";
+
+/** Customer-facing hub tabs — comicVideo + video collapse to "video". */
+export type ContentUiCategoryId =
+  | "shorts"
+  | "music"
+  | "comic"
+  | "video"
+  | "image"
+  | "game";
+
+export type ContentMediaKind =
+  | "shortVideo"
+  | "audio"
+  | "comic"
+  | "video"
+  | "image"
+  | "game";
+
+/**
+ * Media source contract.
+ * - none: no playable media (placeholders)
+ * - public_asset: path under site public/ only (never private Storage URL)
+ * - external_embed: public embed id/url allowlisted later (YouTube etc.)
+ * - protected_ref: opaque assetRef for Phase 4 entitlement fetch — not a URL
+ */
+export type ContentMediaSource = "none" | "public_asset" | "external_embed" | "protected_ref";
+
+export interface ContentMediaMeta {
+  kind: ContentMediaKind;
+  source: ContentMediaSource;
+  /** Public path or public embed handle — NEVER a private Storage/signed URL */
+  publicSrc?: string;
+  /** Opaque id for future server authorization — not a URL */
+  assetRef?: string;
+  /** Public poster/thumbnail path when applicable */
+  poster?: string;
+  aspectRatio?: string;
+  durationSeconds?: number;
+  alt: LocalizedText;
+  caption?: LocalizedText;
+}
+
+export type ContentRightsStatus = "unchecked" | "cleared" | "restricted" | "blocked";
+
+/** Internal provenance — customer AI badge policy is not fixed in Phase 1 */
+export type ContentAiProvenance = "none" | "aiAssisted" | "aiGenerated";
+
+export interface ContentPublicationMeta {
+  rightsStatus: ContentRightsStatus;
+  aiProvenance: ContentAiProvenance;
+  reviewed: boolean;
+  approvedForPublic: boolean;
+  publishedAt?: string;
+}
+
+export interface ContentRelatedMeta {
+  knowledgeSlugs?: string[];
+  ebookSlugs?: string[];
+  appSlugs?: string[];
+}
+
+/** Phase 1 launch metadata only — no executable game bundle yet */
+export interface ContentGameMeta {
+  launchMode: "embedded" | "route";
+  playPath?: string;
+  supportsTouch: boolean;
+  supportsKeyboard: boolean;
+  guestPlayAllowed: boolean;
+  localScore: boolean;
+  memberRankingFuture: boolean;
+}
+
+export type ContentRendererId =
+  | "shortVideo"
+  | "audio"
+  | "comic"
+  | "video"
+  | "image"
+  | "game"
+  | "preparing";
 
 export interface ContentCatalogItem extends AdminMeta {
   slug: string;
@@ -115,4 +197,8 @@ export interface ContentCatalogItem extends AdminMeta {
   status: OpsStatus;
   channel: LocalizedText;
   coverTone: "rose" | "sky" | "amber" | "violet" | "emerald" | "slate";
+  media: ContentMediaMeta;
+  publication: ContentPublicationMeta;
+  related?: ContentRelatedMeta;
+  game?: ContentGameMeta;
 }
